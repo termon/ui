@@ -1,0 +1,24 @@
+{
+    "name": "termon/ui",
+    "description": "Set of Blade View Components",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Termon\\Ui\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Termon\\Ui\\TermonUiServiceProvider"
+            ]
+        }
+    },
+    "authors": [
+        {
+            "name": "termon",
+            "email": "a.mccaughey@ulster.ac.uk"
+        }
+    ],
+    "require": {}
+}
