@@ -27,12 +27,11 @@ $ composer require termon/ui
 ```
 
 ## Prerequisite
-These components require installation of [Tailwind CSS](https://tailwindcss.com) fpr styling and [AlpineJS](https:://alpinejs.dev) for interactivity.
+These components require installation of [Tailwind CSS](https://tailwindcss.com) for styling and [AlpineJS](https:://alpinejs.dev) for interactivity.
 
 ## Using Components
 
-The component prefix is ```ui``` followed by the name of the component (separated by :: )
-
+The component prefix is ```x-ui``` followed by the name of the component (separated by :: )
 
 ```
 <x-ui::<component-name>
@@ -40,19 +39,15 @@ The component prefix is ```ui``` followed by the name of the component (separate
 
 ## Available Components
 
-### Nav Bar
-Nav items accept standard anchor tag ```href``` property and the ```active``` property should be the name of the route so that current route can be highlighted.
+### Nav Bar / Nav Item
+Nav bar is a wrapper around nav items. These items accept the standard anchor tag ```href``` property and the ```active``` property should be the name of the route (used to highlight current route).
+
 ```
 <x-ui::nav>
-    <x-ui::nav.item active="home" href="..">
+    <x-ui::nav.item active="home" :href="route('home')">
         Home
     </x-ui::nav.item>
-    <x-ui::nav.item active="about" href="..">
-        About
-    </x-ui::nav.item>
-    <x-ui::nav.item active="contact" href="..">
-        Contact
-    </x-ui::nav.item>
+    ...
 </x-ui::nav>
 ```
 
@@ -135,6 +130,7 @@ Note that the ```name``` property must match the name of the associated input co
 #### Select
 The select component accepts a name and options(select list) property
 ```
+<x-ui::form.select :options="[..]" name=".." />
 ```
 
 #### Input Groups
