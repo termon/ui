@@ -1,0 +1,1 @@
+<h1 class="text-3xl border-b-2 border-gray-200 font-bold text-gray-800 dark:text-gray-300 mb-7">{{$slot}}</h1>
