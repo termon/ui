@@ -1,4 +1,4 @@
-# Laravel View Components
+# Laravel View Components (v1.0.7)
 
 A simple set of anonymous Laravel Blade View Components to help construct basic user interfaces. Components include:
 
