@@ -39,8 +39,9 @@ The component prefix is ```ui``` followed by the name of the component (separate
 
 ## Available Components
 
-### Nav Bar
-Nav items accept standard anchor tag ```href``` property and the ```active``` property should be the name of the route so that current route can be highlighted.
+### Nav 
+The `nav` component is a nav-bar that contains nav items `nav.item`. These accept standard anchor tag ```href``` property and the ```active``` property should be the name of the route so that current route can be highlighted.
+
 ```
 <x-ui::nav>
     <x-ui::nav.item active="home" href="..">
@@ -56,13 +57,14 @@ Nav items accept standard anchor tag ```href``` property and the ```active``` pr
 ```
 
 ### Button and Link
-The ```button``` and ```link``` components can be configured with several variants ('blue', 'red', 'green', 'yellow', 'dark', 'light', 'oblue', 'ored', 'link')  
+The ```button``` and ```link``` components can be configured with several variants (`'blue'`, `'red'`, `'green'`, `'yellow'`, `'dark'`, `'light'`, `'oblue'`, `'ored'` and `'link'`)  
 
-Following examples provide a Light variant button, and standard link. Adding a variant property to the link allows it to be styled as one of the buttons.
+Following examples provide a `'light'` variant button, and standard `link`. Adding a `variant` property to the link allows it to be styled as one of the buttons.
 
  ```
 <x-ui::button variant="light">Light</button>
 <x-ui::link>Link</button>
+<x-ui::link variant='oblue'>Outline Blue Link</button>
  ```
 
 
@@ -126,7 +128,13 @@ Given an options list variable named `$roles` and a model named `$model` with a 
 ```
 
 ### Flash
-A flash component is used to display flash messages before a redirect. A controller action would typically flash a message to the session as part of the redirect `return redirect()->route("..")->with('<type>', "<message>");` where `type` is one of `success, error, info, warning` and `message` is the message to display.
+A flash component is used to display flash messages before a redirect. A controller action would typically flash a message to the session as part of the redirect 
+
+```
+return redirect()->route("..")->with(<type>, <message>);
+```
+
+where `type` is one of `'success'`, `'error'`, `'info'` or `'warning'` and `message` is the message to display.
 
 The `flash` component should be rendered as part of the main layout 
 
@@ -160,10 +168,10 @@ Badges provide additional contextual information for other user interface (UI) e
 ```
 
 ### Header
-A simple component to use as a consistent page title section (header). Can be combined with `title` component below. For example:
+A simple component to use as a page (title) header. Can be combined with `title` component below. For example:
 
 ```
- <x-ui::header>
+<x-ui::header>
         <x-ui::title>Create</x-ui::title>
 </x-ui::header>
 ```

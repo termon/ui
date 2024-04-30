@@ -4,7 +4,6 @@
         <x-ui::nav.button type="submit">Logout</x-ui::nav.button>  
         <div class="py-1.5 text-gray-400 text-xs">
             ({{ auth()?->user()?->name }})
-            {{-- ({{ auth()?->user()?->role}}) --}}
         </div> 
     </form>
 @endauth 
