@@ -9,7 +9,7 @@ $classes = match($variant) {
    'light'  => "py-1.5 px-4 text-sm transition-colors font-medium rounded-lg text-gray-900 bg-gray-50    border border-gray-200   hover:bg-gray-100   hover:text-black disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-gray-200   active:bg-gray-200",
    'oblue'  => "py-1.5 px-4 text-sm transition-colors font-medium rounded-lg text-blue-600 bg-gray-50    border border-gray-200   hover:bg-blue-600   hover:text-white disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-blue-600   hover:border-blue-700",
    'ored'   => "py-1.5 px-4 text-sm transition-colors font-medium rounded-lg text-red-600  bg-gray-50    border border-gray-200   hover:bg-red-600    hover:text-white disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-red-600    hover:border-red-700",
-   'link'   => "py-1.5 px-4 text-sm transition-colors font-medium hover:text-bold hover:text-black hover:underline",    
+   'link'   => "py-1.5 px-2 text-sm transition-colors font-medium            text-blue-700 hover:text-bold hover:text-blue-900    hover:underline",    
    default  => "",
 };
 @endphp

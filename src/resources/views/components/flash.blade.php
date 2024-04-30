@@ -8,21 +8,6 @@ $message = Session::get('error') ?? $message;
 $title = Session::get('warning') ? "Warning" : $title;
 $message = Session::get('warning') ?? $message;
 
-// $title = null;
-// $message = null;
-// if (Session::get('success')) {
-//     $title = "Success";
-//     $message = Session::get('success');
-// } elseif (Session::get('error')) {
-//     $title = "Error";
-//     $message = Session::get('error');
-// } elseif (Session::get('info')) {
-//     $title = "Information";
-//     $message = Session::get('info');
-// } elseif (Session::get('warning')) {
-//     $title = "Warning";
-//     $message = Session::get('warning');
-// }
 @endphp
 
 

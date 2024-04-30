@@ -1,8 +1,8 @@
 
-@props(['variant' => 'blue'])
+@props(['mode' => 'blue'])
 
 @php
-$classes = match($variant) {
+$classes = match($mode) {
   'blue'   => "text-xs font-medium px-2.5 py-0.5 rounded border border-blue-400   bg-blue-100   text-blue-800",
   'gray'   => "text-xs font-medium px-2.5 py-0.5 rounded border border-gray-500   bg-gray-100   text-gray-800",
   'red'    => "text-xs font-medium px-2.5 py-0.5 rounded border border-red-400    bg-red-100    text-red-800",

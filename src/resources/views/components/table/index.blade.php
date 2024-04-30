@@ -1,24 +1,23 @@
-@props(['thead', 'tbody'])
+{{-- 
+    overflow-hidden - clip any content within an element that overflows the bounds of that element
+    overflow-x-auto - allow horizontal scrolling if needed 
+    min-w-full      - element should take up full width of container
+    align-middle    - align element in middle of container which is height of parent
+--}}
+<div {{$attributes->merge(['class' => 'p-1.5 overflow-hidden overflow-x-auto min-w-full align-middle border rounded-lg'])}} >
+    <table class="min-w-full divide-y divide-gray-200">
 
-<div class="flex flex-col">
-    <div class="-m-1.5 overflow-x-auto">
-        <div class="p-1.5 min-w-full inline-block align-middle">
-            <div class="border rounded-lg overflow-hidden">
-                <table {{$attributes->merge(['class' => "min-w-full divide-y divide-gray-200"])}}>
-                    @if(isset($thead))
-                        <thead {{$thead->attributes->merge(['class' => "bg-gray-200"])}}>
-                            {{ $thead }}
-                        </thead>
-                    @endif
+        <thead {{ $head->attributes->merge(['class' => 'bg-gray-50']) }}>
+            <tr>
+                {{ $head }}
+            </tr>
+        </thead>
 
-                    @if(isset($tbody))
-                        <tbody {{$tbody->attributes->merge(['class' => "divide-y divide-gray-200"])}}>
-                            {{ $tbody }}
-                        </tbody>
-                    @endif
-                </table>
-            </div>
-        </div>
-    </div>
+        <tbody class="divide-y divide-gray-200">
+            {{ $slot }}
+        </tbody>
+
+    </table>
+
 </div>
 

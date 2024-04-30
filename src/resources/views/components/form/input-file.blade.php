@@ -1,5 +1,8 @@
 @props([
-  'variant' => 'light'
+   'label' => null,
+   'name',
+   'value',
+   'variant' => 'light'
 ])
 
 @php
@@ -17,4 +20,18 @@ $classes = match ($variant) {
 };
 @endphp
 
-<input id={{$attributes['name']}} {{ $attributes->merge(['type' =>'file', 'class' => $classes])->class(['border', 'border-red-200' => $errors->has($attributes['name']) ])}}>
+<div>
+  @isset($label)
+      <label for="{{$name}}" class="mb-2 block text-gray-700 text-sm font-bold uppercase">
+          {{ $label }}
+      </label>
+  @endisset
+
+  <input id="{{ $name }}" name="{{ $name }}" value="{{ $value }}"  {{ $attributes->merge(['type' =>'file', 'class' => $classes])->class(['border', 'border-red-200' => $errors->has($attributes['name']) ])}}>
+
+  @error($name)
+      <div class="text-sm text-red-500 mt-2"> 
+          {{ $message }} 
+      </div>
+  @enderror 
+</div> 

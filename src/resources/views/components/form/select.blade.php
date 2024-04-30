@@ -1,13 +1,25 @@
-<select id="{{ $attributes['name'] }}" 
-        {{$attributes->merge(['class'=>'border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'])
-                     ->class(['border', 'border-red-200' => $errors->has($name)])
-                     ->except('options')}}
->
-    <option value="">Choose option</option>
-    @isset($attributes['options'])
-        @foreach($attributes['options'] as $key => $name ) 
-            <option value="{{ $key }}"  {{ $key == $attributes['value'] ? 'selected' : ''}}>{{ $name }}</option>
-        @endforeach     
+@props([
+   'label' => null,
+   'name',
+   'value',
+   'options' => []   
+])
+ 
+<div>
+    @isset($label)
+        <label for="{{$name}}" class="mb-2 block text-gray-700 text-sm font-bold uppercase">
+            {{ $label }}
+        </label>
     @endisset
-</select>
-
+    <select id="{{ $name }}" name="{{$name}}" {{$attributes->merge(['class'=>'border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'])}}>
+        <option selected disabled>Choose option...</option>
+        @foreach($options as $key => $val ) 
+            <option value="{{ $key }}"  {{ $key == $value ? 'selected' : ''}}>{{ $val }}</option>
+        @endforeach     
+    </select>   
+    @error($name)
+        <div class="text-sm text-red-500 mt-2"> 
+            {{ $message }} 
+        </div>
+    @enderror 
+</div>
