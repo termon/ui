@@ -1,4 +1,4 @@
-# Laravel View Components (v1.0.7)
+# Laravel View Components
 
 A simple set of anonymous Laravel Blade View Components to help construct basic user interfaces. Components include:
 
@@ -10,7 +10,12 @@ A simple set of anonymous Laravel Blade View Components to help construct basic 
 
 ## Installation
 
-Add the github repository to your composer.json file
+Use composer to install the library.
+```
+$ composer require termon/ui
+```
+
+**Note**: if the package is not available on `packagist` then add the `github` repository to your composer.json file
 
 ```
 "repositories": [
@@ -21,18 +26,12 @@ Add the github repository to your composer.json file
 ],
 ```
 
-Then use composer to install the library.
-```
-$ composer require termon/ui
-```
-
 ## Prerequisite
 These components require installation of [Tailwind CSS](https://tailwindcss.com) fpr styling and [AlpineJS](https:://alpinejs.dev) for interactivity.
 
 ## Using Components
 
 The component prefix is ```ui``` followed by the name of the component (separated by :: )
-
 
 ```
 <x-ui::<component-name>
@@ -89,81 +88,61 @@ Cards can also be configured with optional ```title``` and ```footer``` slots
 ```
 
 ### Table
-The ```Table``` component includes ```thead``` and ```tbody``` named slots, with ```th, tr, td``` elements. Each element will accept custom classes. An example table:
+The ```Table``` component includes a `head` slot in which column headers can be defined using the `col` component. Table rows are output using `row` and `cell` components. An example table:
 
 ```
-<x-ui.table>
+<x-ui::table>
     <x-slot:head>
-        <x-ui.table.col>Column 1</x-ui.table.col>           
+        <x-ui::table.col>
+            Column 1
+        </x-ui::table.col>           
     </x-slot:head>
 
-    <x-ui.table.row>
-        <x-ui.table.cell>Row column</x-ui.table.cell>
-    </x-ui.table.row>
-</x-ui.table>
+    <x-ui::table.row>
+        <x-ui::table.cell>
+            Row column
+        </x-ui::table.cell>
+    </x-ui::table.row>
+</x-ui::table>
 ```
 
 ### Form
 
-Form elements include
-
-1. label, input, select, textarea and error (validation) components
-2. input-group and input-file-group, textarea-group components that are wrappers around label input and error components
+Form elements include: `input`, `input-file`, `select`, and `textarea` components. All require a minimum of a `name` property and an optional `label` property. All, also accept any standard html properties. 
 
 Example usage:
-The ```label, input, input-file, select, textarea``` components can be used individually. All accept standard html properties. 
 
-#### Label
-```
-<x-ui::form.label>Label</x-ui::form.label>
-```
 #### Input
+Given a model variable `$model` with a `name` attribute, the input could be used as follows: 
 ```
-<x-ui::form.input name=".." value=".." />
+<x-ui::form.input label="Name" name="name" value="..." />
 ```
 
-#### Error
-Note that the ```name``` property must match the name of the associated input component
-```
-<x-ui::form.error name=".." />
-```
 #### Select
-The select component accepts a name and options(select list) property
-```
-```
+Given an options list variable named `$roles` and a model named `$model` with a `role` attribute, the select could be used as follows:
 
-#### Input Groups
-Input groups are wrappers around the label, input and error components.
 ```
-<x-ui::form.<type>-group label="Title" name="title" value="..." class="mb-4" />
+<x-ui::form.select label="Role" name="role" :options="$roles" value="..." />
 ```
-where ```type``` is one of ```input, input-file, select, textarea```. 
-
 
 ### Flash
-A flash component is used to display flash messages before a redirect. A controller action would typically flash a message to the session as part of the redirect.
+A flash component is used to display flash messages before a redirect. A controller action would typically flash a message to the session as part of the redirect `return redirect()->route("..")->with('<type>', "<message>");` where `type` is one of `success, error, info, warning` and `message` is the message to display.
 
-```
-return redirect()->route("..")
-                 ->with('<type>', "<message>");  
-```
-where ```type``` is one of ```success, error, info, warning``` and ```message``` is the message to display.
-
-The ```flash``` component should be rendered as part of the main layout 
+The `flash` component should be rendered as part of the main layout 
 
 ```
 <x-ui::flash />
+
 <main>
       {{ $slot }}
 </main>
 ```
 
 ### Breadcrumb
-
 A breadcrumb can be used to aid navigation. To configure a breadcrumb component we should pass the crumbs as an associative array containing crumb name and a route. The final crumb typically has no associated route as it represents the current page.
 
 ```
-<x-ui::breadcrumb class="my-3" :crumbs="[
+<x-ui::breadcrumb :crumbs="[
     'Home' => route(..), 
     'Crumb1' => route(..), 
     'Crumb2'=> route(..),
@@ -178,6 +157,15 @@ Badges provide additional contextual information for other user interface (UI) e
 <x-ui::badge variant="pink">
     Badge
 </x-ui::badge>
+```
+
+### Header
+A simple component to use as a consistent page title section (header). Can be combined with `title` component below. For example:
+
+```
+ <x-ui::header>
+        <x-ui::title>Create</x-ui::title>
+</x-ui::header>
 ```
 
 ### Title
