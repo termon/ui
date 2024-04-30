@@ -92,20 +92,15 @@ Cards can also be configured with optional ```title``` and ```footer``` slots
 The ```Table``` component includes ```thead``` and ```tbody``` named slots, with ```th, tr, td``` elements. Each element will accept custom classes. An example table:
 
 ```
-<x-ui::table>
-    <x-slot:thead class="text-left">
-        <x-ui::table.tr>
-            <x-ui::table.th>Head Col</x-ui::table.th>            
-        </x-ui::table.tr>
-    </x-slot:thead>
+<x-ui.table>
+    <x-slot:head>
+        <x-ui.table.col>Column 1</x-ui.table.col>           
+    </x-slot:head>
 
-    <x-slot:tbody>
-        <x-ui::table.tr>            
-            <x-ui::table.td>Row col</x-ui::table.td>
-        </x-ui::table.tr>
-        @endforeach
-    </x-slot:tbody>
-</x-ui::table>
+    <x-ui.table.row>
+        <x-ui.table.cell>Row column</x-ui.table.cell>
+    </x-ui.table.row>
+</x-ui.table>
 ```
 
 ### Form
