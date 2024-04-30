@@ -168,7 +168,7 @@ The ```flash``` component should be rendered as part of the main layout
 A breadcrumb can be used to aid navigation. To configure a breadcrumb component we should pass the crumbs as an associative array containing crumb name and a route. The final crumb typically has no associated route as it represents the current page.
 
 ```
-<x-ui.breadcrumb class="my-3" :crumbs="[
+<x-ui::breadcrumb class="my-3" :crumbs="[
     'Home' => route(..), 
     'Crumb1' => route(..), 
     'Crumb2'=> route(..),

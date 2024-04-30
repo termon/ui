@@ -6,7 +6,7 @@
 
       <a x-on:click="open=true" class="flex gap-1 items-center text-gray-700 hover:text-gray-900 border-b-2 border-transparent hover:border-black" href="#">
         <span class="">{{ $title }}</span>
-        <x-ui.svg.chevron />        
+        <x-ui::svg.chevron />        
       </a>
      
       <ul x-show="open" x-on:click.away="open=false" 

@@ -13,8 +13,8 @@
 <div class="flex items-center">
     {{$slot}}
     @if ($name == $sort)
-        <a href="{{ $url }}"><x-ui.svg.sort direction="{{$direction}}"/></a>        
+        <a href="{{ $url }}"><x-ui::svg.sort direction="{{$direction}}"/></a>        
     @else
-        <a href="{{ $url }}"><x-ui.svg.sort /></a>
+        <a href="{{ $url }}"><x-ui::svg.sort /></a>
     @endif
 </div>
