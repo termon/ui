@@ -77,11 +77,11 @@ The ```Card``` component acts as a container for content.
 </x-ui::card>
 ```
 
-Cards can also be configured with optional ```title``` and ```footer``` slots
+Cards can also be configured with optional ```header``` and ```footer``` slots
 
 ```
 <x-ui::card>
-   <x-slot:title>Card Title</x-slot:title>
+   <x-slot:header>Card Title</x-slot:header>
 
     // card content ...
 
