@@ -1,2 +1,5 @@
 /vendor/
 /packages/
+
+# create a new tag locallay then
+# git push origin tag 1.0.x
