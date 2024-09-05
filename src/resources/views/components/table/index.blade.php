@@ -4,18 +4,22 @@
     min-w-full      - element should take up full width of container
     align-middle    - align element in middle of container which is height of parent
 --}}
-<div {{$attributes->merge(['class' => 'p-1.5 overflow-hidden overflow-x-auto min-w-full align-middle border rounded-lg'])}} >
+<div {{$attributes->merge(['class' => 'p-1.5 overflow-hidden overflow-x-auto min-w-full align-middle border rounded-md'])}} >
     <table class="min-w-full divide-y divide-gray-200">
 
-        <thead {{ $head->attributes->merge(['class' => 'bg-gray-50']) }}>
-            <tr>
-                {{ $head }}
-            </tr>
-        </thead>
+        @isset($thead)
+            <thead {{ $thead->attributes->merge(['class' => 'bg-gray-50']) }}>
+                <tr>
+                    {{ $thead }}
+                </tr>
+            </thead>
+        @endisset
 
-        <tbody class="divide-y divide-gray-200">
-            {{ $slot }}
-        </tbody>
+        @isset($tbody)
+            <tbody {{ $tbody->attributes->merge(['class' =>'divide-y divide-gray-200 font-normal py-6'])}}>
+                {{ $tbody }}
+            </tbody>
+        @endisset
 
     </table>
 

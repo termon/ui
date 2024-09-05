@@ -27,11 +27,11 @@ $ composer require termon/ui
 ```
 
 ## Prerequisite
-These components require installation of [Tailwind CSS](https://tailwindcss.com) fpr styling and [AlpineJS](https:://alpinejs.dev) for interactivity.
+These components require installation of [Tailwind CSS](https://tailwindcss.com) for styling and [AlpineJS](https:://alpinejs.dev) for interactivity.
 
 ## Using Components
 
-The component prefix is ```ui``` followed by the name of the component (separated by :: )
+The component prefix is ```x-ui``` followed by the name of the component (separated by :: )
 
 ```
 <x-ui::<component-name>
@@ -53,6 +53,20 @@ The `nav` component is a nav-bar that contains nav items `nav.item`. These accep
     <x-ui::nav.item active="contact" href="..">
         Contact
     </x-ui::nav.item>
+</x-ui::nav>
+```
+
+#### Dropdown
+A dropdown menu can be added to the navbar using the ```nav.drop``` component that requires a property ```title``` used to name the menu. This component then contains one or more ```nav.drop.link``` components which act in a similar fashion to the ```nav.item``` components
+
+```
+<x-ui::nav>
+    ...
+    <x-ui.nav.drop title="Dropdown">
+        <x-ui.nav.drop.link active="about" href="{{route('about')}}">About</x-ui.nav.drop.link>  
+        <x-ui.nav.drop.link active="home" href="{{route('home')}}">Home</x-ui.nav.drop.link> 
+        <x-ui.nav.drop.link active="books.index" href="{{route('books.index')}}">Books</x-ui.nav.drop.link>  
+    </x-ui.nav.drop>
 </x-ui::nav>
 ```
 

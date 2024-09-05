@@ -14,6 +14,6 @@ $classes = match($variant) {
 };
 @endphp
 
-<a href={{ $href }} {{ $attributes->merge(["class" => $classes ]) }} >
+<a href="{{ $href }}" {{ $attributes->merge(["class" => $classes ]) }} >
    {{ $slot }}
 </a>    
