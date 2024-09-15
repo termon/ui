@@ -26,38 +26,46 @@ $ composer require termon/ui
 ],
 ```
 
+### Publish Locally
+To add the components directly into your application for local editing they can be published using
+
+```
+ php artisan vendor:publish tag=termon/ui
+```
+
 ## Prerequisite
 These components require installation of [Tailwind CSS](https://tailwindcss.com) for styling and [AlpineJS](https:://alpinejs.dev) for interactivity.
 
 ## Using Components
 
-The component prefix is ```x-ui``` followed by the name of the component (separated by :: )
+The component prefix is ```x-ui``` followed by the name of the component (separated by :: or . when installed locally )
 
 ```
-<x-ui::<component-name>
+<x-ui::<component-name> // using vendor package
+<x-ui.<component-name>  // when published locally
 ```
 
 ## Available Components
 
 ### Nav 
-The `nav` component is a nav-bar that contains nav items `nav.item`. These accept standard anchor tag ```href``` property and the ```active``` property should be the name of the route so that current route can be highlighted.
+The `nav` component is a nav-bar that contains nav items `nav.link`. These accept standard anchor tag ```href``` property and the ```active``` property should be the name of the route so that current route can be highlighted.
 
 ```
 <x-ui::nav>
-    <x-ui::nav.item active="home" href="..">
+    <x-ui::nav.link active="home" href="..">
         Home
-    </x-ui::nav.item>
-    <x-ui::nav.item active="about" href="..">
+    </x-ui::nav.link>
+    <x-ui::nav.link active="about" href="..">
         About
-    </x-ui::nav.item>
-    <x-ui::nav.item active="contact" href="..">
+    </x-ui::nav.link>
+    <x-ui::nav.link active="contact" href="..">
         Contact
-    </x-ui::nav.item>
+    </x-ui::nav.link>
 </x-ui::nav>
 ```
 
 #### Dropdown
-A dropdown menu can be added to the navbar using the ```nav.drop``` component that requires a property ```title``` used to name the menu. This component then contains one or more ```nav.drop.link``` components which act in a similar fashion to the ```nav.item``` components
+A dropdown menu can be added to the navbar using the ```nav.drop``` component that requires a property ```title``` used to name the menu. This component then contains one or more ```nav.drop.link``` components which act in a similar fashion to the ```nav.link``` components
 
 ```
 <x-ui::nav>
@@ -108,30 +116,38 @@ The ```Table``` component includes a `head` slot in which column headers can be 
 
 ```
 <x-ui::table>
-    <x-slot:head>
-        <x-ui::table.col>
+    <x-slot:thead>
+        <x-ui::table.th>
             Column 1
-        </x-ui::table.col>           
-    </x-slot:head>
+        </x-ui::table.th>           
+    </x-slot:thead>
 
-    <x-ui::table.row>
-        <x-ui::table.cell>
-            Row column
-        </x-ui::table.cell>
-    </x-ui::table.row>
+    <x-slot:tbody>
+        <x-ui::table.tr>
+            <x-ui::table.td>
+                Row column
+            </x-ui::table.td>
+        </x-ui::table.tr>
+    <x-slot:tbody>
 </x-ui::table>
 ```
 
 ### Form
 
-Form elements include: `input`, `input-file`, `select`, and `textarea` components. All require a minimum of a `name` property and an optional `label` property. All, also accept any standard html properties. 
+Form elements include: `input`, `select`, and `textarea` components. All require a minimum of a `name` property and an optional `label` property. All, also accept any standard html properties. 
 
+> When using a file input (type="file") you can specify an optional variant to style the input -
+'light', 'blue', 'gray', 'dark', 'green', 'red', 'yellow', 'purple'.
+    
 Example usage:
 
 #### Input
-Given a model variable `$model` with a `name` attribute, the input could be used as follows: 
+Given a model variable `$model` with a text `name` attribute, number `quantity` attribute and file `photo` attribute , the inputs could be used as follows: 
 ```
 <x-ui::form.input label="Name" name="name" value="..." />
+<x-ui::form.input type="number" label="Quantity" name="quantity" value="..." />
+<x-ui::form.input type="file" label="Photo" name="photo" value="..." />
+
 ```
 
 #### Select
@@ -188,6 +204,21 @@ A simple component to use as a page (title) header. Can be combined with `title`
 <x-ui::header>
         <x-ui::title>Create</x-ui::title>
 </x-ui::header>
+```
+
+### Display
+Used to display a label and a value - typically used in a show view. For example given a $model with a name attribute we can display it as follows:
+
+```
+<x-ui::display label="Name" value="{{$model->name}}" />
+```
+Where a more complex value is to be displayed then use the $slot as follows:
+
+```
+<x-ui::display label="Name">
+    <span>{{$model->name}}"</span>
+    <x-ui::badge variant="pink">Pro</x-ui::badge>
+</x-ui::display>
 ```
 
 ### Title

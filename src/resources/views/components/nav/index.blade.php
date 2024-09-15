@@ -1,19 +1,19 @@
-<nav {{ $attributes->merge(['class' => 'flex justify-between items-center gap-6 bg-gray-50 px-4 py-3 border-b']) }}>
+<nav {{ $attributes->merge(['class' => 'flex justify-between items-center bg-gray-50 px-4 py-2 border-b']) }}>
 
-    <div class="flex gap-3 lg:gap-6 items-center"> 
+    <div class="flex gap-1 lg:gap-2 items-center">
         {{ $slot }}
     </div>
-       
+
     @isset($center)
-        <div class="flex gap-4"> 
+        <div class="flex gap-1 lg:gap-2 items-center">
             {{ $center }}
         </div>
     @endisset
-    
+
     @isset($right)
-    <div class="flex gap-4">
-        {{ $right }}
-    </div>
+        <div class="flex gap-1 lg:gap-2 items-center">
+            {{ $right }}
+        </div>
     @endisset
-  
+
 </nav>

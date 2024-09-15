@@ -15,12 +15,13 @@ class TermonUiServiceProvider extends ServiceProvider
         //
     }
 
-    /**
-     * Bootstrap services.
-     */
     public function boot(): void
     {
         //
+        $this->publishes([
+            __DIR__.'/resources/views/components' => resource_path('views/components/ui'),
+        ], 'termon/ui');
+        
         $this->loadViewsFrom(__DIR__.'/resources/views', 'ui');
             
     }
