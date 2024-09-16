@@ -9,9 +9,7 @@
 
         @isset($thead)
             <thead {{ $thead->attributes->merge(['class' => 'bg-gray-50']) }}>
-                <tr>
-                    {{ $thead }}
-                </tr>
+                {{ $thead }}
             </thead>
         @endisset
 
