@@ -27,18 +27,17 @@ if ($type === 'file') {
 }
 @endphp
 
-<div>
-    @isset($label)
-        <label for="{{$name}}" class="mb-2 block text-gray-700 text-sm font-bold uppercase">
-            {{ $label }}
-        </label>
-    @endisset
+@isset($label)
+    <label for="{{$name}}" class="mb-2 block text-gray-700 text-sm font-bold uppercase">
+        {{ $label }}
+    </label>
+@endisset
 
-    <input type={{$type}} id="{{ $name }}" name="{{ $name }}" value="{{ $value }}" {{ $attributes->merge(['class'=> $classes])}}>
+<input type={{$type}} id="{{ $name }}" name="{{ $name }}" value="{{ $value }}" {{ $attributes->merge(['class'=> $classes])}}>
 
-    @error($name)
-        <div class="text-sm text-red-500 mt-2"> 
-            {{ $message }} 
-        </div>
-    @enderror 
-</div> 
+@error($name)
+    <div class="text-sm text-red-500 mt-2"> 
+        {{ $message }} 
+    </div>
+@enderror 
+

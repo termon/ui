@@ -26,8 +26,8 @@ $ composer require termon/ui
 ],
 ```
 
-### Publish Locally
-To add the components directly into your application for local editing they can be published using
+### Publish Components Locally
+To add the components directly into your applications resources folder they can be published using
 
 ```
  php artisan vendor:publish tag=termon/ui
