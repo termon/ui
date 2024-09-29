@@ -1,5 +1,4 @@
-{{--whitespace-nowrap--}}
-<td {{$attributes->merge(['class' => 'px-3 py-2 font-medium text-gray-800'])}}>
-    {{$slot}}
+{{-- whitespace-nowrap --}}
+<td {{ $attributes->merge(['class' => 'px-3 py-2']) }}>
+    {{ $slot }}
 </td>
-
