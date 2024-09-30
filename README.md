@@ -34,7 +34,7 @@ $ composer require termon/ui
 To add the components directly into your applications resources folder they can be published using
 
 ```
- php artisan vendor:publish tag=termon/ui
+ php artisan vendor:publish --tag=termon/ui
 ```
 
 ## Prerequisite
