@@ -253,3 +253,21 @@ A simple component to provide consistent page title. It a set of sizes `xl` (def
     About Us
 </x-ui::title>
 ```
+
+### Tabs
+
+The `tabs` and `tab` components work together to provide tabbed panels and work together as follows
+
+```
+<x-ui.tabs active="Tab1">
+    <x-ui.tabs.tab name="Tab1">
+        Tab one content
+    </x-ui.tabs.tab>
+    <x-ui.tabs.tab name="Tab2">
+        Tab two content
+    </x-ui.tabs.tab>
+    <x-ui.tabs.tab name="Tab3">
+        Tab three content
+    </x-ui.tabs.tab>
+</x-ui.tabs.tab>
+```
