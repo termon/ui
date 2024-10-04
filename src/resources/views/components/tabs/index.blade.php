@@ -19,7 +19,7 @@
                 :class="tab === activeTab ?
                     'font-bold text-black border-b-2 border-black dark:border-white dark:text-white' :
                     'text-neutral-600 font-medium dark:text-neutral-300 dark:hover:border-b-neutral-300 dark:hover:text-white hover:border-b-2 hover:border-b-neutral-800 hover:text-neutral-900'"
-                class="h-min px-4 py-2 text-sm" type="button" role="tab" role="tab"
+                class="h-min px-4 py-2" type="button" role="tab" role="tab"
                 :aria-selected="(tab === activeTab).toString()" :aria-controls="`tab-panel-${index + 1}`"></button>
         </template>
     </div>
