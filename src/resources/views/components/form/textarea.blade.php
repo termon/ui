@@ -1,7 +1,7 @@
 @props([
     'label' => null,
     'name',
-    'value',
+    'value' => null,
 ])
 
 {{-- <div {{$attributes->only(['class'])}}> --}}
