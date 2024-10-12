@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.3.10**
+> **Version 1.3.11**
 
 A simple set of anonymous Laravel Blade View Components to help construct basic user interfaces. Components include:
 
@@ -145,7 +145,7 @@ The `table` component includes `thead` and `tbody` slots in which head and body 
 
 ### Form
 
-Form elements include: `input`, `select`, and `textarea` components. All require a minimum of a `name` property and an optional `label` property. All, also accept any standard html properties.
+Form elements include: `input`, `select`, and `textarea` components. All require a minimum of a `name` property and an optional `label` property. All, also accept any standard html properties. Additionally `label` and `error` components can be used individually.
 
 > When using a file input `type="file"` you can specify an optional variant to style the input -
 > `'light'`, `'blue'`, `'gray'`, `'dark'`, `'green'`, `'red'`, `'yellow'`, `'purple'`.
@@ -154,11 +154,12 @@ Example usage:
 
 #### Input
 
-Given a model variable `$model` with a text `name` attribute, number `quantity` attribute and file `photo` attribute , the inputs could be used as follows:
+Given a model variable `$model` with a text `name` attribute, number `quantity` attribute, `description` textarea attribute and file `photo` attribute , the inputs could be used as follows:
 
 ```
 <x-ui::form.input label="Name" name="name" value="..." />
 <x-ui::form.input type="number" label="Quantity" name="quantity" value="..." />
+<x-ui::form.textarea label="Description" name="description" value="..." />
 <x-ui::form.input type="file" variant="light" label="Photo" name="photo" value="..." />
 ```
 
