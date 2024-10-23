@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.3.12**
+> **Version 1.3.13**
 
 A simple set of anonymous Laravel Blade View Components to help construct basic user interfaces. Components include:
 
@@ -271,4 +271,14 @@ The `tabs` and `tab` components work together to provide tabbed panels and work 
         Tab three content
     </x-ui.tabs.tab>
 </x-ui.tabs.tab>
+```
+
+### Svg
+
+Svg component accepts as an attribute, the name of the svg (`add` `add-user`, `arrow-left`, `arrow-right` `arrow-down` `arrow-up` `badge` `chevron` `edit` `eye` `globe` `home` `info` `logo` `minus` `pie` `plus` `sort` `sort-asc` `sort-desc` `tag` `trash`)
+
+It also accepts a size attribute with values `sm` `md` `lg` and `xl`
+
+```
+<x-ui.svg trash size='sm' />
 ```
