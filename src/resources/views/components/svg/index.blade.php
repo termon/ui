@@ -137,30 +137,32 @@
         {{ $slot }}
     </svg>
 @elseif ($attributes['sort'])
-    <!-- bars -->
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
-        {{ $attributes->merge(['class' => 'size-6']) }}>
-        <path fill-rule="evenodd"
-            d="M2 3.75A.75.75 0 0 1 2.75 3h10.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 3.75ZM2 8a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 8Zm0 4.25a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1-.75-.75Z"
-            clip-rule="evenodd" />
-    </svg>
-@elseif ($attributes['sort-asc'])
-    <!-- bars-down -->
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-        stroke="currentColor" {{ $attributes->merge(['class' => 'size-6']) }}>
-        <path stroke-linecap="round" stroke-linejoin="round"
-            d="M3 4.5h14.25M3 9h9.75M3 13.5h5.25m5.25-.75L17.25 9m0 0L21 12.75M17.25 9v12" />
-    </svg>
-@elseif ($attributes['sort-desc'])
-    <!-- bars-up -->
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-        stroke="currentColor" {{ $attributes->merge(['class' => 'size-6']) }}>
-        <path stroke-linecap="round" stroke-linejoin="round"
-            d="M3 4.5h14.25M3 9h9.75M3 13.5h9.75m4.5-4.5v12m0 0-3.75-3.75M17.25 21 21 17.25" />
-    </svg>
+    @if ($attributes['direction'] === 'asc')
+        <!-- bars-down -->
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" {{ $attributes->merge(['class' => $class]) }}>
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M3 4.5h14.25M3 9h9.75M3 13.5h5.25m5.25-.75L17.25 9m0 0L21 12.75M17.25 9v12" />
+        </svg>
+    @elseif ($attributes['direction'] === 'desc')
+        <!-- bars-up -->
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" {{ $attributes->merge(['class' => $class]) }}>
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M3 4.5h14.25M3 9h9.75M3 13.5h9.75m4.5-4.5v12m0 0-3.75-3.75M17.25 21 21 17.25" />
+        </svg>
+    @else
+        <!-- bars -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
+            {{ $attributes->merge(['class' => $class]) }}>
+            <path fill-rule="evenodd"
+                d="M2 3.75A.75.75 0 0 1 2.75 3h10.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 3.75ZM2 8a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 8Zm0 4.25a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1-.75-.75Z"
+                clip-rule="evenodd" />
+        </svg>
+    @endif
 @elseif ($attributes['tag'])
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-        stroke="currentColor" {{ $attributes->merge(['class' => 'size-6']) }}>
+        stroke="currentColor" {{ $attributes->merge(['class' => $class]) }}>
         <path stroke-linecap="round" stroke-linejoin="round"
             d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
         <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z" />
