@@ -1,4 +1,0 @@
-# HeroIcons
-
-https://heroicons.com/
-

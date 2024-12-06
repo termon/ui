@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.3.14**
+> **Version 1.3.15**
 
 A simple set of anonymous Laravel Blade View Components to help construct basic user interfaces. Components include:
 
@@ -159,8 +159,8 @@ Given a model variable `$model` with a text `name` attribute, number `quantity` 
 ```
 <x-ui::form.input label="Name" name="name" value="..." />
 <x-ui::form.input type="number" label="Quantity" name="quantity" value="..." />
-<x-ui::form.textarea label="Description" name="description" value="..." />
 <x-ui::form.input type="file" variant="light" label="Photo" name="photo" value="..." />
+<x-ui::form.textarea label="Description" name="description" value="..." />
 ```
 
 #### Select

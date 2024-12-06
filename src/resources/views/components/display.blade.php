@@ -2,7 +2,7 @@
 
 <div {{ $attributes->merge(['class' => 'flex border-b border-slate-200 sm:py-2 md:py-3 rounded-md']) }}>
     @isset($label)
-        <span class="font-bold text-black dark:text-white mr-5">
+        <span class="whitespace-nowrap font-bold text-black dark:text-white mr-5">
             {{ $label }}
         </span>
     @endisset
