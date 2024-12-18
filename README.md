@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.3.15**
+> **Version 1.3.16**
 
 A simple set of anonymous Laravel Blade View Components to help construct basic user interfaces. Components include:
 
@@ -54,40 +54,40 @@ The component prefix is `x-ui` followed by the name of the component (separated 
 
 ### Nav
 
-The `nav` component is a nav-bar that contains nav items `nav.link`. These accept standard anchor tag `href` property and the `active` property should be the name of the route so that current route can be highlighted.
+The `nav` component is a nav-bar that contains links with a nav variant `x-ui.link variant="nav"`. These accept standard anchor tag `href` property and the `active` property should be the name of the route so that current route can be highlighted.
 
 ```
 <x-ui::nav>
-    <x-ui::nav.link active="home" href="..">
+    <x-ui::link variant="nav" active="home" href="..">
         Home
-    </x-ui::nav.link>
-    <x-ui::nav.link active="about" href="..">
+    </x-ui::link>
+    <x-ui::link variant="nav" active="about" href="..">
         About
-    </x-ui::nav.link>
-    <x-ui::nav.link active="contact" href="..">
+    </x-ui::link>
+    <x-ui::link variant="nav" active="contact" href="..">
         Contact
-    </x-ui::nav.link>
+    </x-ui::link>
 </x-ui::nav>
 ```
 
 #### Dropdown
 
-A dropdown menu can be added to the navbar using the `nav.drop` component that requires a property `title` used to name the menu. This component then contains one or more `nav.drop.link` components which act in a similar fashion to the `nav.link` components
+A dropdown menu can be added to the navbar using the `nav.drop` component that requires a property `title` used to name the menu. This component then contains one or more standard nav links - `link` components with `variant='nav'`.
 
 ```
 <x-ui::nav>
     ...
-    <x-ui.nav.drop title="Dropdown">
-        <x-ui.nav.drop.link active="about" href="{{route('about')}}">About</x-ui.nav.drop.link>
-        <x-ui.nav.drop.link active="home" href="{{route('home')}}">Home</x-ui.nav.drop.link>
-        <x-ui.nav.drop.link active="books.index" href="{{route('books.index')}}">Books</x-ui.nav.drop.link>
-    </x-ui.nav.drop>
+    <x-ui::nav.drop title="Dropdown">
+        <x-ui::link variant="nav" active="about" href="{{route('about')}}">About</x-ui::link>
+        <x-ui::link variant="nav" active="home" href="{{route('home')}}">Home</x-ui::link>
+        <x-ui::link variant="nav" active="books.index" href="{{route('books.index')}}">Books</x-ui::link>
+    </x-ui::nav.drop>
 </x-ui::nav>
 ```
 
 ### Button and Link
 
-The `button` and `link` components can be configured with several variants (`'blue'`, `'red'`, `'green'`, `'yellow'`, `'dark'`, `'light'`, `'oblue'`, `'ored'` and `'link'`)
+The `button` and `link` components can be configured with several variants (`'blue'`, `'red'`, `'green'`, `'yellow'`, `'dark'`, `'light'`, `'oblue'`, `'ored'`, `'link'` or `'nav'`)
 
 Following examples provide a `'light'` variant button, and standard `link`. Adding a `variant` property to the link allows it to be styled as one of the buttons.
 
@@ -111,11 +111,15 @@ Cards can also be configured with optional `header` and `footer` slots
 
 ```
 <x-ui::card>
-   <x-slot:header>Card Title</x-slot:header>
+   <x-slot:header>
+       <h2>Card Title</h2>
+   </x-slot:header>
 
     // card content ...
 
-   <x-slot:footer>Footer area</x-slot:footer>
+   <x-slot:footer>
+        <div>Footer Area</div>
+   </x-slot:footer>
 </x-ui::card>
 ```
 
@@ -275,10 +279,10 @@ The `tabs` and `tab` components work together to provide tabbed panels and work 
 
 ### Svg
 
-Svg component accepts as an attribute, the name of the svg (`add` `add-user`, `arrow-left`, `arrow-right` `arrow-down` `arrow-up` `badge` `chevron` `edit` `eye` `globe` `home` `info` `logo` `minus` `pie` `plus` `sort` `sort-asc` `sort-desc` `tag` `trash`)
+Svg component accepts a `variant` attribute, containing the name of the svg e.g. (`add` `add-user`, `arrow-left`, `arrow-right` `arrow-down` `arrow-up` `badge` `bars` `bars-up` `bars-down` `chevron` `edit` `eye` `globe` `home` `info` `logo` `minus` `pie` `plus` `tag` `trash`)
 
 It also accepts a size attribute with values `sm` `md` `lg` and `xl`
 
 ```
-<x-ui.svg trash size='sm' />
+<x-ui.svg variant="trash" size='sm' />
 ```

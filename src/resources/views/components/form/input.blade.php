@@ -32,7 +32,5 @@
     {{ $attributes->merge(['class' => $classes]) }}>
 
 @error($name)
-    <x-ui.form.error>
-        {{ $message }}
-    </x-ui.form.error>
+    <x-ui.form.error>{{ $message }}</x-ui.form.error>
 @enderror
