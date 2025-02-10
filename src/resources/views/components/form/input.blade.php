@@ -2,7 +2,7 @@
 
 @php
     // default styles for an input
-    $classes = 'border rounded-md w-full p-2.5 text-gray-700 leading-tight focus:ring-blue-500 focus:border-blue-500 ';
+    $classes = 'border border-gray-300 rounded-md w-full p-2.5 text-gray-700 leading-tight focus:ring-blue-500 focus:border-blue-500 ';
 
     // updated styles for file input
     if ($type === 'file') {
