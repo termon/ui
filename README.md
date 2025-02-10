@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.3.22**
+> **Version 1.3.23**
 
 A simple set of anonymous Laravel Blade View Components to help construct basic user interfaces. Components include:
 
