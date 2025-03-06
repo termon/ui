@@ -6,9 +6,9 @@
 ])
 
 @isset($label)
-    <x-ui.form.label for="{{ $name }}">
+    <x-ui::form.label for="{{ $name }}">
         {{ $label }}
-    </x-ui.form.label>
+    </x-ui::form.label>
 @endisset
 
 <select id="{{ $name }}" name="{{ $name }}"
@@ -20,7 +20,7 @@
 </select>
 
 @error($name)
-    <x-ui.form.error>
+    <x-ui::form.error>
         {{ $message }}
-    </x-ui.form.error>
+    </x-ui::form.error>
 @enderror

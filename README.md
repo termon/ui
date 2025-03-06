@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.3.24**
+> **Version 1.3.25**
 
 A simple set of anonymous Laravel Blade View Components to help construct basic user interfaces. Components include:
 
@@ -279,7 +279,7 @@ The `tabs` and `tab` components work together to provide tabbed panels and work 
 
 ### Svg
 
-Svg component accepts a `variant` attribute, containing the name of the svg e.g. (`add` `add-user`, `user`, `arrow-left`, `arrow-right` `arrow-down` `arrow-up` `badge` `bars` `bars-up` `bars-down` `chevron` `edit` `eye` `globe` `home` `info` `logo` `minus` `pie` `plus` `tag` `trash`)
+Svg component accepts a `variant` attribute, containing the name of the svg e.g. (`add` `add-user`, `user`, `arrow-left`, `arrow-right` `arrow-down` `arrow-up` `badge` `bars` `bars-up` `bars-down` `chevron-left` `chevron-right` `chevron-up` `chevron-down` `edit` `eye` `globe` `home` `info` `logo` `minus` `pie` `plus` `tag` `trash`)
 
 It also accepts a size attribute with values `sm` `md` `lg` and `xl`
 
