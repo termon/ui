@@ -1,14 +1,23 @@
 # Laravel View Components
 
-> **Version 1.3.25**
+> **Version 1.3.26**
 
-A simple set of anonymous Laravel Blade View Components to help construct basic user interfaces. Components include:
+A simple set of anonymous Laravel Blade View Components (styled using TailwindCSS 4), to help construct basic user interfaces. Components include:
 
     1. NavBar with nav item and drop down menu items
     2. Table
     3. Form components
     3. Common Svg Icons
-    4. General components including: badge, breadcrumb, button, card, display, flash, page title, modal.
+    4. General components including: 
+        - badge, 
+        - breadcrumb, 
+        - button, 
+        - card, 
+        - display, 
+        - flash, 
+        - header, 
+        - tabs, 
+        - modal
 
 ## Installation
 
@@ -40,6 +49,11 @@ To add the components directly into your applications resources folder they can 
 ## Prerequisite
 
 These components require installation of [Tailwind CSS](https://tailwindcss.com) for styling and [AlpineJS](https:://alpinejs.dev) for interactivity.
+
+### Tailwind 4 Configuration 
+Add following line to your `app.css` file
+
+`@source '../../vendor/termon/ui/src/resources/views/components/**/*.blade.php';`
 
 ## Using Components
 
@@ -146,6 +160,12 @@ The `table` component includes `thead` and `tbody` slots in which head and body 
     <x-slot:tbody>
 </x-ui::table>
 ```
+#### Table Sort Link
+A `link-sort` component is available for use in table header columns
+
+```
+<x-ui::link-sort name="attribute-name" />
+```
 
 ### Form
 
@@ -249,14 +269,26 @@ Where a more complex value is to be displayed then use the $slot as follows:
 </x-ui::display>
 ```
 
-### Title
+### Title / Header
 
-A simple component to provide consistent page title. It a set of sizes `xl` (default), `lg`, `md`.
+The `title` component can be used to provide consistent page title, with configurable sizes `xl` (default), `lg`, `md`.
 
 ```
 <x-ui::title size="lg">
     About Us
 </x-ui::title>
+```
+
+The `header` component can be used with `title` to add a borderedflex area to the top of a page with title on left and optional navigation elements on right
+
+```
+<x-ui::header>
+    <x-ui::title size="lg">
+       Users
+    </x-ui::title>
+
+    <x::link href="#">Create</x::link>
+</x-ui::header>
 ```
 
 ### Tabs
