@@ -19,10 +19,6 @@
             => 'py-1.5 px-4 text-sm transition-colors font-medium rounded-lg text-red-600  bg-gray-50    border border-gray-200   hover:bg-red-600    hover:text-white disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-red-600    hover:border-red-700',
         'link'
             => 'py-1.5 px-2 text-sm transition-colors font-medium            text-gray-700 hover:text-bold hover:text-gray-900    hover:underline',
-        'slink'
-            => 'text-sm transition-colors font-medium                        text-gray-700 hover:text-bold hover:text-gray-900    hover:underline',
-        'nav'
-            => 'py-2 px-4 transition-colors duration-300 text-gray-700 hover:text-gray-900 hover:rounded-md hover:font-semibold block hover:bg-gray-200 whitespace-no-wrap',
         'none' => '',
         default => throw new \Exception("No such link variant: $variant"),
     };

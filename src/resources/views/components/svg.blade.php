@@ -29,6 +29,10 @@
         <svg id="user">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
         </svg>
+    @elseif($variant === 'avatar')
+        <svg id="avatar">
+            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+        </svg>
     @elseif($variant === 'arrow-right')
         <svg id="arrow-right">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
@@ -66,6 +70,10 @@
         <svg id="chevron-down">
             <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /> 
         </svg> 
+    @elseif($variant === 'chevron-up-down')
+        <svg id="chevron-up-down">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+        </svg>
     @elseif($variant === 'edit')
         <svg id="edit">
             <path stroke-linecap="round" stroke-linejoin="round"

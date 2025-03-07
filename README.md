@@ -1,10 +1,10 @@
 # Laravel View Components
 
-> **Version 1.3.26**
+> **Version 1.3.3**
 
 A simple set of anonymous Laravel Blade View Components (styled using TailwindCSS 4), to help construct basic user interfaces. Components include:
 
-    1. NavBar with nav item and drop down menu items
+    1. Navbar/Sidebar with nav items and drop down menu items
     2. Table
     3. Form components
     3. Common Svg Icons
@@ -66,37 +66,68 @@ The component prefix is `x-ui` followed by the name of the component (separated 
 
 ## Available Components
 
-### Nav
+### Navbar
 
-The `nav` component is a nav-bar that contains links with a nav variant `x-ui.link variant="nav"`. These accept standard anchor tag `href` property and the `active` property should be the name of the route so that current route can be highlighted.
+The `navbar` component is a navbar that contains `links` using `x-ui::navbar.link` elements. These accept standard anchor tag properties and an `active` property containing the name of the routethis link navigates to, so that the current route can be highlighted.
 
 ```
-<x-ui::nav>
-    <x-ui::link variant="nav" active="home" href="..">
+<x-ui::navbar>
+    <x-ui::navbar.link active="home" href="..">
         Home
-    </x-ui::link>
-    <x-ui::link variant="nav" active="about" href="..">
+    </x-ui::navbar.link>
+    <x-ui::navbar.link active="about" href="..">
         About
-    </x-ui::link>
-    <x-ui::link variant="nav" active="contact" href="..">
+    </x-ui::navbar.link>
+    <x-ui::navbar.link  active="contact" href="..">
         Contact
-    </x-ui::link>
-</x-ui::nav>
+    </x-ui::navbar.link>
+</x-ui::navbar>
 ```
 
 #### Dropdown
 
-A dropdown menu can be added to the navbar using the `nav.drop` component that requires a property `title` used to name the menu. This component then contains one or more standard nav links - `link` components with `variant='nav'`.
+A dropdown menu can be added to the navbar using the `navbar.drop` component that requires a property `title` used to name the menu. This component then contains one or more standard  `link` components with `variant='nav'`.
 
 ```
-<x-ui::nav>
+<x-ui::navbar>
     ...
-    <x-ui::nav.drop title="Dropdown">
-        <x-ui::link variant="nav" active="about" href="{{route('about')}}">About</x-ui::link>
-        <x-ui::link variant="nav" active="home" href="{{route('home')}}">Home</x-ui::link>
-        <x-ui::link variant="nav" active="books.index" href="{{route('books.index')}}">Books</x-ui::link>
-    </x-ui::nav.drop>
-</x-ui::nav>
+    <x-ui::navbar.drop title="Dropdown">
+        <x-ui::navbar.link active="about" href="{{route('about')}}">About</x-ui::navbar.link>
+        <x-ui::navbar.link active="home" href="{{route('home')}}">Home</x-ui::navbar.link>
+        <x-ui::navbar.link active="contact" href="{{route('contact')}}">Contact</x-ui::navbar.link>
+    </x-ui::navbar.drop>
+</x-ui::navbar>
+```
+
+### Sidebar
+The `sidebar` component is a navigation component that contains `links` using `x-ui::sidebar.link` elements. These accept standard anchor tag properties and an `active` property containing the name of the routethis link navigates to, so that the current route can be highlighted, as well as an optional `icon` property containing the name of an `svg` icon. Drop down menus can be added by wrapping `sidebar.link` components in a `sidebar.drop` component that accepts a `title` and `icon` props
+
+The side bar also contains a `header` slot that can be used to display e.g. an application logo and title and a `footer` slot that can be used to display e.g. user info and/or user navigation links.
+
+```
+<x-ui.sidebar>
+    <!-- sidebar header -->
+    <x:slot:header>
+        <x-app-logo-icon class="w-8 h-8" />
+        <span class="font-bold text-xl">My Application</span>
+    </x:slot:header>
+
+    <!-- Sidebar navigation links -->
+    <x-ui.sidebar.link href="/" icon="eye">Home</x-ui.sidebar.link>
+    <x-ui.sidebar.link href="/about" icon="info">About</x-ui.sidebar.link>
+    <x-ui.sidebar.drop title="Contact" icon="eye">
+        <x-ui.sidebar.link href="/contact/hr" icon="user">Personnel</x-ui.sidebar.link>
+        <x-ui.sidebar.link href="/contact/sales" icon="globe">Sales</x-ui.sidebar.link>
+    </x-ui.sidebar.drop>
+
+    <!-- Sidebar footer -->
+    <x-slot:footer>
+        <x-ui.sidebar.drop title="Joe Smith" icon="home">            
+            <x-ui.sidebar.link href="/user/settings" icon="user">Settings</x-ui.sidebar.link>
+            <x-ui.sidebar.link method="post" href="/logout" icon="chevron-left">Logout</x-ui.sidebar.link>        
+        </x-ui.sidebar.drop>  
+    </x-slot:footer>
+</x-ui.sidebar>
 ```
 
 ### Button and Link
@@ -311,7 +342,8 @@ The `tabs` and `tab` components work together to provide tabbed panels and work 
 
 ### Svg
 
-Svg component accepts a `variant` attribute, containing the name of the svg e.g. (`add` `add-user`, `user`, `arrow-left`, `arrow-right` `arrow-down` `arrow-up` `badge` `bars` `bars-up` `bars-down` `chevron-left` `chevron-right` `chevron-up` `chevron-down` `edit` `eye` `globe` `home` `info` `logo` `minus` `pie` `plus` `tag` `trash`)
+Svg component accepts a `variant` attribute, containing the name of the svg e.g. (`add` `add-user`, `user`, `arrow-left`, `arrow-right` `arrow-down` `arrow-up` `badge` `bars` `bars-up` `bars-down` `chevron-left` `chevron-right` `chevron-up` `chevron-down``chvron-up-down` `edit` `eye` `globe` `home` `info` `logo` `minus`
+`pie` `plus` `tag` `trash`)
 
 It also accepts a size attribute with values `sm` `md` `lg` and `xl`
 
