@@ -21,7 +21,7 @@
         @endisset
 
         <!-- Sidebar Navigation -->
-        <nav x-show="!collapsed" class="">
+        <nav x-show="!collapsed">
             {{ $slot }}
         </nav>
     </div>
