@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.3.32**
+> **Version 1.3.33**
 
 A simple set of anonymous Laravel Blade View Components (styled using TailwindCSS 4), to help construct basic user interfaces. Components include:
 
@@ -68,66 +68,81 @@ The component prefix is `x-ui` followed by the name of the component (separated 
 
 ### Navbar
 
-The `navbar` component is a navbar that contains `links` using `x-ui::navbar.link` elements. These accept standard anchor tag properties and an `active` property containing the name of the routethis link navigates to, so that the current route can be highlighted.
+The `navbar` component is a navbar that contains `links` using `x-ui::navbar.link` elements. These accept standard anchor tag properties and an `active` property containing the name of the route this link navigates to, so that the current route can be highlighted.
 
 ```
 <x-ui::navbar>
-    <x-ui::navbar.link active="home" href="..">
-        Home
-    </x-ui::navbar.link>
-    <x-ui::navbar.link active="about" href="..">
-        About
-    </x-ui::navbar.link>
-    <x-ui::navbar.link  active="contact" href="..">
-        Contact
-    </x-ui::navbar.link>
-</x-ui::navbar>
-```
 
-#### Dropdown
+    <!-- Optional Navbar Title -->
+    <x-slot:title>
+       ...
+    </x-slot:title>
 
-A dropdown menu can be added to the navbar using the `navbar.drop` component that requires a property `title` used to name the menu. This component then contains one or more standard  `link` components with `variant='nav'`.
+    <!-- Navbar links -->
+    <x-ui::navbar.link active="home" href=".."> ... </x-ui::navbar.link>
+   
+    <!-- Optional Navbar End links -->
+    <x-slot:end>
+       ...
+    </x-slot:end>
 
-```
-<x-ui::navbar>
-    ...
-    <x-ui::navbar.drop title="Dropdown">
-        <x-ui::navbar.link active="about" href="{{route('about')}}">About</x-ui::navbar.link>
-        <x-ui::navbar.link active="home" href="{{route('home')}}">Home</x-ui::navbar.link>
-        <x-ui::navbar.link active="contact" href="{{route('contact')}}">Contact</x-ui::navbar.link>
-    </x-ui::navbar.drop>
 </x-ui::navbar>
 ```
 
 ### Sidebar
-The `sidebar` component is a navigation component that contains `links` using `x-ui::sidebar.link` elements. These accept standard anchor tag properties and an `active` property containing the name of the routethis link navigates to, so that the current route can be highlighted, as well as an optional `icon` property containing the name of an `svg` icon. Drop down menus can be added by wrapping `sidebar.link` components in a `sidebar.drop` component that accepts a `title` and `icon` props
-
-The side bar also contains a `header` slot that can be used to display e.g. an application logo and title and a `footer` slot that can be used to display e.g. user info and/or user navigation links.
+The `sidebar` component is a navigation component that contains  `links` using `x-ui::sidebar.link` elements. These accept standard anchor tag properties and an `active` property containing the name of the route this link navigates to, so that the current route can be highlighted, as well as an optional `icon` property containing the name of an `svg` icon. 
 
 ```
 <x-ui.sidebar>
-    <!-- sidebar header -->
-    <x:slot:header>
-        <x-app-logo-icon class="w-8 h-8" />
-        <span class="font-bold text-xl">My Application</span>
-    </x:slot:header>
+    <x-ui.sidebar.link href=".." icon="eye">Home</x-ui.sidebar.link>
+</x-ui::sidebar>
+```
 
-    <!-- Sidebar navigation links -->
-    <x-ui.sidebar.link href="/" icon="eye">Home</x-ui.sidebar.link>
-    <x-ui.sidebar.link href="/about" icon="info">About</x-ui.sidebar.link>
-    <x-ui.sidebar.drop title="Contact" icon="eye">
-        <x-ui.sidebar.link href="/contact/hr" icon="user">Personnel</x-ui.sidebar.link>
-        <x-ui.sidebar.link href="/contact/sales" icon="globe">Sales</x-ui.sidebar.link>
-    </x-ui.sidebar.drop>
+The side bar contains a `title` slot that can be used to display e.g. an application logo and title and an `end` slot that can be used to display e.g. user info and/or user navigation links.
 
-    <!-- Sidebar footer -->
-    <x-slot:footer>
-        <x-ui.sidebar.drop title="Joe Smith" icon="home">            
-            <x-ui.sidebar.link href="/user/settings" icon="user">Settings</x-ui.sidebar.link>
-            <x-ui.sidebar.link method="post" href="/logout" icon="chevron-left">Logout</x-ui.sidebar.link>        
-        </x-ui.sidebar.drop>  
-    </x-slot:footer>
+```
+<x-ui.sidebar>
+ <!-- Optional Sidebar title -->
+    <x:slot:title>       
+       ...
+    </x:slot:title>
+
+    <!-- Sidebar links -->
+    <x-ui.sidebar.link href=".." icon="eye">...</x-ui.sidebar.link>
+    
+    <!-- Optional Sidebar end links -->
+    <x-slot:end>
+       ...
+    </x-slot:end>
 </x-ui.sidebar>
+```
+
+### Dropdown
+
+A dropdown menu can be added to the `navbar` or `sidebar` using `navbar.drop` or `sidebar.drop`. A `title` property can be provided to name the menu or where a more complex `title` is required, replace the attribute with a title slot   `<x-slot:title>...</x-slot:title>`
+The dropdown can then contains one or more `navbsr.link` or `sidebar.link` components.
+
+
+```
+<x-ui::navbar>
+    ...
+    <x-ui::navbar.drop title="Dropdown" icon="...">
+        <x-ui::navbar.link active="about" href="..">...</x-ui::navbar.link>
+        <x-ui::navbar.link active="home" href="..">...</x-ui::navbar.link>
+    </x-ui::navbar.drop>
+    ...
+</x-ui::navbar>
+
+<x-ui::sidebar>
+    ...
+    <x-ui::sidebar.drop>
+        <x-slot:title>   
+            ...                                                                         
+        </x-slot:title>
+        ...
+    </x-ui::sidebar.drop>
+    ...
+</x-ui::sidebar>
 ```
 
 ### Button and Link

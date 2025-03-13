@@ -2,21 +2,18 @@
 
 <div x-data="{ open: false }" class="space-y-0 w-full">
     <!-- trigger -->
-    <div class="flex items-center justify-between hover:cursor-pointer hover:bg-gray-100 rounded-lg pe-1" @click="open = !open">
+    <div class="flex items-center justify-between px-3 py-2 transition-colors duration-300 hover:cursor-pointer text-gray-700 hover:bg-gray-100 rounded-lg pe-1" @click="open = !open">
         
-        <!-- display header slot if available otherwise default title/icon -->
-        @if(isset($header))
-            <div class="text-sm font-medium text-gray-700 flex items-center gap-2">{{ $header }}</div>
-        @else
-            <div class="flex items-center justify-between gap-2 px-3 py-2 text-sm font-medium text-gray-700">
-                @isset($icon)
-                    <x-ui::svg :variant="$icon" class="w-5 h-5" />
-                @endisset
-                <span>{{ $title }}</span>
-            </div>
-        @endif
+        <!-- display title and optional title icon component classes only applied to title slot -->
+        <div  {{ $attributes->merge(["class" => "flex items-center justify-between gap-2"] )}} >
+            @isset($icon)
+                <x-ui::svg :variant="$icon" class="w-5 h-5" />
+            @endisset
+            {{ $title }}
+        </div>      
+
        <!-- open close icon -->      
-        <x-ui::svg variant="chevron-down" class="w-5 h-5" x-bind:class="{ 'rotate-180': open }" />
+        <x-ui::svg variant="chevron-down" class="w-3 h-3" x-bind:class="{ 'rotate-180': open }" />
     </div>
 
     <!-- content -->
