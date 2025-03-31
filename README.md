@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.3.34**
+> **Version 1.4.0**
 
 A simple set of anonymous Laravel Blade View Components (styled using TailwindCSS 4), to help construct basic user interfaces. Components include:
 
@@ -15,9 +15,11 @@ A simple set of anonymous Laravel Blade View Components (styled using TailwindCS
         - card, 
         - display, 
         - flash, 
-        - header, 
-        - tabs, 
+        - header,
+        - hero,
         - modal
+        - steps 
+        - tabs, 
 
 ## Installation
 
@@ -213,6 +215,13 @@ A `link-sort` component is available for use in table header columns
 <x-ui::link-sort name="attribute-name" />
 ```
 
+#### Paginator
+A `paginator` component is available to use when the table is displaying a paginated collection. The component also allows the user to specify the number of rows to display in each page. The paginated collection variable items should be passed via the `:items` property
+
+```
+<x-paginator :items="$collection" size="10" />
+```
+
 ### Form
 
 Form elements include: `input`, `select`, and `textarea` components. All require a minimum of a `name` property and an optional `label` property. All, also accept any standard html properties. Additionally `label` and `error` components can be used individually.
@@ -335,6 +344,25 @@ The `header` component can be used with `title` to add a borderedflex area to th
 
     <x::link href="#">Create</x::link>
 </x-ui::header>
+```
+
+### Hero
+The `hero` component is used for displaying a large box or image with a title and description.
+
+```
+<x-ui::hero heading="Hero Heading" subheading="Optional sub-heading">
+  Content to display in hero body
+</x-ui::hero>
+```
+
+### Statistic
+The `statistic` component is used to show numbers and data in a block.
+
+```
+<x-ui::statistic title="Total Views" 
+                 description="The total number of views" 
+                 value="1000" 
+                 variant="dark"/>
 ```
 
 ### Tabs
