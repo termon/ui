@@ -1,5 +1,5 @@
 
-@props(['items', 'size' => 10, 'options' => ['10' => 10, '25' => 25, '50' => 50, '100' => 100]])
+@props(['items', 'size' => 10, 'options' => ['15' => 15, '25' => 25, '50' => 50, '100' => 100, '500' => 500]])
 @php
     $size = request()->get('size', $size);
 @endphp
