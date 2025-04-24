@@ -12,7 +12,7 @@
         @method($method)
         @isset($icon)
             {{-- <x-dynamic-component :component="'heroicon-o-' . $icon" class="w-5 h-5 shrink-0" /> --}}
-            <x-ui.icon :icon="$icon" class="w-5 h-5 shrink-0" />
+            <x-ui::icon :icon="$icon" class="w-5 h-5 shrink-0" />
         @endisset
         <button type="submit" class="hover:cursor-pointer">
             <span class="truncate">
@@ -30,7 +30,7 @@
     >
     @isset($icon)
         {{-- <x-dynamic-component :component="'heroicon-o-' . $icon" class="w-5 h-5 shrink-0" /> --}}
-        <x-ui.icon :icon="$icon" class="w-5 h-5 shrink-0" />
+        <x-ui::icon :icon="$icon" class="w-5 h-5 shrink-0" />
     @endisset
 
     @isset($label)

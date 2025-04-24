@@ -19,7 +19,7 @@
     // $componentName = $variantPrefix . $icon;
 @endphp
 
-<x-ui.svg 
+<x-ui::svg 
     :icon="$icon" 
     :class="$baseClass" 
     {{ $attributes->merge(['class' => $baseClass]) }}

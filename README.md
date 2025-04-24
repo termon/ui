@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.5.0**
+> **Version 1.5.1**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for stylin , to help construct basic user interfaces. 
 
