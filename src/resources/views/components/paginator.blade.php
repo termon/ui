@@ -1,24 +1,109 @@
+@props([
+    'items', 
+    'size' => 15, 
+    'options' => ['15' => 15, '25' => 25, '50' => 50, '100' => 100, '500' => 500],
+    'variant' => 'default'
+])
 
-@props(['items', 'size' => 10, 'options' => ['15' => 15, '25' => 25, '50' => 50, '100' => 100, '500' => 500]])
 @php
     $size = request()->get('size', $size);
+    $current = $items->currentPage();
+    $last = $items->lastPage();
+    $window = 2; // Number of pages on each side of current
+
+    [$bg, $darkBg] = match($variant) {
+        'green' => ['bg-green-500', 'dark:bg-green-600'],
+        'red' => ['bg-red-500', 'dark:bg-red-600'],
+        'dark' => ['bg-gray-500', 'dark:bg-gray-600'],
+        'purple' => ['bg-purple-500', 'dark:bg-purple-600'],
+        'light' => ['bg-gray-300', 'dark:bg-gray-600'],
+        default => ['bg-blue-500', 'dark:bg-blue-600'],
+    };
+   
 @endphp
-<div class="flex items-center gap-2 p-4">
-    @if ($items instanceof \Illuminate\Pagination\AbstractPaginator )        
-        {{ $items->appends(request()->query())->links('pagination::tailwind') }}       
+
+@if ($items instanceof \Illuminate\Pagination\AbstractPaginator && $items->hasPages())
+    <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 p-4 text-sm">
+
+        {{-- Pagination --}}
+        <nav role="navigation" aria-label="{{ __('Pagination Navigation') }}">
+            <ul class="inline-flex items-center justify-center gap-1 flex-wrap">
+                {{-- Previous --}}
+                <li>
+                    @if ($items->onFirstPage())
+                        <span class="px-3 py-2 rounded bg-gray-200 dark:bg-gray-700 text-gray-500 cursor-not-allowed">
+                            &laquo;
+                        </span>
+                    @else
+                        <a href="{{ $items->previousPageUrl() }}" class="px-3 py-2 rounded bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300">
+                            &laquo;
+                        </a>
+                    @endif
+                </li>
+
+                {{-- Page Links (Desktop only) --}}
+                <div class="hidden sm:flex items-center gap-1">
+                    {{-- First page and leading ellipsis --}}
+                    @if ($current > $window + 1)
+                        <li>
+                            <a href="{{ $items->url(1) }}" class="px-3 py-2 rounded bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300">1</a>
+                        </li>
+                        @if ($current > $window + 2)
+                            <li><span class="px-2 text-gray-400">…</span></li>
+                        @endif
+                    @endif
+
+                    {{-- Page Window --}}
+                    @for ($i = max(1, $current - $window); $i <= min($last, $current + $window); $i++)
+                        @if ($i === $current)
+                            <li>
+                                <span @class(["px-3 py-2 rounded text-white font-semibold",$bg,$darkBg])>{{ $i }}</span>
+                            </li>
+                        @else
+                            <li>
+                                <a href="{{ $items->url($i) }}" class="px-3 py-2 rounded bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300">{{ $i }}</a>
+                            </li>
+                        @endif
+                    @endfor
+
+                    {{-- Trailing ellipsis and last page --}}
+                    @if ($current < $last - $window)
+                        @if ($current < $last - $window - 1)
+                            <li><span class="px-2 text-gray-400">…</span></li>
+                        @endif
+                        <li>
+                            <a href="{{ $items->url($last) }}" class="px-3 py-2 rounded bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300">{{ $last }}</a>
+                        </li>
+                    @endif
+                </div>
+
+                {{-- Next --}}
+                <li>
+                    @if ($items->hasMorePages())
+                        <a href="{{ $items->nextPageUrl() }}" class="px-3 py-2 rounded bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300">
+                            &raquo;
+                        </a>
+                    @else
+                        <span class="px-3 py-2 rounded bg-gray-200 dark:bg-gray-700 text-gray-500 cursor-not-allowed">
+                            &raquo;
+                        </span>
+                    @endif
+                </li>
+            </ul>
+        </nav>
+
+        {{-- Page size form --}}
         <form method="get" action="{{ request()->url() }}" class="flex items-center gap-2">
             @foreach(request()->except(['size', 'page']) as $key => $value)
                 <input type="hidden" name="{{ $key }}" value="{{ $value }}">
             @endforeach
-            <label for="size" class="text-sm text-nowrap">Items per page</label>
+            <label for="size" class="hidden md:block text-sm dark:text-gray-300">Page Size</label>
             <select id="size" name="size" onchange="this.form.submit()"
-                {{ $attributes->merge(['class' => 'border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5']) }}>
+                {{ $attributes->merge(['class' => 'border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white rounded p-2']) }}>
                 @foreach ($options as $key => $val)
-                    <option value="{{ $key }}" {{ $key == $size ? 'selected' : '' }}>{{ $val }}
-                    </option>
+                    <option value="{{ $key }}" {{ $key == $size ? 'selected' : '' }}>{{ $val }}</option>
                 @endforeach
             </select>
         </form>
-    @endif
-</div>
-
+    </div>
+@endif

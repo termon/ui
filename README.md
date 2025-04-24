@@ -1,25 +1,8 @@
 # Laravel View Components
 
-> **Version 1.4.5**
+> **Version 1.5.0**
 
-A simple set of anonymous Laravel Blade View Components (styled using TailwindCSS 4), to help construct basic user interfaces. Components include:
-
-    1. Navbar/Sidebar with nav items and drop down menu items
-    2. Table
-    3. Form components
-    3. Common Svg Icons
-    4. General components including: 
-        - badge, 
-        - breadcrumb, 
-        - button, 
-        - card, 
-        - display, 
-        - flash, 
-        - header,
-        - hero,
-        - modal
-        - steps 
-        - tabs, 
+A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for stylin , to help construct basic user interfaces. 
 
 ## Installation
 
@@ -42,11 +25,13 @@ $ composer require termon/ui
 
 ### Publish Components Locally
 
-To add the components directly into your applications resources folder they can be published using
+If you would prefer to add the components directly into your applications resources folder they can be published using
 
 ```
  php artisan vendor:publish --tag=termon/ui
 ```
+
+> Note you will need to re-publish these components when the base package is updated via composer
 
 ## Prerequisite
 
@@ -70,8 +55,7 @@ The component prefix is `x-ui` followed by the name of the component (separated 
 
 ### Navbar
 
-The `navbar` component is a navbar that contains `links` using `x-ui::navbar.link` elements. These accept standard anchor tag properties and an `active` property containing the name of the route this link navigates to, so that the current route can be highlighted.
-
+The `navbar` component is a fully responsive (mobile friendly) navigation component that contains  `links` using `x-ui::navbar.link` elements. These accept standard anchor tag properties and an `active` property containing the name of the route this link navigates to, so that the current route can be highlighted, as well as an optional `icon` property containing the name of an `svg` icon. Links can be grouped into a dropdown `<x-ui::navbar.dropdown icon=".." label=".."> ... </x-ui::navbar.dropdown>`
 ```
 <x-ui::navbar>
 
@@ -81,70 +65,61 @@ The `navbar` component is a navbar that contains `links` using `x-ui::navbar.lin
     </x-slot:title>
 
     <!-- Navbar links -->
-    <x-ui::navbar.link active="home" href=".."> ... </x-ui::navbar.link>
+    <x-slot:navigation>
+        <x-ui::navbar.link active="home" href=".."> ... </x-ui::navbar.link>
+    </x-slot:navigation>
    
-    <!-- Optional Navbar End links -->
-    <x-slot:end>
+    <!-- Optional Navbar Right links -->
+    <x-slot:right>
        ...
-    </x-slot:end>
+    </x-slot:right>
+
+    <!-- Optional Navbar Bottom links (visible in mobile mode )-->
+    <x-slot:bottom>
+        ...
+    </x-slot:bottom>
 
 </x-ui::navbar>
 ```
 
 ### Sidebar
-The `sidebar` component is a navigation component that contains  `links` using `x-ui::sidebar.link` elements. These accept standard anchor tag properties and an `active` property containing the name of the route this link navigates to, so that the current route can be highlighted, as well as an optional `icon` property containing the name of an `svg` icon. 
+The `sidebar` component is a fully responsive (mobile friendly) navigation component that contains  `links` using `x-ui::sidebar.link` elements. These accept standard anchor tag properties and an `active` property containing the name of the route this link navigates to, so that the current route can be highlighted, as well as an optional `icon` property containing the name of an `svg` icon. Links can be grouped into a dropdown `<x-ui::sidebar.dropdown icon=".." label=".."> ... </x-ui::sidebar.dropdown>`
 
 ```
-<x-ui.sidebar>
-    <x-ui.sidebar.link href=".." icon="eye">Home</x-ui.sidebar.link>
-</x-ui::sidebar>
-```
-
-The side bar contains a `title` slot that can be used to display e.g. an application logo and title and an `end` slot that can be used to display e.g. user info and/or user navigation links.
-
-```
-<x-ui.sidebar>
+<x-ui::sidebar>
  <!-- Optional Sidebar title -->
-    <x:slot:title>       
+    <x-slot:title>       
        ...
-    </x:slot:title>
+    </x-slot:title>
 
-    <!-- Sidebar links -->
-    <x-ui.sidebar.link href=".." icon="eye">...</x-ui.sidebar.link>
+    <!-- Sidebar navigation links -->
+    <x-slot:navigation>
+        <x-ui::sidebar.link href=".." icon="eye">...</x-ui::sidebar.link>
+    </x-slot:navigation> 
     
-    <!-- Optional Sidebar end links -->
-    <x-slot:end>
+    <!-- Optional Sidebar bottom links -->
+    <x-slot:bottom>
        ...
-    </x-slot:end>
+    </x-slot:bottom>
+
+    <!-- Optional Sidebar top links - displayed when in mobile mode -->
+    <x-slot:top>
+        ...
+    </x-slot:top>
+
 </x-ui.sidebar>
 ```
 
 ### Dropdown
 
-A dropdown menu can be added to the `navbar` or `sidebar` using `navbar.drop` or `sidebar.drop`. A `title` property can be provided to name the menu or where a more complex `title` is required, replace the attribute with a title slot   `<x-slot:title>...</x-slot:title>`
-The dropdown can then contains one or more `navbsr.link` or `sidebar.link` components.
+A dropdown menu can be added to the `navbar` or `sidebar` using `navbar.dropdown` or `sidebar.dropdown`. A `label` property can be provided to name the menu and an optional `icon` property can be used to add an `svg` icon. 
 
 
 ```
-<x-ui::navbar>
-    ...
-    <x-ui::navbar.drop title="Dropdown" icon="...">
-        <x-ui::navbar.link active="about" href="..">...</x-ui::navbar.link>
-        <x-ui::navbar.link active="home" href="..">...</x-ui::navbar.link>
-    </x-ui::navbar.drop>
-    ...
-</x-ui::navbar>
-
-<x-ui::sidebar>
-    ...
-    <x-ui::sidebar.drop>
-        <x-slot:title>   
-            ...                                                                         
-        </x-slot:title>
-        ...
-    </x-ui::sidebar.drop>
-    ...
-</x-ui::sidebar>
+<x-ui::navbar.dropdown label="Dropdown" icon="...">
+    <x-ui::navbar.link active="about" href="..">...</x-ui::navbar.link>
+    <x-ui::navbar.link active="home" href="..">...</x-ui::navbar.link>
+</x-ui::navbar.dropdown>
 ```
 
 ### Button and Link
@@ -222,6 +197,8 @@ A `paginator` component is available to use when the table is displaying a pagin
 <x-paginator :items="$collection" size="10" />
 ```
 
+An optional set of `:options` can be added to override the default page options `:options="['15' => 15, '25' => 25, '50' => 50, '100' => 100, '500' => 500]"`. Additionally an optional `variant` can be used to specify a colour `green` `red` `dark` `purple` `light`
+
 ### Form
 
 Form elements include: `input`, `select`, and `textarea` components. All require a minimum of a `name` property and an optional `label` property. All, also accept any standard html properties. Additionally `label` and `error` components can be used individually.
@@ -270,6 +247,8 @@ The `flash` component should be rendered as part of the main layout
 </main>
 ```
 
+> The position of the flash message can be specified using an optional `position` parameter with values `top-right` `top-left` `bottom-right` `bottom-left`
+
 ### Breadcrumb
 
 A breadcrumb can be used to aid navigation. To configure a breadcrumb component we should pass the crumbs as an associative array containing crumb name and a route. The final crumb typically has no associated route as it represents the current page.
@@ -306,6 +285,28 @@ A simple component to use as a page header. Can be combined with `title` compone
 
 > **Note** header content is flex row, justify between
 
+#### Title 
+
+The `title` component can be used to provide consistent page title, with configurable sizes `xl` (default), `lg`, `md`.
+
+```
+<x-ui::title size="lg">
+    About Us
+</x-ui::title>
+```
+
+> A `title` is often placed in a `header` to provide a consistent page header 
+
+```
+<x-ui::header>
+    <x-ui::title size="lg">
+       Users
+    </x-ui::title>
+
+    <x::link href="#">Create</x::link>
+</x-ui::header>
+```
+
 ### Display
 
 Used to display a `label` (optional) and a `value` - typically used in a show view. For example given a `$model` with a name attribute we can display it as follows:
@@ -322,28 +323,6 @@ Where a more complex value is to be displayed then use the $slot as follows:
     <span>{{$model->name}}"</span>
     <x-ui::badge variant="pink">Pro</x-ui::badge>
 </x-ui::display>
-```
-
-### Title / Header
-
-The `title` component can be used to provide consistent page title, with configurable sizes `xl` (default), `lg`, `md`.
-
-```
-<x-ui::title size="lg">
-    About Us
-</x-ui::title>
-```
-
-The `header` component can be used with `title` to add a borderedflex area to the top of a page with title on left and optional navigation elements on right
-
-```
-<x-ui::header>
-    <x-ui::title size="lg">
-       Users
-    </x-ui::title>
-
-    <x::link href="#">Create</x::link>
-</x-ui::header>
 ```
 
 ### Hero
@@ -370,26 +349,51 @@ The `statistic` component is used to show numbers and data in a block.
 The `tabs` and `tab` components work together to provide tabbed panels and work together as follows
 
 ```
-<x-ui.tabs active="Tab1">
-    <x-ui.tabs.tab name="Tab1">
+<x-ui::tabs active="Tab1">
+    <x-ui::tabs.tab name="Tab1">
         Tab one content
-    </x-ui.tabs.tab>
-    <x-ui.tabs.tab name="Tab2">
+    </x-ui::tabs.tab>
+    <x-ui::tabs.tab name="Tab2">
         Tab two content
-    </x-ui.tabs.tab>
-    <x-ui.tabs.tab name="Tab3">
+    </x-ui::tabs.tab>
+    <x-ui::tabs.tab name="Tab3">
         Tab three content
-    </x-ui.tabs.tab>
+    </x-ui::tabs.tab>
 </x-ui.tabs.tab>
 ```
 
 ### Svg
 
-Svg component accepts a `variant` attribute, containing the name of the svg e.g. (`add` `add-user`, `user`, `arrow-left`, `arrow-right` `arrow-down` `arrow-up` `badge` `bars` `bars-up` `bars-down` `chevron-left` `chevron-right` `chevron-up` `chevron-down``chvron-up-down` `edit` `eye` `globe` `home` `info` `logo` `minus`
-`pie` `plus` `tag` `trash`)
+Svg component accepts a `variant` attribute, containing the name of the svg e.g. ( `add` `add-user` `avatar` `arrow-right` `arrow-left` `arrow-up` `arrow-down` `archive-box` `badge` `bars` `bars-up` `bars-down` `bell` `chat-bubble-left` `cog-6-tooth` `chevron-left` `chevron-right` `chevron-up` `chevron-down` `chevron-up-down` `edit` `eye` `exit` `folder` `globe` `home` `info` `list` `link` `magnifying-glass` `minus` `moon` `pie` `plus` `tag` `trash` `user` `wrench` `x-mark`)
 
 It also accepts a size attribute with values `sm` `md` `lg` and `xl`
 
 ```
-<x-ui.svg variant="trash" size='sm' />
+<x-ui::svg variant="trash" size='sm' />
+```
+
+### Modal
+
+A `modal` component is used to display a popup modal. The modal accepts a `name` prop which must be unique on the page containing the modal. It also can be configured with optional `title` and `footer` slots.
+   
+```
+<x-ui::modal name="test"  focusable>
+    <x-slot:title>
+        ...
+    </x-slot:title>
+
+    <!-- modal content -->
+
+    <x-slot:footer>
+        ...
+    </x-slot:footer>
+</x-ui::modal>  
+```
+
+#### Trigger
+
+To trigger a modal we can use a `button` and `@click` attribute to trigger the opening of the modal (named `test` in this example).
+
+```
+<x-ui::button variant="dark" @click="$dispatch('open-modal', 'test')">Open</x-ui::button>
 ```

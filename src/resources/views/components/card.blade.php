@@ -1,4 +1,4 @@
-<div {{ $attributes->merge(['class' => 'px-6 py-4 shadow-lg overflow-hidden sm:rounded-lg border border-gray-200']) }}>
+<div {{ $attributes->merge(['class' => 'px-6 py-4 shadow-lg overflow-hidden sm:rounded-lg border border-gray-200  dark:bg-gray-800 dark:border-gray-700 ']) }}>
 
     @isset($header)
         <div {{ $header->attributes->merge([])->except('class') }} }}

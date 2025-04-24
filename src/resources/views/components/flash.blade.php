@@ -1,20 +1,31 @@
-@php
-$title = Session::get('success') ? "Success" : null;
-$message = Session::get('success') ?? null;
-$title = Session::get('info') ? "Information" : $title;
-$message = Session::get('info') ?? $message;
-$title = Session::get('error') ? "Error" : $title;
-$message = Session::get('error') ?? $message;
-$title = Session::get('warning') ? "Warning" : $title;
-$message = Session::get('warning') ?? $message;
+@props([
+    'position' => 'top-right'
+])
 
+@php
+    $positionClasses = match($position) {
+        'top-right' => 'top-5 right-5',
+        'top-left' => 'top-5 left-5',
+        'bottom-right' => 'bottom-5 right-5',
+        'bottom-left' => 'bottom-5 left-5',
+        default => 'top-5 right-5'
+    };
+
+    $title = Session::get('success') ? "Success" : null;
+    $message = Session::get('success') ?? null;
+    $title = Session::get('info') ? "Information" : $title;
+    $message = Session::get('info') ?? $message;
+    $title = Session::get('error') ? "Error" : $title;
+    $message = Session::get('error') ?? $message;
+    $title = Session::get('warning') ? "Warning" : $title;
+    $message = Session::get('warning') ?? $message;
 @endphp
 
 
 <!-- Alert component -->
 @if($message!=null)
-<div class="absolute top-10 right-5 m-auto" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 6000)">
-    <div class="bg-white rounded-lg border-gray-300 border p-3 shadow-lg">
+<div class="absolute {{ $positionClasses }} m-auto" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 6000)">
+    <div class="bg-white rounded-lg border-gray-300 border p-3 shadow-lg dark:text-gray-400 dark:bg-gray-700">
     <div class="flex ">
         <div class="px-2"> 
             @if (Session::get('success'))       
@@ -28,8 +39,8 @@ $message = Session::get('warning') ?? $message;
             @endif
         </div>        
         <div class="ml-2 mr-6">
-            <div class="font-semibold">{{$title}}</div>
-            <div class="text-gray-500">{{$message}}</div>
+            <div class="font-semibold dark:text-gray-200">{{$title}}</div>
+            <div class="text-gray-500 dark:text-gray-200">{{$message}}</div>
         </div>
         {{-- <div class="absolute top-0 bottom-0 right-0 px-4 py-3" @click="() => show=false"> --}}
         <div class="items-start" @click="() => show=false">

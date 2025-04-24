@@ -10,6 +10,6 @@
         default => throw new \Exception("Title: No such size {$size}"),
     };
 @endphp
-<h1 {{ $attributes->merge(['class' => $classes]) }}>
+<h1 {{ $attributes->merge(['class' => "$classes" ]) }}>
     {{ $slot }}
 </h1>
