@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.5.1**
+> **Version 1.5.2**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for stylin , to help construct basic user interfaces. 
 
@@ -122,9 +122,19 @@ A dropdown menu can be added to the `navbar` or `sidebar` using `navbar.dropdown
 </x-ui::navbar.dropdown>
 ```
 
+#### Navbar/Sidebar Link
+
+Both `navbar` and `sidebar` contain a `link` component that is used to display navlinks.
+
+```
+<x-ui::navbar.link icon="..." label="..." href="..."  />
+<x-ui::sidebar.link icon="..." label="..." href="..."  />
+```
+Icons and labels are optional. Additionally a `method` parameter allows a link to use another http method (useful when the link carries out an action such as logout)
+
 ### Button and Link
 
-The `button` and `link` components can be configured with several variants (`'blue'`, `'red'`, `'green'`, `'yellow'`, `'dark'`, `'light'`, `'oblue'`, `'ored'`, `'link'` or `'nav'`)
+The `button` and `link` components can be configured with several variants (`'blue'`, `'red'`, `'green'`, `'yellow'`, `'dark'`, `'light'`, `'oblue'`, `'ored'`, `'link'`)
 
 Following examples provide a `'light'` variant button, and standard `link`. Adding a `variant` property to the link allows it to be styled as one of the buttons.
 
@@ -182,6 +192,16 @@ The `table` component includes `thead` and `tbody` slots in which head and body 
         </x-ui::table.tr>
     <x-slot:tbody>
 </x-ui::table>
+```
+
+Table columns can optionally be configured to only be visible at specified breakpoints (useful when supporting mobile). Ensure matching header and body column have matching attributes.
+
+In this example the column is only visible at `lg` and greater breakpoints
+```
+<x-ui::table.th showOn="lg">...</x-ui::table.th>
+
+<x-ui::table.td showOn="lg">...</x-ui::table.td>
+
 ```
 #### Table Sort Link
 A `link-sort` component is available for use in table header columns
@@ -364,7 +384,7 @@ The `tabs` and `tab` components work together to provide tabbed panels and work 
 
 ### Svg
 
-Svg component accepts a `variant` attribute, containing the name of the svg e.g. ( `add` `add-user` `avatar` `arrow-right` `arrow-left` `arrow-up` `arrow-down` `archive-box` `badge` `bars` `bars-up` `bars-down` `bell` `chat-bubble-left` `cog-6-tooth` `chevron-left` `chevron-right` `chevron-up` `chevron-down` `chevron-up-down` `edit` `eye` `exit` `folder` `globe` `home` `info` `list` `link` `magnifying-glass` `minus` `moon` `pie` `plus` `tag` `trash` `user` `wrench` `x-mark`)
+Svg component accepts a `variant` attribute, containing the name of the svg e.g. ( `add` `add-user` `adjustments-horizontal` `avatar` `arrow-right` `arrow-left` `arrow-up` `arrow-down` `archive-box` `badge` `bars` `bars-up` `bars-down` `bell` `check-circle` `chat-bubble-left` `cog-6-tooth` `chevron-left` `chevron-right` `chevron-up` `chevron-down` `chevron-up-down` `document-duplicate` `edit` `eye` `exit` `folder` `globe` `home` `info` `list` `list-bullet` `link` `magnifying-glass` `minus` `moon` `pie` `plus` `tag` `trash` `user` `wrench` `x-mark`)
 
 It also accepts a size attribute with values `sm` `md` `lg` and `xl`
 

@@ -1,4 +1,4 @@
-@props(['variant' => 'link', 'href' => '#', 'active' => null])
+@props(['variant' => 'link', 'href' => '#', 'label' => null, 'icon' => null])
 @php
     $classes = match ($variant) {
         'blue'
@@ -18,13 +18,16 @@
         'ored'
             => 'py-1.5 px-4   transition-colors font-medium rounded-lg text-red-600  bg-gray-50    border border-gray-200   hover:bg-red-600    hover:text-white disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-red-600    hover:border-red-700 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900 ',
         'link'
-            => 'py-1.5 px-4   transition-colors font-medium text-gray-900 hover:text-bold hover:text-black hover:underline dark:text-gray-100 dark:hover:text-white',
+            => 'py-1.5 px-1.5   transition-colors font-medium text-gray-900 hover:text-bold hover:text-black hover:underline dark:text-gray-100 dark:hover:text-white',
         'none' => '',
         default => throw new \Exception("No such button variant: $variant"),
     };
 @endphp
 
 <a href="{{ $href }}"
-    {{ $attributes->merge(['class' => $classes])->class(['font-semibold' => $variant === 'nav' && Route::is($active)]) }}>
-    {{ $slot }}
+    {{ $attributes->merge(['class' => $classes])->class(['flex items-center justify-center gap-1' => isset($icon)]) }}>   
+    @isset($icon)
+        <x-ui::svg :icon="$icon" size="md" />
+    @endisset
+    <span>{{ $label ?? $slot }}</span>
 </a>

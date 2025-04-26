@@ -12,16 +12,15 @@
 >
     <button
         @click="open = !open; collapsed = false"
-        {{-- :class="collapsed ? 'justify-center' : 'justify-between'" --}}
         class="w-full flex items-center justify-between gap-3 px-4 py-2 rounded-md hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 transition text-left"
-        {{-- :class="collapsed ? 'justify-center' : 'justify-between'" --}}
         :class="collapsed ? 'justify-center px-0' : 'justify-start gap-3'"
     >
         <div class="flex items-center gap-3">
             
             {{-- Heroicon --}}
             @isset($icon)
-                <x-dynamic-component :component="'heroicon-o-' . $icon" class="w-5 h-5 shrink-0" />            
+                {{-- <x-dynamic-component :component="'heroicon-o-' . $icon" class="w-5 h-5 shrink-0" />             --}}
+                <x-ui::svg :icon="$icon" class="w-5 h-5 shrink-0" />
             @endisset
 
             {{-- Label --}}
