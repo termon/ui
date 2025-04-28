@@ -23,10 +23,10 @@
             '-translate-x-full': !mobileOpen,
             'translate-x-0': mobileOpen
         }"
-        class="fixed z-40 inset-y-0 left-0 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transform transition-all duration-300 ease-in-out lg:static lg:translate-x-0 lg:flex-shrink-0"
+        class="fixed z-40 inset-y-0 left-0 bg-gray-50 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transform transition-all duration-300 ease-in-out lg:static lg:translate-x-0 lg:flex-shrink-0"
     >
         <!-- Header -->
-        <div class="p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700 h-18">
+        <div class="p-4 flex items-center bg-white dark:bg-gray-800 justify-between border-b border-gray-200 dark:border-gray-700 h-18">
  
             <div x-show="!collapsed" >
                 @isset($title) 

@@ -41,9 +41,11 @@
         x-transition:leave-start="opacity-100 max-h-screen"
         x-transition:leave-end="opacity-0 max-h-0 overflow-hidden"
         x-cloak
-        class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-50 py-2"
+        :class="mobileOpen 
+        ? 'relative w-full mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md py-2' 
+        : 'absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-50 py-2'"
     >
         {{ $slot }}
     </div>
-
+    
 </div>

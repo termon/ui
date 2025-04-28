@@ -1,7 +1,7 @@
 @props([
     'items', 
-    'size' => 15, 
-    'options' => ['15' => 15, '25' => 25, '50' => 50, '100' => 100, '500' => 500],
+    'size' => 10, 
+    'options' => ['10' => 10, '25' => 25, '50' => 50, '100' => 100, '500' => 500],
     'variant' => 'default'
 ])
 
@@ -91,6 +91,10 @@
                 </li>
             </ul>
         </nav>
+
+        <div class="text-gray-600 dark:text-gray-300 text-sm">
+            Page {{ $current }} of {{ $last }}
+        </div>
 
         {{-- Page size form --}}
         <form method="get" action="{{ request()->url() }}" class="flex items-center gap-2">
