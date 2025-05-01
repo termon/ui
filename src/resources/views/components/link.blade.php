@@ -12,13 +12,13 @@
         'dark'
             => 'py-1.5 px-4   transition-colors font-medium rounded-lg text-gray-100 bg-gray-900   border border-gray-200   hover:bg-gray-700   hover:text-white disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-gray-900   active:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 ',
         'light'
-            => 'py-1.5 px-4   transition-colors font-medium rounded-lg text-gray-900 bg-gray-50    border border-gray-200   hover:bg-gray-100   hover:text-black disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-gray-200   active:bg-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 ',
+            => 'py-1.5 px-4   transition-colors font-medium rounded-lg text-gray-900 bg-gray-50    border border-gray-200   hover:bg-gray-100   hover:text-black disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-gray-200   active:bg-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 dark:border-gray-700 ',
         'oblue'
-            => 'py-1.5 px-4   transition-colors font-medium rounded-lg text-blue-600 bg-gray-50    border border-gray-200   hover:bg-blue-600   hover:text-white disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-blue-600   hover:border-blue-700 dark:hover:bg-blue-500 dark:focus:ring-blue-800 ',
+            => 'py-1.5 px-4   transition-colors font-medium rounded-lg text-blue-600 bg-gray-50    border border-gray-200   hover:bg-blue-600   hover:text-white disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-blue-600   hover:border-blue-700 dark:bg-gray-500 dark:hover:bg-blue-500  dark:text-blue-300 dark:hover:text-white dark:focus:ring-gray-700 dark:border-gray-700 ',
         'ored'
-            => 'py-1.5 px-4   transition-colors font-medium rounded-lg text-red-600  bg-gray-50    border border-gray-200   hover:bg-red-600    hover:text-white disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-red-600    hover:border-red-700 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900 ',
+            => 'py-1.5 px-4   transition-colors font-medium rounded-lg text-red-600  bg-gray-50    border border-gray-200   hover:bg-red-600    hover:text-white disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-red-600    hover:border-red-700 dark:bg-gray-500 dark:hover:bg-red-500    dark:text-red-300 dark:hover:text-white dark:focus:ring-gray-700 dark:border-gray-700 ',
         'link'
-            => 'py-1.5 px-1.5   transition-colors font-medium text-gray-900 hover:text-bold hover:text-black hover:underline dark:text-gray-100 dark:hover:text-white',
+            => 'py-1.5 px-1.5 transition-colors font-medium text-gray-900 hover:text-bold hover:text-black hover:underline dark:text-gray-100 dark:hover:text-white',
         'none' => '',
         default => throw new \Exception("No such button variant: $variant"),
     };

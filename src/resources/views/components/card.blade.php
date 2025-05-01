@@ -4,8 +4,8 @@
         <div {{ $header->attributes->merge([])->except('class') }} }}
             {{ $header->attributes->class([
                 'pt-4 pb-2 mb-2 border-b border-gray-800 ',
-                'font-semibold' => !str_contains($header->attributes->get('class'), 'font-'),
-                'text-xl' => !str_contains($header->attributes->get('class'), 'text-'),
+                // 'font-semibold' => !str_contains($header->attributes->get('class'), 'font-'),
+                // 'text-xl' => !str_contains($header->attributes->get('class'), 'text-'),
             ]) }}>
             {{ $header }}
         </div>
@@ -17,8 +17,8 @@
         <div {{ $footer->attributes->merge()->except('class') }}
             {{ $footer->attributes->class([
                 'py-2 mt-2 border-t border-gray-800',
-                'font-normal' => !str_contains($header->attributes->get('class'), 'font-'),
-                'text-md' => !str_contains($header->attributes->get('class'), 'text-'),
+                // 'font-normal' => !str_contains($header->attributes->get('class'), 'font-'),
+                // 'text-md' => !str_contains($header->attributes->get('class'), 'text-'),
             ]) }}>
             {{ $footer }}
         </div>

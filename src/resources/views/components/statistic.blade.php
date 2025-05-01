@@ -22,9 +22,9 @@
 <div {{ $attributes->merge(["class" => "shadow-lg rounded-lg p-6"])}}>
     <div class="text-gray-500 dark:text-gray-300 text-sm mb-2">{{ $title }}</div>
     @if($value)
-       <div class="text-4xl font-bold">{{$value}}</div>
+       <div class="text-xl md:text-4xl font-bold">{{$value}}</div>
     @else
-        <div {{ $slot->attributes->merge(["class" => "text-4xl font-bold {$classes}"]) }}>{{$slot}}</div>
+        <div {{ $slot->attributes->merge(["class" => "text-xl md:text-4xl font-bold {$classes}"]) }}>{{$slot}}</div>
     @endif
        @if($description)
         <div class="text-gray-500 dark:text-gray-400 text-sm mt-2">{{ $description }}</div>

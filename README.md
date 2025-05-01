@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.5.4**
+> **Version 1.5.5**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for stylin , to help construct basic user interfaces. 
 
@@ -416,4 +416,32 @@ To trigger a modal we can use a `button` and `@click` attribute to trigger the o
 
 ```
 <x-ui::button variant="dark" @click="$dispatch('open-modal', 'test')">Open</x-ui::button>
+```
+
+### Steps
+
+The `steps` component can be used to display a list of steps with their completion status
+
+```
+<x-ui::steps :steps="[1 => ['Details', true], 2 => ['Employment', true], 3 => ['Plan', true], 4 => ['Safety', false]]" />
+```
+
+The component also accepts optional parameters
+
+`numbered` - displays step number
+`percent` - displays a percentage completion bar beneath the steps
+`variant` - colour of completed steps `green` `blue` `indigo` (default) 
+
+
+### Highchart
+
+A component wrapping the highchart library. The component slot should contain a string representing a javascript object describing the chart.
+
+```
+<x-ui::highchart>
+{
+    title: { text: 'Demo Chart' },
+    series: [{ data: [1, 2, 3, 4] }]
+}
+</x-ui::highchart>
 ```
