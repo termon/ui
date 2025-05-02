@@ -7,9 +7,9 @@
 
 @php
     [$textColor, $bgClass] = match ($variant) {
-        'green' => ['text-green-600', 'bg-green-600 text-white'],
-        'blue' => ['text-blue-600', 'bg-blue-600 text-white'],
-        default => ['text-indigo-600', 'bg-indigo-600 text-white'],
+        'green' => ['text-green-500', 'bg-green-600 text-white'],
+        'blue' => ['text-blue-500', 'bg-blue-600 text-white'],
+        default => ['text-indigo-500', 'bg-indigo-600 text-white'],
     };
 
     $completedSteps = count(array_filter($steps, fn($step) => $step[1]));

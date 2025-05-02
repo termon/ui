@@ -1,4 +1,4 @@
-<div
+<div x-cloak
     x-data="{
         dark: localStorage.getItem('dark') === 'true',
         mobileOpen: false

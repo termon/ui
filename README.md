@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.5.9**
+> **Version 1.6.0**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for stylin , to help construct basic user interfaces. 
 
@@ -143,6 +143,15 @@ Following examples provide a `'light'` variant button, and standard `link`. Addi
 <x-ui::link>Link</button>
 <x-ui::link variant='oblue'>Outline Blue Link</button>
 ```
+
+Both also accept optional `icon` and `label` properties. For `icon` specify the name of an svg icon (see svg below). The `label` property can be used instead of the slot e.g.
+
+```
+<x-ui::button variant="light" icon="folder" label="Information"/>
+```
+
+> The component will display only the icon on `sm` screens and both on larger screens.
+
 
 ### Card
 

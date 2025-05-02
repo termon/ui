@@ -106,7 +106,7 @@ x-init="
 
     <div class="w-full">
         @isset($label)
-          <label for="datepicker" class="block m-1 text-sm font-medium text-neutral-500 dark:text-neutral-300">{{$label}}</label>
+          <label for="datepicker" class="block m-1 text-sm font-medium text-gray-500 dark:text-gray-300">{{$label}}</label>
         @endisset
 
         <div class="relative">
@@ -121,17 +121,17 @@ x-init="
               placeholder="Select date"
               readonly
               class="m-1 flex w-full h-10 px-3 py-2 text-sm border rounded-md
-                     bg-white text-neutral-600 border-neutral-300
-                     placeholder:text-neutral-400 focus:border-neutral-300
-                     focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-400
+                     bg-white text-gray-600 border-gray-300
+                     placeholder:text-gray-400 focus:border-gray-300
+                     focus:outline-none focus:ring-1 focus:ring-gray-700
                      disabled:cursor-not-allowed disabled:opacity-50
-                     dark:bg-neutral-800 dark:text-neutral-200 dark:border-neutral-600
-                     dark:placeholder:text-neutral-400 dark:focus:ring-neutral-500"
+                     dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600
+                     dark:placeholder:text-gray-400 dark:focus:ring-gray-700"
             />
 
             <div
               @click="datePickerOpen = !datePickerOpen; if(datePickerOpen){ $refs.datePickerInput.focus() }"
-              class="absolute top-0 right-0 px-3 py-2 cursor-pointer text-neutral-400 hover:text-neutral-500 dark:text-neutral-400 dark:hover:text-neutral-300">
+              class="absolute top-0 right-0 px-3 py-2 cursor-pointer text-gray-400 hover:text-gray-500 dark:text-gray-400 dark:hover:text-gray-300">
                 <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
@@ -143,27 +143,27 @@ x-init="
               x-transition
               @click.away="datePickerOpen = false"
               class="z-50 p-4 mt-2 bg-white border rounded-lg shadow w-[17rem]
-                     border-neutral-200/70 dark:bg-neutral-900 dark:border-neutral-700"
+                     border-gray-200/70 dark:bg-gray-900 dark:border-gray-700"
             >
                 <div class="flex items-center justify-between mb-2">
                     <div>
-                        <span x-text="datePickerMonthNames[datePickerMonth]" class="text-lg font-bold text-gray-800 dark:text-neutral-200"></span>
-                        <span x-text="datePickerYear" class="ml-1 text-lg font-normal text-gray-600 dark:text-neutral-400"></span>
+                        <span x-text="datePickerMonthNames[datePickerMonth]" class="text-lg font-bold text-gray-800 dark:text-gray-200"></span>
+                        <span x-text="datePickerYear" class="ml-1 text-lg font-normal text-gray-600 dark:text-gray-400"></span>
                     </div>
                     <div>
                         <button @click="datePickerPreviousMonth()" type="button"
                           class="inline-flex p-1 transition duration-100 ease-in-out rounded-full
                                  cursor-pointer focus:outline-none focus:shadow-outline
-                                 hover:bg-gray-100 dark:hover:bg-neutral-700">
-                            <svg class="w-6 h-6 text-gray-400 dark:text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                 hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <svg class="w-6 h-6 text-gray-400 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                             </svg>
                         </button>
                         <button @click="datePickerNextMonth()" type="button"
                           class="inline-flex p-1 transition duration-100 ease-in-out rounded-full
                                  cursor-pointer focus:outline-none focus:shadow-outline
-                                 hover:bg-gray-100 dark:hover:bg-neutral-700">
-                            <svg class="w-6 h-6 text-gray-400 dark:text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                 hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <svg class="w-6 h-6 text-gray-400 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                             </svg>
                         </button>
@@ -173,7 +173,7 @@ x-init="
                 <div class="grid grid-cols-7 mb-3">
                     <template x-for="(day, index) in datePickerDays" :key="index">
                         <div class="px-0.5">
-                            <div x-text="day" class="text-xs font-medium text-center text-gray-800 dark:text-neutral-300"></div>
+                            <div x-text="day" class="text-xs font-medium text-center text-gray-800 dark:text-gray-300"></div>
                         </div>
                     </template>
                 </div>
@@ -189,10 +189,10 @@ x-init="
                                 x-text="day"
                                 @click="datePickerDayClicked(day)"
                                 :class="{
-                                    'bg-neutral-200 text-neutral-800 dark:bg-neutral-700 dark:text-white': datePickerIsToday(day),
-                                    'text-gray-600 hover:bg-neutral-200 dark:text-neutral-300 dark:hover:bg-neutral-700':
+                                    'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-white': datePickerIsToday(day),
+                                    'text-gray-600 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700':
                                         !datePickerIsToday(day) && !datePickerIsSelectedDate(day),
-                                    'bg-neutral-800 text-white hover:bg-opacity-75 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200':
+                                    'bg-gray-800 text-white hover:bg-opacity-75 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200':
                                         datePickerIsSelectedDate(day)
                                 }"
                                 class="flex items-center justify-center text-sm leading-none text-center
@@ -207,8 +207,8 @@ x-init="
                     <button
                         type="button"
                         @click="datePickerSetToday"
-                        class="px-3 py-1 text-sm font-medium text-neutral-700 bg-neutral-100 rounded hover:bg-neutral-200
-                               dark:bg-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                        class="px-3 py-1 text-sm font-medium text-gray-700 bg-gray-100 rounded hover:bg-gray-200
+                               dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
                     >
                         Today
                     </button>
