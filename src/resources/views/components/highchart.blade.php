@@ -1,11 +1,15 @@
 @props([ 
-    'id' => 'container',
+    'id',
     'config' 
 ])
 
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<!-- This component is used to render a Highcharts chart. It uses Alpine.js for reactivity and localStorage to persist the dark mode preference. -->
+@once
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+@endonce
+
 <script>
     window.HighchartsLightTheme = {
         chart: {
@@ -47,6 +51,7 @@
 
 <div
     x-data="{
+        id:'{{ $id }}',
         darker: localStorage.getItem('dark') === 'true' || (localStorage.getItem('dark') === null && window.matchMedia('(prefers-color-scheme: dark)').matches ),
         init() {
             //console.log('Highcharts component initialized');           
@@ -61,15 +66,15 @@
         },
         render(config) {
             //console.log('Rendering chart');
-            if (window.chart) {               
-                chart.destroy(); // Clean up old chart
+            if ({{ $id }}.chart) {
+                {{ $id }}.chart.destroy(); // Clean up old chart
             }
-            // create new chart
-            window.chart = Highcharts.chart('container', {{  $config }});
+            // create new chart with unique id
+            {{ $id }} = Highcharts.chart('{{ $id }}', {{  $config ?? $slot }});
         }, 
     }"  
 >
-    <div id="container" {{ $attributes->merge(['class' => "w-full h-96"])}}></div>
+    <div id="{{ $id }}" {{ $attributes->merge(['class' => "w-full h-96"])}}></div>
 </div>
 
 

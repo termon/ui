@@ -20,7 +20,7 @@
 <div {{ $attributes->merge([
     'class' => 'text-sm sm:text-base font-medium text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-lg'
 ]) }}>
-    <ol class="flex flex-col gap-4 md:flex-row md:justify-between items-start mb-4">
+    <ol class="flex flex-col items-start gap-4 md:flex-row md:justify-between mb-4">
         @foreach($steps as $index => [$label, $complete])
             <li class="flex items-center {{ $complete ? $textColor : '' }}">
                 @if($numbered)
