@@ -11,6 +11,7 @@
   datePickerBlankDaysInMonth: [],
   datePickerMonthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
   datePickerDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+
   datePickerDayClicked(day) {
     let selectedDate = new Date(this.datePickerYear, this.datePickerMonth, day);
     this.datePickerDay = day;
@@ -18,6 +19,7 @@
     this.datePickerIsSelectedDate(day);
     this.datePickerOpen = false;
   },
+
   datePickerPreviousMonth(){
     if (this.datePickerMonth == 0) {
         this.datePickerYear--;
@@ -26,6 +28,7 @@
     this.datePickerMonth--;
     this.datePickerCalculateDays();
   },
+
   datePickerNextMonth(){
     if (this.datePickerMonth == 11) {
         this.datePickerMonth = 0;
@@ -35,15 +38,18 @@
     }
     this.datePickerCalculateDays();
   },
+
   datePickerIsSelectedDate(day) {
     const d = new Date(this.datePickerYear, this.datePickerMonth, day);
     return this.datePickerValue === this.datePickerFormatDate(d);
   },
+
   datePickerIsToday(day) {
     const today = new Date();
     const d = new Date(this.datePickerYear, this.datePickerMonth, day);
     return today.toDateString() === d.toDateString();
   },
+
   datePickerCalculateDays() {
     let daysInMonth = new Date(this.datePickerYear, this.datePickerMonth + 1, 0).getDate();
     let dayOfWeek = new Date(this.datePickerYear, this.datePickerMonth).getDay();
@@ -58,6 +64,7 @@
     this.datePickerBlankDaysInMonth = blankdaysArray;
     this.datePickerDaysInMonth = daysArray;
   },
+
   datePickerFormatDate(date) {
     let formattedDay = this.datePickerDays[date.getDay()];
     let formattedDate = ('0' + date.getDate()).slice(-2);
@@ -74,8 +81,19 @@
     
     return `${formattedMonth} ${formattedDate}, ${formattedYear}`;
   },
-}" x-init="
-    currentDate = new Date();
+
+  datePickerSetToday() {
+    const today = new Date('{{ $value }}');
+    this.datePickerYear = today.getFullYear();
+    this.datePickerMonth = today.getMonth();
+    this.datePickerDay = today.getDate();
+    this.datePickerValue = this.datePickerFormatDate(today);
+    this.datePickerCalculateDays();
+    this.datePickerOpen = false;
+  }
+}" 
+x-init="
+    currentDate = new Date('{{ $value }}');
     if (datePickerValue) {
         currentDate = new Date(Date.parse(datePickerValue));
     }
@@ -91,7 +109,7 @@
           <label for="datepicker" class="block m-1 text-sm font-medium text-neutral-500 dark:text-neutral-300">{{$label}}</label>
         @endisset
 
-        <div class="relative w-[17rem]">
+        <div class="relative">
             <input
               x-ref="datePickerInput"
               name="{{ $name }}"
@@ -182,6 +200,18 @@
                             ></div>
                         </div>
                     </template>
+                </div>
+
+                <!-- "Today" button -->
+                <div class="mt-3 text-right">
+                    <button
+                        type="button"
+                        @click="datePickerSetToday"
+                        class="px-3 py-1 text-sm font-medium text-neutral-700 bg-neutral-100 rounded hover:bg-neutral-200
+                               dark:bg-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                    >
+                        Today
+                    </button>
                 </div>
             </div>
         </div>

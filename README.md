@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.5.5**
+> **Version 1.5.6**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for stylin , to help construct basic user interfaces. 
 
@@ -246,6 +246,15 @@ Given an options list variable named `$roles` and a model named `$model` with a 
 ```
 <x-ui::form.select label="Role" name="role" :options="$roles" value="..." />
 ```
+
+####
+
+A custom date picker component is also available and can be used instead of form input with a date type.
+
+```
+<x-ui::form.date-picker name="birthday" label="Birthday" value="{{ $birthday }}"
+```
+> The input value should be a string in format Y-m-d
 
 ### Flash
 
