@@ -1,19 +1,37 @@
-@props(['label', 'value'=>null])
+@props([
+    'label',
+    'value' => null,
+    'icon' => null,
+    'labelWidth' => 'md', // accepts: sm, md, lg, xl
+])
 
-<div {{ $attributes->merge(['class' => 'flex border-b items-center border-slate-200 dark:border-slate-500 py-2 md:py-3 rounded-md ']) }}>
-    @isset($label)
-        <span class="font-semibold mr-5">
-            {{ $label }}
-        </span>
-    @endisset
+@php
+    $labelWidthClass = match ($labelWidth) {
+        'sm' => 'md:min-w-[6rem]',
+        'md' => 'md:min-w-[10rem]',
+        'lg' => 'md:min-w-[14rem]',
+        'xl' => 'md:min-w-[18rem]',
+        default => 'md:min-w-[10rem]',
+    };
+@endphp
+{{-- Wrapper --}}
+<div {{ $attributes->merge(['class' => 'flex flex-col md:flex-row md:items-start py-2 border-b border-gray-200 dark:border-gray-700']) }}>
+    {{-- Icon + Label (always inline) --}}
+    <div class="flex items-center gap-2 font-medium text-gray-500 dark:text-gray-400 {{ $labelWidthClass }}">
+        @isset($icon)
+            <x-ui::svg :icon="$icon" class="w-4 h-4 text-gray-400 dark:text-gray-500" />
+        @endisset
+        <span>{{ $label }}</span>
+    </div>
 
-    @if (isset($value))
-        <span class="text-slate-600 dark:text-slate-300">
+    {{-- Value --}}
+    <div class=" text-gray-900 dark:text-gray-100 md:flex-1 md:pl-4 mt-1 md:mt-0">
+        @isset ($value)
             {{ $value }}
-        </span>
-    @else
-        <div {{ $slot->attributes->merge(['class' => 'text-slate-600 dark:text-slate-300']) }}>
-            {{ $slot }}
-        </div>
-    @endif
+        @else
+            <div {{ $slot->attributes }}>
+                {{ $slot }}
+            </div>
+        @endisset
+    </div>
 </div>

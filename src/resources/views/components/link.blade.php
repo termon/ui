@@ -28,9 +28,9 @@
 @endphp
 
 <a href="{{ $href }}"
-    {{ $attributes->merge(['class' => $classes])->class(['flex items-center justify-center gap-1' => isset($icon)]) }}>   
+    {{ $attributes->merge(['class' => $classes])->class(['inline-flex items-center gap-1' => isset($icon)]) }}>   
     @isset($icon)
-        <x-ui::svg :icon="$icon"  />
+        <x-ui::svg :icon="$icon"  class="shrink-0"/>
         <span class="hidden md:inline">{{ $label ?? $slot }}</span>
     @else
         {{ $label ?? $slot }}
