@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.6.1**
+> **Version 1.6.2**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for stylin , to help construct basic user interfaces. 
 
@@ -52,6 +52,15 @@ The component prefix is `x-ui` followed by the name of the component (separated 
 ```
 
 ## Available Components
+
+### Heading
+
+The heading component provides styled headings with consistent light/dark mode styling and mobile support. The component takes a level parameter with a value between `1-5`
+
+```
+<x-ui::heading level="1">Heading Level 1</x-ui::heading>
+<x-ui::heading level="2">Heading Level 2</x-ui::heading>
+```
 
 ### Navbar
 

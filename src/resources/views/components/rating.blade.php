@@ -13,7 +13,7 @@
     };
 @endphp
 
-<div {{ $attributes->merge(['class' => 'flex items-center my-4']) }}>
+<div {{ $attributes->merge(['class' => 'flex items-center']) }}>
     @foreach (range(1, $max) as $i)
         <svg @class([$classes, 'me-1', 'text-yellow-300' => $i <= $value, 'text-gray-300' => $i > $value ]) 
             aria-hidden="true"
@@ -22,7 +22,9 @@
         </svg>
     @endforeach
 
-    <p class="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400">{{ $value }}</p>
-    <p class="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400">out of</p>
-    <p class="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400">{{ $max }}</p>
+    @if ($size === 'lg')
+        <p class="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400">{{ $value }}</p>
+        <p class="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400">/</p>
+        <p class="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400">{{ $max }}</p>
+    @endif
 </div>
