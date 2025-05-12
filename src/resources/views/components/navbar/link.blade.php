@@ -17,12 +17,12 @@
     <form method="POST" action="{{ $href }}" class="{{ $wrapperClasses }}">
         @csrf
         @method($method)
-
-        @isset($icon)
-            <x-ui::icon :icon="$icon" class="w-5 h-5 shrink-0" />
-        @endisset
-
+      
         <button type="submit" class="flex items-center gap-2 hover:cursor-pointer">
+            @isset($icon)
+                <x-ui::icon :icon="$icon" class="w-5 h-5 shrink-0" />
+            @endisset
+
             @isset($label)
                 <span class="truncate">{{ $label }}</span>
             @endisset

@@ -18,10 +18,13 @@
 <form method="POST" action="{{ $href }}" class="{{ $wrapperClasses }}">
     @csrf
     @method($method)
-    @isset($icon)
-        <x-ui::icon :icon="$icon" class="w-5 h-5 shrink-0" />
-    @endisset
+   
     <button type="submit" class="flex items-center gap-2 w-full">
+
+         @isset($icon)
+            <x-ui::icon :icon="$icon" class="w-5 h-5 shrink-0" />
+        @endisset
+
         <span x-show="!collapsed" x-transition x-cloak class="truncate">
             {{ $label }}
         </span>
@@ -32,7 +35,9 @@
         </span>
     </button>
 </form>
+
 @else
+
 <a {{ $attributes->merge(['href' => $href]) }}
    class="{{ $wrapperClasses }}"
    :class="collapsed ? 'justify-center' : 'gap-3'">

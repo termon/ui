@@ -9,6 +9,7 @@
         '3' => 'text-xl   md:text-2xl lg:text-3xl font-bold      dark:text-gray-100',
         '4' => 'text-base md:text-xl  lg:text-2xl font-semibold  dark:text-gray-100',
         '5' => 'text-sm   md:text-md  lg:text-xl font-semibold   dark:text-gray-100',
+        '6' => 'text-xs   md:text-smd lg:text-md font-semibold   dark:text-gray-100',
         default => throw new \Exception("heading: No such level {$level}"),
     };
 @endphp
