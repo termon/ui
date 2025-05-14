@@ -18,9 +18,9 @@
 @endphp
 
 <div {{ $attributes->merge([
-    'class' => 'text-sm sm:text-base font-medium text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-lg'
+    'class' => 'font-medium text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-lg'
 ]) }}>
-    <ol class="flex flex-col items-start gap-4 md:flex-row md:justify-between mb-4">
+    <ol class="flex flex-col items-start gap-4 md:flex-row md:justify-between">
         @foreach($steps as $index => [$label, $complete])
             <li class="flex items-center {{ $complete ? $textColor : '' }}">
                 @if($numbered)
@@ -46,7 +46,7 @@
     </ol>
 
     @if($percentage)
-        <div class="relative w-full h-2 rounded-full bg-gray-200 dark:bg-gray-700 mb-2">
+        <div class="relative w-full h-2 rounded-full bg-gray-200 dark:bg-gray-700 my-2">
             <div class="h-2 rounded-full transition-all duration-300 {{ $bgClass }}" style="width: {{ $completedPercentage }}%;"></div>
             <div class="absolute top-5 right-0 mt-[-0.75rem] text-xs text-gray-600 dark:text-gray-300">
                 {{ round($completedPercentage) }}%
