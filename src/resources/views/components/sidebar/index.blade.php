@@ -35,7 +35,7 @@
             </div>
  
             <button @click="collapsed = !collapsed"
-                    class="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white hidden lg:block">
+                    class="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white hidden lg:block cursor-pointer focus:outline-none">
                 <svg x-show="!collapsed" class="w-5 h-5" fill="none" stroke="currentColor"
                      stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M19 12H5M12 5l-7 7 7 7" />
@@ -69,7 +69,7 @@
         <!-- Top bar (mobile only) -->
         <header
             class="flex items-center  justify-between p-4 border-b bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 lg:hidden">
-            <button @click="mobileOpen = !mobileOpen" class="text-gray-600 dark:text-gray-200 focus:outline-none">
+            <button @click="mobileOpen = !mobileOpen" class="text-gray-600 dark:text-gray-200 cursor-pointer focus:outline-none">
                 <svg x-show="!mobileOpen" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
                      viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M4 6h16M4 12h16M4 18h16" />

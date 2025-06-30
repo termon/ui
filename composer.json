@@ -2,7 +2,7 @@
     "name": "termon/ui",
     "description": "Set of Blade View Components",
     "type": "library",
-    "version": "1.6.6",
+    "version": "1.6.7",
     "autoload": {
         "psr-4": {
             "Termon\\Ui\\": "src/"
