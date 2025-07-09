@@ -19,7 +19,7 @@
     @csrf
     @method($method)
    
-    <button type="submit" class="flex items-center gap-2 w-full">
+    <button type="submit" class="flex items-center gap-2 w-full cursor-pointer">
 
          @isset($icon)
             <x-ui::icon :icon="$icon" class="w-5 h-5 shrink-0" />

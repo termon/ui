@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.6.7**
+> **Version 1.6.9**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for stylin , to help construct basic user interfaces. 
 
@@ -270,7 +270,7 @@ Given an options list variable named `$roles` and a model named `$model` with a 
 A custom date picker component is also available and can be used instead of form input with a date type.
 
 ```
-<x-ui::form.date-picker name="birthday" label="Birthday" value="{{ $birthday }}"
+<x-ui::form.input name="date" type="date" label="Date" value="{{ now()->format('Y-m-d') }}" class="w-64"/>
 ```
 > The input value should be a string in format Y-m-d
 
@@ -282,7 +282,7 @@ A flash component is used to display flash messages before a redirect. A control
 return redirect()->route("..")->with(<type>, <message>);
 ```
 
-where `type` is one of `'success'`, `'error'`, `'info'` or `'warning'` and `message` is the message to display.
+where `type` is one of `'success'`, `'error'`, `'info'`, `'warning'` or `'status'` and `message` is the message to display.
 
 The `flash` component should be rendered as part of the main layout
 
