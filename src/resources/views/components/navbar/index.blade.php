@@ -16,9 +16,10 @@
     <!-- Top Nav -->
     <header class="border-b bg-gray-50 border-gray-200 dark:border-gray-700 dark:bg-gray-800 fixed w-full z-40">
         <div class="mx-auto flex items-center justify-between px-4 py-3 lg:py-4">
-            <!-- Left: Logo/title -->
+            <!-- Left: Brand -->
             <div class="flex items-center gap-2">
-                {{ $title ?? '' }}
+                {{ $brandIcon ?? '' }}
+                {{ $brandTitle ?? '' }}
             </div>
 
             <!-- Navigation: Desktop nav -->
@@ -26,9 +27,9 @@
                 {{ $navigation ?? '' }}
             </nav>
 
-            <!-- Right: Settings -->
+            <!-- Right: User -->
             <nav class="hidden lg:flex items-center gap-4">
-                {{ $right ?? '' }}
+                {{ $user ?? '' }}
             </nav>
 
             <!-- Mobile menu button -->
@@ -59,13 +60,13 @@
             x-transition:leave-end="opacity-0 scale-95"
             x-cloak
              @click.outside="mobileOpen = false"
-            class="absolute top-full left-0 w-full bg-gray-50 dark:bg-gray-800 border-t shadow-lg border-gray-200 dark:border-gray-700 z-30 lg:hidden"
+            class="absolute top-full right-0 min-w-64 w-max bg-gray-50 dark:bg-gray-800 border-t shadow-lg border-gray-200 dark:border-gray-700 z-30 lg:hidden"
         >
             <div class="px-4 py-3 space-y-2">
                 {{ $navigation ?? '' }}
             </div>
             <div class="px-4 py-3 space-y-2 border-t border-gray-200 dark:border-gray-700">
-                {{ $right ?? '' }}
+                {{ $user ?? '' }}
             </div>
         </div>
     </header>
@@ -75,10 +76,10 @@
         {{ $slot }}
     </main>
 
-    <!-- Bottom (only mobile) -->
+    <!-- Toolbar (only mobile) -->
     <footer class="lg:hidden flex items-center justify-center fixed bottom-0 inset-x-0 mt-2 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-40">
         <div class="flex justify-around items-center py-2">
-            {{ $bottom ?? '' }}
+            {{ $toolbar ?? '' }}
         </div>
     </footer>
 </div>

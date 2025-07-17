@@ -10,7 +10,7 @@
 >
     <button
         @click="open = !open; collapsed = false"       
-        class="w-full flex items-center justify-between gap-3 px-4 py-2 rounded-md hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 transition text-left cursor-pointer"
+        class="w-full flex items-center justify-between gap-3 px-4 py-2 rounded-md hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 transition text-left"
     >
         <div class="flex items-center gap-3">
             
@@ -34,16 +34,14 @@
     <!-- Dropdown Menu (for the items) -->
     <div
         x-show="open"
-        x-transition:enter="transition-all duration-500 ease-in-out"
-        x-transition:enter-start="opacity-0 max-h-0 overflow-hidden"
-        x-transition:enter-end="opacity-100 max-h-screen"
-        x-transition:leave="transition-all duration-500 ease-in-out"
-        x-transition:leave-start="opacity-100 max-h-screen"
-        x-transition:leave-end="opacity-0 max-h-0 overflow-hidden"
+        x-transition:enter="transition-all duration-200 ease-out"
+        x-transition:enter-start="opacity-0 scale-95"
+        x-transition:enter-end="opacity-100 scale-100"
+        x-transition:leave="transition-all duration-150 ease-in"
+        x-transition:leave-start="opacity-100 scale-100"
+        x-transition:leave-end="opacity-0 scale-95"
         x-cloak
-        :class="mobileOpen 
-        ? 'relative w-full mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md py-2' 
-        : 'absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-50 py-2'"
+        class="mt-1 pl-4 space-y-1 lg:absolute lg:right-0 lg:top-full lg:mt-2 lg:pl-1 lg:py-1 lg:bg-white lg:dark:bg-gray-800 lg:border lg:border-gray-200 lg:dark:border-gray-700 lg:rounded-md lg:shadow-lg lg:z-50 lg:min-w-48 lg:w-max"
     >
         {{ $slot }}
     </div>

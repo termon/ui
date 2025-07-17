@@ -1,8 +1,8 @@
 # Laravel View Components
 
-> **Version 1.6.9**
+> **Version 1.7.0**
 
-A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for stylin , to help construct basic user interfaces. 
+A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
 ## Installation
 
@@ -48,7 +48,7 @@ The component prefix is `x-ui` followed by the name of the component (separated 
 
 ```
 <x-ui::<component-name> // using vendor package
-<x-ui.<component-name>  // when published locally (recommended)
+<x-ui.<component-name>  // when published locally 
 ```
 
 ## Available Components
@@ -64,59 +64,91 @@ The heading component provides styled headings with consistent light/dark mode s
 
 ### Navbar
 
-The `navbar` component is a fully responsive (mobile friendly) navigation component that contains  `links` using `x-ui::navbar.link` elements. These accept standard anchor tag properties and an `active` property containing the name of the route this link navigates to, so that the current route can be highlighted, as well as an optional `icon` property containing the name of an `svg` icon. Links can be grouped into a dropdown `<x-ui::navbar.dropdown icon=".." label=".."> ... </x-ui::navbar.dropdown>`
+The `navbar` component is a fully responsive (mobile friendly) navigation component with a consistent slot structure. Links can be grouped into dropdowns using `<x-ui::navbar.dropdown icon=".." label=".."> ... </x-ui::navbar.dropdown>`
+
 ```
 <x-ui::navbar>
+    <!-- Brand Icon -->
+    <x-slot:brand-icon>       
+       <svg class="w-8 h-8">...</svg>
+    </x-slot:brand-icon>
 
-    <!-- Optional Navbar Title -->
-    <x-slot:title>
-       ...
-    </x-slot:title>
+    <!-- Brand Title -->
+    <x-slot:brand-title>       
+       <span class="text-lg font-semibold">App Name</span>
+    </x-slot:brand-title>
 
-    <!-- Navbar links -->
+    <!-- Primary navigation links -->
     <x-slot:navigation>
-        <x-ui::navbar.link active="home" href=".."> ... </x-ui::navbar.link>
+        <x-ui::navbar.link href="/" icon="home" label="Home" />
+        <x-ui::navbar.dropdown label="Company" icon="folder">
+            <x-ui::navbar.link href="/about" icon="info" label="About" />
+            <x-ui::navbar.link href="/contact" icon="phone" label="Contact" />
+        </x-ui::navbar.dropdown>
     </x-slot:navigation>
-   
-    <!-- Optional Navbar Right links -->
-    <x-slot:right>
-       ...
-    </x-slot:right>
 
-    <!-- Optional Navbar Bottom links (visible in mobile mode )-->
-    <x-slot:bottom>
-        ...
-    </x-slot:bottom>
+    <!-- User section -->
+    <x-slot:user>
+        <x-ui::navbar.dropdown label="User Menu" icon="user">
+            <x-ui::navbar.link href="/profile" icon="cog" label="Profile" />
+            <x-ui::navbar.form-link action="/logout" method="post" icon="exit" label="Logout" />
+        </x-ui::navbar.dropdown>
+    </x-slot:user>
+
+    <!-- Toolbar (mobile bottom bar) -->
+    <x-slot:toolbar>
+        <x-ui::navbar.link href="/notifications" icon="bell" />
+        <x-ui::navbar.link href="/search" icon="search" />
+    </x-slot:toolbar>
+
+    <!-- Main content -->
+    {{ $slot }}
 
 </x-ui::navbar>
 ```
 
 ### Sidebar
-The `sidebar` component is a fully responsive (mobile friendly) navigation component that contains  `links` using `x-ui::sidebar.link` elements. These accept standard anchor tag properties and an `active` property containing the name of the route this link navigates to, so that the current route can be highlighted, as well as an optional `icon` property containing the name of an `svg` icon. Links can be grouped into a dropdown `<x-ui::sidebar.dropdown icon=".." label=".."> ... </x-ui::sidebar.dropdown>`
+The `sidebar` component is a fully responsive (mobile friendly) navigation component that contains navigation links and action buttons. Links can be grouped into dropdowns using `<x-ui::sidebar.dropdown icon=".." label=".."> ... </x-ui::sidebar.dropdown>`
 
 ```
 <x-ui::sidebar>
- <!-- Optional Sidebar title -->
-    <x-slot:title>       
-       ...
-    </x-slot:title>
+    <!-- Optional Brand Icon -->
+    <x-slot:brand-icon>       
+       <svg>...</svg>
+    </x-slot:brand-icon>
 
-    <!-- Sidebar navigation links -->
+    <!-- Optional Brand Title -->
+    <x-slot:brand-title>       
+       <span>App Name</span>
+    </x-slot:brand-title>
+
+    <!-- Primary navigation links -->
     <x-slot:navigation>
-        <x-ui::sidebar.link href=".." icon="eye">...</x-ui::sidebar.link>
+        <x-ui::sidebar.link href="/" icon="home" label="Home" />
+        <x-ui::sidebar.dropdown label="Company" icon="folder">
+            <x-ui::sidebar.link href="/about" icon="info" label="About" />
+            <x-ui::sidebar.link href="/contact" icon="phone" label="Contact" />
+        </x-ui::sidebar.dropdown>
     </x-slot:navigation> 
     
-    <!-- Optional Sidebar bottom links -->
-    <x-slot:bottom>
-       ...
-    </x-slot:bottom>
+    <!-- User section -->
+    <x-slot:user>
+        <x-ui::sidebar.dropdown label="User Menu" icon="user">
+            <x-ui::sidebar.link href="/profile" icon="cog" label="Profile" />
+            <x-ui::sidebar.form-link action="/logout" method="post" icon="exit" label="Logout" />
+        </x-ui::sidebar.dropdown>
+    </x-slot:user>
 
-    <!-- Optional Sidebar top links - displayed when in mobile mode -->
-    <x-slot:top>
-        ...
-    </x-slot:top>
+    <!-- Toolbar (icon-only links) -->
+    <x-slot:toolbar>
+        <x-ui::sidebar.link href="/notifications" icon="bell" />
+        <x-ui::sidebar.link href="/search" icon="search" />
+    </x-slot:toolbar>
 
-</x-ui.sidebar>
+    <!-- Main content -->
+    {{ $slot }}
+
+</x-ui::sidebar>
 ```
 
 ### Dropdown
@@ -133,13 +165,31 @@ A dropdown menu can be added to the `navbar` or `sidebar` using `navbar.dropdown
 
 #### Navbar/Sidebar Link
 
-Both `navbar` and `sidebar` contain a `link` component that is used to display navlinks.
+Both `navbar` and `sidebar` contain link components for navigation and actions:
 
+**Navigation Links:**
 ```
 <x-ui::navbar.link icon="..." label="..." href="..."  />
 <x-ui::sidebar.link icon="..." label="..." href="..."  />
 ```
-Icons and labels are optional. Additionally a `method` parameter allows a link to use another http method (useful when the link carries out an action such as logout)
+
+**Form Action Links (for POST/PUT/DELETE operations):**
+```
+<x-ui::navbar.form-link action="..." method="post" icon="..." label="..."  />
+<x-ui::sidebar.form-link action="..." method="post" icon="..." label="..."  />
+```
+
+Icons and labels are optional. For regular navigation, use the standard `link` component. For form actions (like logout, delete operations), use the dedicated `form-link` component which includes CSRF protection and method spoofing.
+
+**Component Architecture:**
+- `navbar.link` / `sidebar.link` - Navigation links with active state detection
+- `navbar.form-link` / `sidebar.form-link` - Form submissions with CSRF protection (POST/PUT/DELETE)
+
+**Sidebar Tooltips:**
+Sidebar link components include intelligent tooltip positioning:
+- **Sidebar context**: Tooltips appear to the right when collapsed
+- **Toolbar context**: Tooltips appear below when collapsed
+- **No label**: No tooltip is displayed (prevents artifacts on icon-only links)
 
 ### Button and Link
 
@@ -411,7 +461,7 @@ The `tabs` and `tab` components work together to provide tabbed panels and work 
 
 ### Svg
 
-Svg component accepts a `variant` attribute, containing the name of the svg e.g. ( `add` `add-user` `adjustments-horizontal` `avatar` `arrow-path` `arrow-right` `arrow-left` `arrow-up` `arrow-down` `archive-box` `badge` `bars` `bars-up` `bars-down` `bell` `check-circle` `chat-bubble-left` `cog-6-tooth` `chevron-left` `chevron-right` `chevron-up` `chevron-down` `chevron-up-down` `document-duplicate` `edit` `eye` `exit` `folder` `globe` `home` `info` `light-bulb` `list` `list-bullet` `link` `magnifying-glass` `minus` `moon` `pie` `plus` `tag` `trash` `user` `wrench` `x-mark`)
+Svg component accepts a `variant` attribute, containing the name of the svg e.g. ( `add` `add-user` `adjustments-horizontal` `avatar` `arrow-path` `arrow-right` `arrow-left` `arrow-up` `arrow-down` `archive-box` `badge` `bars` `bars-up` `bars-down` `bell` `check-circle` `chat-bubble-left` `cog-6-tooth` `chevron-left` `chevron-right` `chevron-up` `chevron-down` `chevron-up-down` `document-duplicate` `edit` `eye` `exit` `folder` `globe` `home` `info` `light-bulb` `list` `list-bullet` `link` `magnifying-glass` `minus` `moon` `pie` `plus` `search` `tag` `trash` `user` `wrench` `x-mark`)
 
 It also accepts a size attribute with values `sm` `md` `lg` and `xl`
 

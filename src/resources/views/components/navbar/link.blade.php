@@ -3,7 +3,6 @@
     'label',
     'icon', // e.g. 'home', 'cog-6-tooth'
     'active' => request()->url() === url($href ?? '#'),
-    'method' => null
 ])
 
 @php
@@ -13,29 +12,12 @@
     $wrapperClasses = $baseClasses . ' ' . ($active ? $activeClasses : $inactiveClasses);
 @endphp
 
-@if ($method)
-    <form method="POST" action="{{ $href }}" class="{{ $wrapperClasses }}">
-        @csrf
-        @method($method)
-      
-        <button type="submit" class="flex items-center gap-2 hover:cursor-pointer">
-            @isset($icon)
-                <x-ui::icon :icon="$icon" class="w-5 h-5 shrink-0" />
-            @endisset
+<a {{ $attributes->merge(['href' => $href]) }} class="{{ $wrapperClasses }}">
+    @isset($icon)
+        <x-ui::icon :icon="$icon" class="w-5 h-5 shrink-0" />
+    @endisset
 
-            @isset($label)
-                <span class="truncate">{{ $label }}</span>
-            @endisset
-        </button>
-    </form>
-@else
-    <a {{ $attributes->merge(['href' => $href]) }} class="{{ $wrapperClasses }}">
-        @isset($icon)
-            <x-ui::icon :icon="$icon" class="w-5 h-5 shrink-0" />
-        @endisset
-
-        @isset($label)
-            <span class="truncate">{{ $label }}</span>
-        @endisset
-    </a>
-@endif
+    @isset($label)
+        <span class="truncate">{{ $label }}</span>
+    @endisset
+</a>
