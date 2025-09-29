@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.7.2**
+> **Version 1.7.3**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -480,6 +480,8 @@ It also accepts a size attribute with values `sm` `md` `lg` and `xl`
 
 A `modal` component is used to display a popup modal. The modal accepts a `name` prop which must be unique on the page containing the modal. It also can be configured with optional `title` and `footer` slots.
    
+The modal also accepts a `dismissable` prop that defaults to `true` but when set to `false` prevents closing the modal by clicking oon the backdrop.
+
 ```
 <x-ui::modal name="test"  focusable>
     <x-slot:title>

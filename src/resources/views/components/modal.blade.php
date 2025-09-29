@@ -1,4 +1,4 @@
-@props(['name', 'show' => false, 'maxWidth' => '2xl'])
+@props(['name', 'dismissable' => false, 'show' => false, 'maxWidth' => '2xl'])
 
 @php
     $maxWidth = [
@@ -13,6 +13,7 @@
 <div
     x-data="{
         show: @js($show),
+        dismissable: @js($dismissable),
         focusables() {
         // All focusable element types...
         let selector = 'a, button, input:not([type=\'hidden\']), textarea, select, details, [tabindex]:not([tabindex=\'-1\'])';
@@ -55,7 +56,7 @@
         x-transition:leave-end="opacity-0"
     >
         <!-- Backdrop -->
-        <div class="fixed inset-0 bg-gray-200 dark:bg-gray-900 opacity-85" x-on:click="show = false"></div> 
+        <div class="fixed inset-0 bg-gray-200 dark:bg-gray-900 opacity-85" x-on:click="!dismissable ? show = false : null"></div>
         
         <!-- Modal content -->
         <div
