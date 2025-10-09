@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.7.3**
+> **Version 1.7.4**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -468,7 +468,7 @@ The `tabs` and `tab` components work together to provide tabbed panels and work 
 
 ### Svg
 
-Svg component accepts a `variant` attribute, containing the name of the svg e.g. ( `add` `add-user` `adjustments-horizontal` `avatar` `arrow-path` `arrow-right` `arrow-left` `arrow-up` `arrow-down` `archive-box` `badge` `bars` `bars-up` `bars-down` `bell` `check-circle` `chat-bubble-left` `cog-6-tooth` `chevron-left` `chevron-right` `chevron-up` `chevron-down` `chevron-up-down` `document-duplicate` `edit` `eye` `exit` `folder` `globe` `home` `info` `light-bulb` `list` `list-bullet` `link` `magnifying-glass` `minus` `moon` `pie` `plus` `search` `tag` `trash` `user` `wrench` `x-mark`)
+Svg component accepts a `variant` attribute, containing the name of the svg e.g. ( `add` `add-user` `adjustments-horizontal` `avatar` `arrow-path` `arrow-right` `arrow-left` `arrow-up` `arrow-down` `archive-box` `badge` `bars` `bars-up` `bars-down` `bell` `check-circle` `chat-bubble-left` `cog-6-tooth` `chevron-left` `chevron-right` `chevron-up` `chevron-down` `chevron-up-down` `document-duplicate` `edit` `eye` `exit` `folder` `globe` `home` `identification` `info` `inbox-arrow-down` `light-bulb` `list` `list-bullet` `link` `magnifying-glass` `minus` `moon` `pie` `plus` `search` `tag` `trash` `user` `wrench` `x-mark`)
 
 It also accepts a size attribute with values `sm` `md` `lg` and `xl`
 
