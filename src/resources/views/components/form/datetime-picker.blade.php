@@ -146,10 +146,10 @@
 
             hours: Array.from({
                 length: 24
-            }, (_, i) => i.toString().padStart(2, '0')),
+            }, (_, i) => i.toString().padStart(2, '0')),            
             minutes: Array.from({
-                length: 60
-            }, (_, i) => i.toString().padStart(2, '0')),
+                length: 12
+            }, (_, i) => (i * 5).toString().padStart(2, '0')),
 
             init() {
                 let date = null;
