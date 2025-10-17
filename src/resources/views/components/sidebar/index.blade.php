@@ -70,12 +70,12 @@
     <div x-show="mobileOpen" @click="mobileOpen = false" class="fixed inset-0 bg-opacity-30 z-30 lg:hidden"
          x-transition.opacity x-cloak></div>
 
-    <!-- Main content -->
-    <div class="flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out">
+    <!-- Main content Scrollable: added max-height-screen -->
+    <div class="flex-1 flex flex-col max-h-screen transition-all duration-300 ease-in-out">
 
-        <!-- Top bar (always visible) -->
+        <!-- Top bar (always visible) Scrollable: added flex-shrink-0 -->
         <header
-            class="flex items-center justify-between p-4 border-b bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 h-14">
+            class="flex items-center justify-between flex-shrink-0 p-4 border-b bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 h-14">
             
             <!-- Left side buttons -->
             <div class="flex items-center gap-2">
@@ -133,8 +133,8 @@
 
         </header>
 
-        <!-- Page content -->
-        <main class="flex-1 text-left px-4 py-2 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+        <!-- Page content  Scrollable: added overflow-y-auto -->
+        <main class="flex-1 text-left overflow-y-auto px-4 py-2 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
             {{ $slot }}
         </main>
     </div>
