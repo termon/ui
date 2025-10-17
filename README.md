@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.7.4**
+> **Version 1.7.5**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -331,6 +331,15 @@ A custom date picker component is also available and can be used instead of form
 ```
 > The input value should be a string in format Y-m-d
 
+#### DateTimePicker
+
+A custom datetime picker component is also available and can be used instead of form input with a datetime type.
+
+```
+<x-ui::form.datetime-picker name="date" label="Date" value="{{ now()->format('Y-m-d H:i:s') }}" class="w-64"/>
+```
+> The input value should be a string in format Y-m-d
+
 ### Flash
 
 A flash component is used to display flash messages before a redirect. A controller action would typically flash a message to the session as part of the redirect
@@ -498,10 +507,15 @@ The modal also accepts a `dismissable` prop that defaults to `true` but when set
 
 #### Trigger
 
-To trigger a modal we can use a `button` and `@click` attribute to trigger the opening of the modal (named `test` in this example).
+To trigger a modal we can use a `button` and `@click` attribute to trigger the opening/closing of the modal (named `test` in this example).
 
+##### Open
 ```
 <x-ui::button variant="dark" @click="$dispatch('open-modal', 'test')">Open</x-ui::button>
+```
+##### Close
+```
+<x-ui::button variant="light" @click="$dispatch('close-modal', 'test')">Close</x-ui::button>
 ```
 
 ### Steps
