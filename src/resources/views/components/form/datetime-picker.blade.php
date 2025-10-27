@@ -1,6 +1,6 @@
 @props(['name', 'label', 'value' => ''])
-
-<div x-data="dateTimePicker('{{ $value }}')" x-cloak>
+<!-- make sure $value is in 'YYYY-MM-DD HH:mm:ss' format for proper initialization -->
+<div x-data="dateTimePicker(@js($value))" x-cloak>
     <div class="w-full">
         @isset($label)
             <x-ui::form.label for="{{ $name }}" class="mb-1">
@@ -153,7 +153,7 @@
 
             init() {
                 let date = null;
-
+                
                 if (initialValue) {
                     const v = String(initialValue).trim();
 
@@ -174,13 +174,17 @@
                         if (!isNaN(parsed)) date = parsed;
                     }
                 }
-
+               
                 if (!date || isNaN(date)) date = new Date();
                 this.year = date.getFullYear();
                 this.month = date.getMonth();
                 this.day = date.getDate();
                 this.hour = date.getHours().toString().padStart(2, '0');
-                this.minute = date.getMinutes().toString().padStart(2, '0');               
+               // round minutes to nearest 5 given we only allow selection of 5 min intervals
+                const rawMinute = date.getMinutes();
+                const roundedMinute = Math.round(rawMinute / 5) * 5;
+                this.minute = (roundedMinute % 60).toString().padStart(2, '0');
+
                 this.selectedDate = new Date(this.year, this.month, this.day, parseInt(this.hour), parseInt(this
                     .minute));
                 this.displayValue = this.formatDateTime(this.selectedDate);
@@ -262,201 +266,6 @@
             },
 
             apply() {
-                this.open = false;
-            },
-
-            formatDateTime(date) {
-                const monthName = this.monthNames[date.getMonth()].substring(0, 3);
-                const day = String(date.getDate()).padStart(2, '0');
-                const year = date.getFullYear();
-                const h = String(date.getHours()).padStart(2, '0');
-                const m = String(date.getMinutes()).padStart(2, '0');
-                return `${monthName} ${day}, ${year} ${h}:${m}`;
-            }
-        };
-    }
-
-
-
-    function dateTimePickerOrig(initialValue) {
-        return {
-            // UI state
-            open: false,
-            displayValue: '',
-            selectedDate: null,
-
-            // date parts
-            year: null,
-            month: null,
-            day: null,
-            hour: '00',
-            minute: '00',
-
-            // config / labels
-            monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
-                'October', 'November', 'December'
-            ],
-            days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-
-            // calendar helpers
-            blankDays: [],
-            daysInMonth: [],
-
-            // time pickers
-            hours: Array.from({
-                length: 24
-            }, (_, i) => i.toString().padStart(2, '0')), // "00" - "23"
-            minutes: Array.from({
-                length: 60
-            }, (_, i) => i.toString().padStart(2, '0')), // "00" - "59"
-
-            init() {
-                // Parse initialValue (supports "YYYY-MM-DD HH:mm[:ss]" or "YYYY-MM-DDTHH:mm[:ss]" or ISO or Date fallback)
-                let date = null;
-
-                if (initialValue) {
-                    // Trim and normalize
-                    const v = String(initialValue).trim();
-
-                    // Try common YYYY-MM-DD HH:mm[:ss] or YYYY-MM-DDTHH:mm[:ss]
-                    const re = /^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?$/;
-                    const m = v.match(re);
-                    if (m) {
-                        const [, y, mo, d, hh, mm, ss] = m;
-                        // Construct a timezone-neutral ISO string for reliable parsing
-                        const iso = `${y}-${mo}-${d}T${hh}:${mm}:${ss ?? '00'}`;
-                        date = new Date(iso);
-                    } else {
-                        // Last resort: try native Date parsing (handles ISO with zone, etc.)
-                        const parsed = new Date(v);
-                        if (!isNaN(parsed)) date = parsed;
-                    }
-                }
-
-                // If parsing failed or no initial value, default to now
-                if (!date || isNaN(date)) date = new Date();
-
-                // Initialize state from parsed date
-                this.year = date.getFullYear();
-                this.month = date.getMonth();
-                this.day = date.getDate();
-                this.hour = date.getHours().toString().padStart(2, '0');
-                this.minute = date.getMinutes().toString().padStart(2, '0');
-
-                // Create selectedDate using local values (avoid passing potential timezone quirks)
-                this.selectedDate = new Date(this.year, this.month, this.day, parseInt(this.hour, 10), parseInt(this
-                    .minute, 10));
-
-                // Set display and calendar
-                this.displayValue = this.formatDateTime(this.selectedDate);
-                this.calculateDays();
-
-                // Keep time in sync as soon as user changes hour or minute
-                // Alpine $watch is available in Alpine v3+
-                if (this.$watch) {
-                    this.$watch('hour', () => this.updateSelectedTime());
-                    this.$watch('minute', () => this.updateSelectedTime());
-                } else {
-                    // Fallback: polling (shouldn't be necessary in modern Alpine)
-                    // no-op
-                }
-            },
-
-            // Update selectedDate when hour/minute change and refresh display
-            updateSelectedTime() {
-                // Ensure selectedDate exists
-                if (!this.selectedDate) {
-                    this.selectedDate = new Date(this.year || new Date().getFullYear(),
-                        this.month || new Date().getMonth(),
-                        this.day || new Date().getDate());
-                }
-
-                const h = parseInt(this.hour, 10) || 0;
-                const m = parseInt(this.minute, 10) || 0;
-                this.selectedDate.setHours(h, m, 0, 0);
-
-                // Keep individual parts in sync too
-                this.year = this.selectedDate.getFullYear();
-                this.month = this.selectedDate.getMonth();
-                this.day = this.selectedDate.getDate();
-
-                this.displayValue = this.formatDateTime(this.selectedDate);
-            },
-
-            calculateDays() {
-                const daysInMonth = new Date(this.year, this.month + 1, 0).getDate();
-                const firstDayOfWeek = new Date(this.year, this.month, 1).getDay();
-                this.blankDays = Array.from({
-                    length: firstDayOfWeek
-                }, (_, i) => i);
-                this.daysInMonth = Array.from({
-                    length: daysInMonth
-                }, (_, i) => i + 1);
-            },
-
-            previousMonth() {
-                if (this.month === 0) {
-                    this.month = 11;
-                    this.year--;
-                } else {
-                    this.month--;
-                }
-                this.calculateDays();
-            },
-
-            nextMonth() {
-                if (this.month === 11) {
-                    this.month = 0;
-                    this.year++;
-                } else {
-                    this.month++;
-                }
-                this.calculateDays();
-            },
-
-            isToday(d) {
-                const t = new Date();
-                return d === t.getDate() && this.month === t.getMonth() && this.year === t.getFullYear();
-            },
-
-            isSelectedDate(d) {
-                return d === this.day && this.month === this.selectedDate.getMonth() && this.year === this.selectedDate
-                    .getFullYear();
-            },
-
-            selectDate(d) {
-                // Update day, keep current hour/minute
-                this.day = d;
-
-                if (!this.selectedDate) {
-                    this.selectedDate = new Date(this.year, this.month, this.day);
-                }
-
-                // Set full date while preserving hours/minutes
-                const h = parseInt(this.hour, 10) || 0;
-                const m = parseInt(this.minute, 10) || 0;
-                this.selectedDate = new Date(this.year, this.month, this.day, h, m, 0, 0);
-
-                this.displayValue = this.formatDateTime(this.selectedDate);
-                this.calculateDays();
-            },
-
-            setNow() {
-                const now = new Date();
-                this.year = now.getFullYear();
-                this.month = now.getMonth();
-                this.day = now.getDate();
-                this.hour = now.getHours().toString().padStart(2, '0');
-                this.minute = now.getMinutes().toString().padStart(2, '0');
-
-                this.selectedDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now
-                    .getMinutes(), 0, 0);
-                this.displayValue = this.formatDateTime(this.selectedDate);
-                this.calculateDays();
-            },
-
-            apply() {
-                // Closing the picker — changes are live already
                 this.open = false;
             },
 
