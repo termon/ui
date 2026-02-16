@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.7.91**
+> **Version 1.7.92**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -505,9 +505,43 @@ The modal also accepts a `dismissable` prop that defaults to `true` but when set
 </x-ui::modal>  
 ```
 
+#### Modal Trigger Component
+
+Use `x-ui::modal.trigger` to trigger modal open/close events without wiring `@click` dispatches manually.
+
+Default behaviour:
+- Uses `x-ui::button` as the trigger component
+- Dispatches `open-modal` by default
+
+Supported props:
+- `for` (required): the modal name to target
+- `action` (optional): `open` or `close` (default: `open`)
+- `component` (optional): dynamic component name (default: `ui::button`)
+
+##### Open (default)
+```
+<x-ui::modal.trigger for="test">
+    Open
+</x-ui::modal.trigger>
+```
+
+##### Close
+```
+<x-ui::modal.trigger for="test" action="close" variant="light">
+    Close
+</x-ui::modal.trigger>
+```
+
+##### Use a Different Trigger Component
+```
+<x-ui::modal-trigger for="test" component="ui::link" variant="link">
+    Open as Link
+</x-ui::modal-trigger>
+```
+
 #### Trigger
 
-To trigger a modal we can use a `button` and `@click` attribute to trigger the opening/closing of the modal (named `test` in this example).
+As an alternative to `modal-trigger`, you can still trigger a modal manually using a `button` and `@click` dispatch (named `test` in this example).
 
 ##### Open
 ```
