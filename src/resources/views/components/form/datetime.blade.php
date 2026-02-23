@@ -8,17 +8,14 @@
 <div x-data="dateTimePicker(@js($value))" x-cloak>
 
     <div class="relative">
-        <input x-ref="input" name="{{ $name }}" value="{{ $value }}" type="text" @click="open = !open"
+        <input x-ref="input" name="{{ $name }}" value="{{ $value }}" type="text" @click.stop="toggle()"
             x-model="displayValue" x-on:keydown.escape="open = false" placeholder="Select date and time" readonly
-            class="m-1 flex w-full h-10 px-3 py-2 text-sm border rounded-md
-                    bg-white text-gray-600 border-gray-300
-                    placeholder:text-gray-400 focus:border-gray-300
-                    focus:outline-none focus:ring-1 focus:ring-gray-700
-                    disabled:cursor-not-allowed disabled:opacity-50
-                    dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600
-                    dark:placeholder:text-gray-400 dark:focus:ring-gray-700" />
+            class="w-full border border-gray-300 rounded-lg p-2.5 pr-10 text-gray-700 leading-tight cursor-pointer
+                    focus:ring-blue-500 focus:border-blue-500
+                    dark:focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
+                    dark:text-white dark:focus:ring-gray-500" />
 
-        <div @click="open = !open; if(open){ $refs.input.focus() }"
+        <div @click.stop="toggle(); if(open){ $refs.input.focus() }"
             class="absolute top-0 right-0 px-3 py-2 cursor-pointer text-gray-400 hover:text-gray-500 dark:text-gray-400 dark:hover:text-gray-300">
             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -26,8 +23,9 @@
             </svg>
         </div>
 
-        <div x-show="open" x-transition @click.away="open = false"
-            class="absolute left-0 z-50 p-4 mt-2 bg-white border rounded-lg shadow w-[17rem]
+        <template x-teleport="body">
+        <div x-show="open" x-ref="panel" x-transition @click.away="open = false" x-on:keydown.escape.window="open = false" x-bind:style="panelStyle"
+            class="fixed left-0 top-0 z-[1000] p-4 bg-white border rounded-lg shadow w-[17rem] max-h-[min(80vh,36rem)] overflow-y-auto
                     border-gray-200/70 dark:bg-gray-900 dark:border-gray-700">
             <!-- Calendar Header -->
             <div class="flex items-center justify-between mb-2">
@@ -114,6 +112,7 @@
                 </button>
             </div>
         </div>
+        </template>
     </div>
 
 </div>
@@ -122,6 +121,7 @@
     function dateTimePicker(initialValue) {
         return {
             open: false,
+            panelStyle: '',
             displayValue: '',
             selectedDate: null,
 
@@ -188,7 +188,61 @@
                 if (this.$watch) {
                     this.$watch('hour', () => this.updateSelectedTime());
                     this.$watch('minute', () => this.updateSelectedTime());
+                    this.$watch('open', (isOpen) => {
+                        if (isOpen) {
+                            this.$nextTick(() => this.positionPanel());
+                        }
+                    });
                 }
+
+                const reposition = () => {
+                    if (this.open) this.positionPanel();
+                };
+
+                this._repositionPanel = reposition;
+                window.addEventListener('resize', reposition);
+                document.addEventListener('scroll', reposition, true);
+            },
+
+            destroy() {
+                if (this._repositionPanel) {
+                    window.removeEventListener('resize', this._repositionPanel);
+                    document.removeEventListener('scroll', this._repositionPanel, true);
+                }
+            },
+
+            toggle() {
+                this.open = !this.open;
+                if (this.open) {
+                    this.$nextTick(() => this.positionPanel());
+                }
+            },
+
+            positionPanel() {
+                if (!this.$refs.input) return;
+
+                const rect = this.$refs.input.getBoundingClientRect();
+                const gap = 8;
+                const widthPx = this.$refs.panel?.offsetWidth || 272; // w-[17rem] fallback
+                let left = rect.left;
+                left = Math.max(gap, Math.min(left, window.innerWidth - widthPx - gap));
+
+                let top = rect.bottom + gap;
+
+                if (this.$refs.panel) {
+                    const panelHeight = this.$refs.panel.offsetHeight || 0;
+                    const aboveTop = rect.top - panelHeight - gap;
+                    const belowBottom = top + panelHeight;
+                    const viewportBottom = window.innerHeight - gap;
+
+                    if (belowBottom > viewportBottom) {
+                        top = aboveTop >= gap
+                            ? aboveTop
+                            : Math.max(gap, viewportBottom - panelHeight);
+                    }
+                }
+
+                this.panelStyle = `top:${Math.max(gap, top)}px;left:${left}px;`;
             },
 
             updateSelectedTime() {
@@ -254,8 +308,12 @@
                 this.month = now.getMonth();
                 this.day = now.getDate();
                 this.hour = now.getHours().toString().padStart(2, '0');
-                this.minute = now.getMinutes().toString().padStart(2, '0');
-                this.selectedDate = new Date(this.year, this.month, this.day, now.getHours(), now.getMinutes());
+                const roundedMinute = Math.round(now.getMinutes() / 5) * 5;
+                this.minute = (roundedMinute % 60).toString().padStart(2, '0');
+                const carryHour = roundedMinute >= 60 ? 1 : 0;
+                const selectedHour = (now.getHours() + carryHour) % 24;
+                this.hour = selectedHour.toString().padStart(2, '0');
+                this.selectedDate = new Date(this.year, this.month, this.day, selectedHour, roundedMinute % 60);
                 this.displayValue = this.formatDateTime(this.selectedDate);
                 this.calculateDays();
             },

@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.8.01**
+> **Version 1.8.02**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -38,9 +38,59 @@ If you would prefer to add the components directly into your applications resour
 These components require installation of [Tailwind CSS](https://tailwindcss.com) for styling and [AlpineJS](https:://alpinejs.dev) for interactivity.
 
 ### Tailwind 4 Configuration 
-Add following line to your `app.css` file
+Add the package Blade views to your Tailwind sources and include the recommended dark mode + Alpine `x-cloak` helpers in `app.css`.
 
-`@source '../../vendor/termon/ui/src/resources/views/components/**/*.blade.php';`
+```css
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../vendor/termon/ui/src/resources/views/**/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+/* tailwindcss class based dark mode */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* alpinejs stop flicker when toggling dark mode / hidden UI */
+[x-cloak] { display: none !important; }
+```
+
+Notes:
+- `@custom-variant dark ...` enables class-based dark mode support used by the components.
+- `[x-cloak]` prevents Alpine-powered UI (dropdowns, modals, pickers) from flashing before Alpine initializes.
+
+### AlpineJS Setup
+
+You can use AlpineJS either via CDN or through Livewire.
+
+#### Option 1: AlpineJS via CDN
+
+Include AlpineJS in your main layout (typically before `</body>`):
+
+```html
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+```
+
+#### Option 2: AlpineJS via Livewire
+
+If you are using Livewire (v4), AlpineJS is included by Livewire. In that case, include Livewire assets in your layout and you do not need a separate Alpine CDN script.
+
+```blade
+<head>
+    @livewireStyles
+</head>
+<body>
+    {{ $slot ?? '' }}
+
+    @livewireScripts
+</body>
+```
 
 ## Using Components
 
