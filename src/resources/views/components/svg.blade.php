@@ -2,12 +2,16 @@
     'size' => 'sm',
     'set' => 'icons',
     'icon' => null,
+    'variant' => null,
     'viewBox' => '0 0 24 24',
     'fill' => 'none',
     'stroke' => 'currentColor',
     'strokeWidth' => '1.5',
 ])
 @php
+    // Backward compatibility: some package views pass `variant` instead of `icon`.
+    $icon = $icon ?? $variant;
+
     $class = match ($size) {
         'sm' => 'size-4',
         'md' => 'size-6',
@@ -16,9 +20,23 @@
         default => throw new \InvalidArgumentException("No such svg size: {$size}"),
     };
 
-    $iconView = "components.ui.{$set}.{$icon}";
-    if (!view()->exists($iconView)) {
-        throw new \InvalidArgumentException("No such svg {$set}.{$icon}");
+    if (!$icon) {
+        throw new \InvalidArgumentException('No svg icon provided.');
+    }
+
+    $iconViews = [
+        "components.ui.{$set}.{$icon}",
+        "ui::components.{$set}.{$icon}",
+    ];
+
+    $iconView = collect($iconViews)->first(
+        fn (string $candidate) => view()->exists($candidate)
+    );
+
+    if (!$iconView) {
+        throw new \InvalidArgumentException(
+            "No such svg {$set}.{$icon}. Tried: ".implode(', ', $iconViews)
+        );
     }
 @endphp
 

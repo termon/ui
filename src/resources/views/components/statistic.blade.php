@@ -32,7 +32,7 @@
     ])>   
         {{ $value ?? $slot}}
         @isset($icon)
-            <x-ui::svg size="md" :variant="$icon" @class=([$classes]) />
+            <x-ui::svg size="md" :icon="$icon" @class=([$classes]) />
         @endisset    
     </div>
 

@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.8.00**
+> **Version 1.8.01**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -552,7 +552,7 @@ Optional SVG props:
 Additional HTML / SVG attributes (for example `class`) can also be passed through.
 
 Default `icons` set currently includes:
-`academic-cap`, `add`, `add-user`, `adjustments-horizontal`, `archive-box`, `arrow-down`, `arrow-down-tray`, `arrow-left`, `arrow-path`, `arrow-right`, `arrow-up`, `arrow-up-tray`, `avatar`, `badge`, `bars`, `bars-down`, `bars-up`, `bell`, `calendar-days`, `camera`, `chart`, `chat-bubble-left`, `check`, `check-circle`, `chevron-down`, `chevron-left`, `chevron-right`, `chevron-up`, `chevron-up-down`, `document`, `document-duplicate`, `edit`, `envelope`, `exit`, `eye`, `finger-print`, `folder`, `funnel`, `globe`, `home`, `identification`, `inbox-arrow-down`, `info`, `light-bulb`, `link`, `list`, `list-bullet`, `magnifying-glass`, `mail`, `minus`, `moon`, `photo`, `pie`, `plus`, `search`, `tag`, `trash`, `user`, `users`, `wrench`, `x-mark`
+`academic-cap`, `add`, `add-user`, `adjustments-horizontal`, `archive-box`, `arrow-down`, `arrow-down-tray`, `arrow-left`, `arrow-path`, `arrow-right`, `arrow-up`, `arrow-up-tray`, `avatar`, `badge`, `bars`, `bars-down`, `bars-up`, `bell`, `calendar-days`, `camera`, `chart`, `chat-bubble-left`, `check`, `check-circle`, `chevron-down`, `chevron-left`, `chevron-right`, `chevron-up`, `chevron-up-down`, `cog`, `cog-6-tooth`, `document`, `document-duplicate`, `edit`, `envelope`, `exit`, `eye`, `finger-print`, `folder`, `funnel`, `globe`, `home`, `identification`, `inbox-arrow-down`, `info`, `light-bulb`, `link`, `list`, `list-bullet`, `magnifying-glass`, `mail`, `minus`, `moon`, `photo`, `pie`, `plus`, `search`, `tag`, `trash`, `user`, `users`, `wrench`, `x-mark`
 
 ```
 <x-ui::svg icon="trash" size="sm" />
