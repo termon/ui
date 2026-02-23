@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.7.92**
+> **Version 1.8.00**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -69,14 +69,14 @@ The `navbar` component is a fully responsive (mobile friendly) navigation compon
 ```
 <x-ui::navbar>
     <!-- Brand Icon -->
-    <x-slot:brand-icon>       
+    <x-slot:brandIcon>       
        <svg class="w-8 h-8">...</svg>
-    </x-slot:brand-icon>
+    </x-slot:brandIcon>
 
     <!-- Brand Title -->
-    <x-slot:brand-title>       
+    <x-slot:brandTitle>       
        <span class="text-lg font-semibold">App Name</span>
-    </x-slot:brand-title>
+    </x-slot:brandTitle>
 
     <!-- Primary navigation links -->
     <x-slot:navigation>
@@ -113,14 +113,14 @@ The `sidebar` component is a fully responsive (mobile friendly) navigation compo
 ```
 <x-ui::sidebar>
     <!-- Optional Brand Icon -->
-    <x-slot:brand-icon>       
+    <x-slot:brandIcon>       
        <svg>...</svg>
-    </x-slot:brand-icon>
+    </x-slot:brandIcon>
 
     <!-- Optional Brand Title -->
-    <x-slot:brand-title>       
+    <x-slot:brandTitle>       
        <span>App Name</span>
-    </x-slot:brand-title>
+    </x-slot:brandTitle>
 
     <!-- Primary navigation links -->
     <x-slot:navigation>
@@ -289,7 +289,9 @@ An optional set of `:options` can be added to override the default page options 
 
 ### Form
 
-Form elements include: `input`, `select`, and `textarea` components. All require a minimum of a `name` property and an optional `label` property. All, also accept any standard html properties. Additionally `label` and `error` components can be used individually.
+Form elements include single-purpose `input`, `select`, and `textarea` components. These components render only the field itself (no label or validation error output) and require a minimum of a `name` property. All also accept standard HTML attributes.
+
+To render a field together with an optional label and validation error using a single declaration, use the corresponding group component: `input-group`, `select-group`, or `textarea-group`. `label` and `error` components can still be used individually.
 
 > When using a file input `type="file"` you can specify an optional variant to style the input -
 > `'light'`, `'blue'`, `'gray'`, `'dark'`, `'green'`, `'red'`, `'yellow'`, `'purple'`.
@@ -298,13 +300,37 @@ Example usage:
 
 #### Input
 
-Given a model variable `$model` with a text `name` attribute, number `quantity` attribute, `description` textarea attribute and file `photo` attribute , the inputs could be used as follows:
+Given a model variable `$model` with a text `name` attribute, number `quantity` attribute, `description` textarea attribute and file `photo` attribute, the inputs could be used as follows.
+
+Use `input` when you only need the input element:
+
+``` 
+<div>
+    <x-ui::form.label for="name">Name</x-ui::form.label>
+    <x-ui::form.input name="name" value="..." />
+    <x-ui::form.error for="name" />
+</div>
+
+<div>
+    <x-ui::form.label for="quantity">Quantity</x-ui::form.label>
+    <x-ui::form.input type="number" name="quantity" value="..." />
+    <x-ui::form.error for="quantity" />
+</div>
+
+<div>
+    <x-ui::form.label for="photo">Photo</x-ui::form.label>
+    <x-ui::form.input type="file" variant="light" name="photo" />
+    <x-ui::form.error for="photo" />
+</div>
+```
+
+Use `input-group` when you want the input with an optional label and validation error:
 
 ```
-<x-ui::form.input label="Name" name="name" value="..." />
-<x-ui::form.input type="number" label="Quantity" name="quantity" value="..." />
-<x-ui::form.input type="file" variant="light" label="Photo" name="photo" value="..." />
-<x-ui::form.textarea label="Description" name="description" value="..." />
+<x-ui::form.input-group label="Name" name="name" value="..." />
+<x-ui::form.input-group type="number" label="Quantity" name="quantity" value="..." />
+<x-ui::form.input-group type="file" variant="light" label="Photo" name="photo" />
+<x-ui::form.textarea-group label="Description" name="description" value="..." />
 ```
 
 #### Select
@@ -312,33 +338,66 @@ Given a model variable `$model` with a text `name` attribute, number `quantity` 
 Given an options list variable named `$roles` and a model named `$model` with a `role` attribute, the select could be used as follows:
 
 ```
-<x-ui::form.select label="Role" name="role" :options="$roles" value="..." />
+<x-ui::form.select-group label="Role" name="role" :options="$roles" value="..." />
 ```
 
 A custom placeholder property can also be provided which overrides the default.
 
 ```
-<x-ui::form.select label="Role" name="role" :options="$roles" value="..."
-                   placeholder="Select a role.." />
+<x-ui::form.select-group label="Role" name="role" :options="$roles" value="..."
+                         placeholder="Select a role.." />
 ```
 
-#### DatePicker
+#### Date
 
-A custom date picker component is also available and can be used instead of form input with a date type.
+A custom date picker component is also available and can be used instead of a standard date input.
 
-```
-<x-ui::form.date-picker name="date" label="Date" value="{{ now()->format('Y-m-d') }}" class="w-64"/>
-```
-> The input value should be a string in format Y-m-d
-
-#### DateTimePicker
-
-A custom datetime picker component is also available and can be used instead of form input with a datetime type.
+Use `date` when you only need the field:
 
 ```
-<x-ui::form.datetime-picker name="date" label="Date" value="{{ now()->format('Y-m-d H:i:s') }}" class="w-64"/>
+<x-ui::form.date name="date" value="{{ now()->format('Y-m-d') }}" class="w-64" />
 ```
-> The input value should be a string in format Y-m-d
+
+Use `date-group` when you want the field with an optional label and validation error:
+
+```
+<x-ui::form.date-group name="date" label="Date" value="{{ now()->format('Y-m-d') }}" class="w-64" />
+```
+> The input value should be a string in format `Y-m-d`
+
+#### DateTime
+
+A custom datetime picker component is also available and can be used instead of a standard datetime input.
+
+Use `datetime` when you only need the field:
+
+```
+<x-ui::form.datetime name="date" value="{{ now()->format('Y-m-d H:i:s') }}" class="w-64" />
+```
+
+Use `datetime-group` when you want the field with an optional label and validation error:
+
+```
+<x-ui::form.datetime-group name="date" label="Date" value="{{ now()->format('Y-m-d H:i:s') }}" class="w-64" />
+```
+> The input value should be a string in format `Y-m-d H:i:s`
+
+#### Confirm
+
+The `confirm` component displays an inline AlpineJS confirmation prompt for destructive actions. It renders an initial button, then swaps to a confirmation state with `Yes` / `No`.
+
+When placed inside a form, clicking `Yes` submits the wrapping form.
+
+```
+<form action="{{ ... }}" method="POST">
+    @csrf
+    @method('DELETE')
+
+    <x-ui::form.confirm variant="ored">Delete</x-ui::form.confirm>
+</form>
+```
+
+An optional `message` prop can be used to override the default confirmation text (`Are you sure?`).
 
 ### Flash
 
@@ -472,17 +531,32 @@ The `tabs` and `tab` components work together to provide tabbed panels and work 
     <x-ui::tabs.tab name="Tab3">
         Tab three content
     </x-ui::tabs.tab>
-</x-ui.tabs.tab>
+</x-ui::tabs.tab>
 ```
 
 ### Svg
 
-Svg component accepts a `variant` attribute, containing the name of the svg e.g. ( `add` `add-user` `adjustments-horizontal` `avatar` `arrow-path` `arrow-right` `arrow-left` `arrow-up` `arrow-down` `archive-box` `badge` `bars` `bars-up` `bars-down` `bell` `check-circle` `chat-bubble-left` `cog-6-tooth` `chevron-left` `chevron-right` `chevron-up` `chevron-down` `chevron-up-down` `document-duplicate` `edit` `eye` `exit` `folder` `globe` `home` `identification` `info` `inbox-arrow-down` `light-bulb` `list` `list-bullet` `link` `magnifying-glass` `minus` `moon` `pie` `plus` `search` `tag` `trash` `user` `wrench` `x-mark`)
+The `svg` component renders icons from a Blade icon library folder.
 
-It also accepts a size attribute with values `sm` `md` `lg` and `xl`
+Required / common props:
+- `icon`: the icon name to render
+- `set`: icon set folder name (defaults to `icons`)
+- `size`: `sm`, `md`, `lg`, `xl` (defaults to `sm`)
+
+Optional SVG props:
+- `viewBox` (default `0 0 24 24`)
+- `fill` (default `none`)
+- `stroke` (default `currentColor`)
+- `strokeWidth` (default `1.5`)
+
+Additional HTML / SVG attributes (for example `class`) can also be passed through.
+
+Default `icons` set currently includes:
+`academic-cap`, `add`, `add-user`, `adjustments-horizontal`, `archive-box`, `arrow-down`, `arrow-down-tray`, `arrow-left`, `arrow-path`, `arrow-right`, `arrow-up`, `arrow-up-tray`, `avatar`, `badge`, `bars`, `bars-down`, `bars-up`, `bell`, `calendar-days`, `camera`, `chart`, `chat-bubble-left`, `check`, `check-circle`, `chevron-down`, `chevron-left`, `chevron-right`, `chevron-up`, `chevron-up-down`, `document`, `document-duplicate`, `edit`, `envelope`, `exit`, `eye`, `finger-print`, `folder`, `funnel`, `globe`, `home`, `identification`, `inbox-arrow-down`, `info`, `light-bulb`, `link`, `list`, `list-bullet`, `magnifying-glass`, `mail`, `minus`, `moon`, `photo`, `pie`, `plus`, `search`, `tag`, `trash`, `user`, `users`, `wrench`, `x-mark`
 
 ```
-<x-ui::svg variant="trash" size='sm' />
+<x-ui::svg icon="trash" size="sm" />
+<x-ui::svg icon="check-circle" size="md" class="text-green-600" />
 ```
 
 ### Modal
@@ -528,6 +602,14 @@ Supported props:
 ##### Close
 ```
 <x-ui::modal.trigger for="test" action="close" variant="light">
+    Close
+</x-ui::modal.trigger>
+```
+
+If the modal contains a form and this close trigger is rendered inside that form, set `type="button"` on the trigger. The default trigger component (`x-ui::button`) would otherwise submit the form.
+
+```
+<x-ui::modal.trigger for="test" action="close" variant="light" type="button">
     Close
 </x-ui::modal.trigger>
 ```

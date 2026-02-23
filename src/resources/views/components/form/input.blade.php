@@ -1,4 +1,4 @@
-@props(['name', 'label' => null, 'value' => null, 'variant' => 'light', 'type' => 'text', 'icon' => null])
+@props(['name', 'value' => null, 'variant' => 'light', 'type' => 'text'])
 
 @php
     // get the wrapper classes or default to an empty string
@@ -9,8 +9,8 @@
         : 'w-full border border-gray-300 rounded-lg p-2.5 text-gray-700 leading-tight focus:ring-blue-500 focus:border-blue-500 dark:focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500';
 
     $variantClasses = $type === 'file' ? match ($variant) {
-        'light' => 'file:bg-gray-100 file:text-gray-900 dark:file:bg-gray-500 dark:file:text-gray-100',
-        'oblue' => 'file:bg-blue-100 file:text-blue-700 dark:file:bg-gray-500 dark:file:text-blue-900',
+        'light' => 'file:bg-gray-100 file:text-gray-900',
+        'oblue' => 'file:bg-blue-100 file:text-blue-700',
         'blue' => 'file:bg-blue-700 file:text-white',
         'gray' => 'file:bg-gray-500 file:text-white',
         'dark' => 'file:bg-gray-900 file:text-white',
@@ -22,31 +22,16 @@
     } : '';
 @endphp
 
-<div @class([
-        $wrapperClasses,                                        // wrapper classes
-        'w-full' => ! Str::of($wrapperClasses)->contains('w-'), // ensure the wrapper is full width unless specified
-    ])>
-
-    @isset($label)
-        <x-ui::form.label for="{{ $name }}" class="mb-1" :icon="$icon">
-            {{ $label }}
-        </x-ui::form.label>
-    @endisset
-
-    <input
+<input
         type="{{ $type }}"
         id="{{ $name }}"
         name="{{ $name }}"
-        value="{{ $value }}"
-        aria-describedby="{{ $name }}-error"
+        value="{{ $value }}"        
         {{ $attributes->except('class')->merge() }}
         @class([
             $baseClasses,
             $variantClasses,
+            $wrapperClasses,
         ])
-    >
+>
 
-    @error($name)
-        <x-ui::form.error id="{{ $name }}-error">{{ $message }}</x-ui::form.error>
-    @enderror
-</div>
