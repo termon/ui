@@ -4,5 +4,5 @@
 # Update local version numbers (README.md) and composer.json version (v. important)
 # Commit changes and push to origin
 # Create a new tag locally then push to origin e.g. publish tagged version 1.8.00
-# $ git tag -a 1.8.03 -m 'Version 1.8.03'
-# $ git push origin 1.8.03
+# $ git tag -a 1.8.04 -m 'Version 1.8.04'
+# $ git push origin 1.8.04

@@ -28,25 +28,41 @@
             class="fixed left-0 top-0 z-[1000] p-4 bg-white border rounded-lg shadow w-[17rem] max-h-[min(80vh,36rem)] overflow-y-auto
                     border-gray-200/70 dark:bg-gray-900 dark:border-gray-700">
             <!-- Calendar Header -->
-            <div class="flex items-center justify-between mb-2">
-                <div>
+            <div class="flex items-center justify-between gap-1 mb-2">
+                <div class="min-w-0 flex-1 whitespace-nowrap">
                     <span x-text="monthNames[month]"
                         class="text-lg font-bold text-gray-800 dark:text-gray-200"></span>
                     <span x-text="year" class="ml-1 text-lg font-normal text-gray-600 dark:text-gray-400"></span>
                 </div>
-                <div>
+                <div class="flex items-center shrink-0 gap-px">
+                    <button @click="previousYear()" type="button" title="Previous year"
+                        class="p-0 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M18 19l-7-7 7-7M11 19L4 12l7-7" />
+                        </svg>
+                    </button>
                     <button @click="previousMonth()" type="button"
-                        class="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <svg class="w-6 h-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        title="Previous month"
+                        class="p-0 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M15 19l-7-7 7-7" />
                         </svg>
                     </button>
                     <button @click="nextMonth()" type="button"
-                        class="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <svg class="w-6 h-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        title="Next month"
+                        class="p-0 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                    <button @click="nextYear()" type="button" title="Next year"
+                        class="p-0 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 5l7 7-7 7m7-14l7 7-7 7" />
                         </svg>
                     </button>
                 </div>
@@ -281,6 +297,16 @@
                 } else {
                     this.month++;
                 }
+                this.calculateDays();
+            },
+
+            previousYear() {
+                this.year--;
+                this.calculateDays();
+            },
+
+            nextYear() {
+                this.year++;
                 this.calculateDays();
             },
 

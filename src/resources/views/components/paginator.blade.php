@@ -22,7 +22,7 @@
    
 @endphp
 
-@if ($items instanceof \Illuminate\Pagination\AbstractPaginator && $items->hasPages())
+@if ($items instanceof \Illuminate\Pagination\AbstractPaginator)
     <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 p-4 text-sm">
 
         {{-- Pagination --}}
@@ -109,5 +109,6 @@
                 @endforeach
             </select>
         </form>
+        
     </div>
 @endif
