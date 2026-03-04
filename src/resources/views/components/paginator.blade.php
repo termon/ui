@@ -23,7 +23,7 @@
 @endphp
 
 @if ($items instanceof \Illuminate\Pagination\AbstractPaginator)
-    <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 p-4 text-sm">
+    <div {{ $attributes->merge(['class' => 'flex flex-wrap items-center justify-center gap-x-4 gap-y-2 p-4 text-sm'])}}>
 
         {{-- Pagination --}}
         <nav role="navigation" aria-label="{{ __('Pagination Navigation') }}">
@@ -102,8 +102,7 @@
                 <input type="hidden" name="{{ $key }}" value="{{ $value }}">
             @endforeach
             <label for="size" class="hidden md:block text-sm dark:text-gray-300">Page Size</label>
-            <select id="size" name="size" onchange="this.form.submit()"
-                {{ $attributes->merge(['class' => 'border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white rounded p-2']) }}>
+            <select id="size" name="size" onchange="this.form.submit()" class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white rounded p-2">
                 @foreach ($options as $key => $val)
                     <option value="{{ $key }}" {{ $key == $size ? 'selected' : '' }}>{{ $val }}</option>
                 @endforeach

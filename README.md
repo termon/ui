@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.8.04**
+> **Version 1.8.05**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -79,7 +79,7 @@ Include AlpineJS in your main layout (typically before `</body>`):
 
 #### Option 2: AlpineJS via Livewire
 
-If you are using Livewire (v4), AlpineJS is included by Livewire. In that case, include Livewire assets in your layout and you do not need a separate Alpine CDN script.
+If you are using Livewire (v4), AlpineJS is included by default. In that case, include Livewire assets in your layout and you do not need a separate Alpine CDN script.
 
 ```blade
 <head>
@@ -111,6 +111,26 @@ The heading component provides styled headings with consistent light/dark mode s
 <x-ui::heading level="1">Heading Level 1</x-ui::heading>
 <x-ui::heading level="2">Heading Level 2</x-ui::heading>
 ```
+### Divider
+
+The `divider` component renders a horizontal divider with inline slot content. It accepts a `type` prop with values `top` or `bottom` and defaults to `top`.
+
+```
+<x-ui::divider>
+    <x-ui::heading level="2">Section Title</x-ui::heading>
+</x-ui::divider>
+
+<x-ui::divider type="bottom">
+    <span class="text-sm text-gray-500">End of section</span>
+</x-ui::divider>
+```
+
+Available divider types:
+- `top` adds a bottom border with spacing below the content.
+- `bottom` adds a top border with spacing above the content.
+
+Additional HTML attributes and classes can be passed to the wrapper `div`.
+
 
 ### Navbar
 
