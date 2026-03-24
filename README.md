@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.8.05**
+> **Version 1.8.10**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -361,7 +361,7 @@ An optional set of `:options` can be added to override the default page options 
 
 Form elements include single-purpose `input`, `select`, and `textarea` components. These components render only the field itself (no label or validation error output) and require a minimum of a `name` property. All also accept standard HTML attributes.
 
-To render a field together with an optional label and validation error using a single declaration, use the corresponding group component: `input-group`, `select-group`, or `textarea-group`. `label` and `error` components can still be used individually.
+To render a field together with an optional label and validation error using a single declaration, use the corresponding group component: `input-group`, `select-group`, `textarea-group`, `date-group`, `datetime-group`, `toggle-group`, `range-group`, or `otp-group`. `label` and `error` components can still be used individually.
 
 > When using a file input `type="file"` you can specify an optional variant to style the input -
 > `'light'`, `'blue'`, `'gray'`, `'dark'`, `'green'`, `'red'`, `'yellow'`, `'purple'`.
@@ -451,6 +451,83 @@ Use `datetime-group` when you want the field with an optional label and validati
 <x-ui::form.datetime-group name="date" label="Date" value="{{ now()->format('Y-m-d H:i:s') }}" class="w-64" />
 ```
 > The input value should be a string in format `Y-m-d H:i:s`
+
+#### Toggle
+
+Use `toggle` when you need a boolean switch that submits `1` when on and `0` when off.
+
+```
+<x-ui::form.toggle name="published" :value="$model->published" />
+```
+
+Use `toggle-group` when you want the field with an optional label and validation error:
+
+```
+<x-ui::form.toggle-group
+    name="published"
+    label="Published"
+    :value="$model->published"
+    variant="green"
+/>
+```
+
+Available toggle variants:
+- `light`
+- `oblue`
+- `blue`
+- `gray`
+- `dark`
+- `green`
+- `red`
+- `yellow`
+- `purple`
+
+#### Range
+
+Use `range` for a styled slider input with a live value display and tick marks.
+
+```
+<x-ui::form.range name="score" min="1" max="5" step="1" :value="$model->score" />
+```
+
+Use `range-group` when you want the field with an optional label and validation error:
+
+```
+<x-ui::form.range-group
+    name="score"
+    label="Score"
+    min="1"
+    max="5"
+    step="1"
+    :value="$model->score"
+    variant="oblue"
+/>
+```
+
+Available range variants:
+- `light`
+- `oblue`
+- `blue`
+- `gray`
+- `dark`
+- `green`
+- `red`
+- `yellow`
+- `purple`
+
+#### OTP
+
+Use `otp` to render a one-time-passcode style sequence of single-character inputs. The component stores values as an array using the provided field name.
+
+```
+<x-ui::form.otp name="code" length="6" />
+```
+
+Use `otp-group` when you want the field with an optional label and validation error:
+
+```
+<x-ui::form.otp-group name="code" label="Verification code" length="6" />
+```
 
 #### Confirm
 
@@ -719,18 +796,68 @@ The component also accepts optional parameters
 `variant` - colour of completed steps `green` `blue` `indigo` (default) 
 
 
+### Chart
+
+The `chart` component wraps [Chart.js](https://www.chartjs.org/) and is intended to replace the older `highchart` component.
+
+It accepts:
+- an `id` prop for the canvas element
+- a `config` prop containing a Chart.js configuration array/object
+- or a slot containing a JavaScript chart config object
+
+The component loads Chart.js from CDN and applies light/dark theme defaults for legend, title, tooltip, axes, and chart background.
+
+Using the `config` prop:
+
+```blade
+<x-ui::chart
+    id="sales-chart"
+    :config="[
+        'type' => 'bar',
+        'data' => [
+            'labels' => ['Jan', 'Feb', 'Mar', 'Apr'],
+            'datasets' => [
+                [
+                    'label' => 'Sales',
+                    'data' => [12, 19, 8, 15],
+                    'backgroundColor' => '#2563eb',
+                ],
+            ],
+        ],
+        'options' => [
+            'plugins' => [
+                'title' => [
+                    'display' => true,
+                    'text' => 'Monthly Sales',
+                ],
+            ],
+        ],
+    ]"
+/>
+```
+
+Using the slot:
+
+```blade
+<x-ui::chart id="traffic-chart">
+{
+    type: 'line',
+    data: {
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+        datasets: [{
+            label: 'Visits',
+            data: [120, 160, 140, 180, 210],
+            borderColor: '#16a34a',
+            backgroundColor: 'rgba(22, 163, 74, 0.2)'
+        }]
+    }
+}
+</x-ui::chart>
+```
+
 ### Highchart
 
-A component wrapping the highchart library. The component slot should contain a string representing a javascript object describing the chart.
-
-```
-<x-ui::highchart>
-{
-    title: { text: 'Demo Chart' },
-    series: [{ data: [1, 2, 3, 4] }]
-}
-</x-ui::highchart>
-```
+The `highchart` component remains available for backward compatibility, but it is now deprecated and should be replaced with `x-ui::chart` for new work and future migrations.
 
 ### Rating
 
