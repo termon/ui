@@ -9,7 +9,7 @@
     class="relative group"
 >
     <button
-        @click="open = !open; collapsed = false"       
+        @click="open = !open"       
         class="w-full flex items-center justify-between gap-3 px-4 py-2 rounded-md font-medium hover:bg-gray-100 text-gray-500 dark:text-gray-300 dark:hover:bg-gray-700 transition text-left"
     >
         <div class="flex items-center gap-3">

@@ -11,7 +11,7 @@
     </x-ui::button>
 
     {{-- Confirmation state --}}
-    <div x-show="confirm" class="flex items-center gap-2" role="alertdialog">
+    <div x-show="confirm" x-cloak class="flex items-center gap-2" role="alertdialog">
         
         <span class="text-sm text-gray-700">{{ $message }}</span>
 
@@ -24,5 +24,4 @@
         </x-ui::button>
     </div>
 </div>
-
 

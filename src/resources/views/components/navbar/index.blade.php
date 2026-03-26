@@ -46,11 +46,11 @@
                 </nav>
             @endisset
 
-            <!-- Bottom Nav -->
-            @isset($bottom)
-                <footer {{ $bottom->attributes->merge(['class' => 'flex items-center justify-center fixed bottom-0 inset-x-0 mt-2 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-40'])}} >
+            <!-- Toolbar Nav -->
+            @isset($toolbar)
+                <footer {{ $toolbar->attributes->merge(['class' => 'flex items-center justify-center fixed bottom-0 inset-x-0 mt-2 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-40'])}} >
                     <div class="flex justify-around items-center py-2">
-                        {{ $bottom }}
+                        {{ $toolbar }}
                     </div>
                 </footer>
             @endisset

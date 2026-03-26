@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.8.10**
+> **Version 1.8.11**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -153,17 +153,17 @@ The `navbar` component is a fully responsive (mobile friendly) navigation compon
         <x-ui::navbar.link href="/" icon="home" label="Home" />
         <x-ui::navbar.dropdown label="Company" icon="folder">
             <x-ui::navbar.link href="/about" icon="info" label="About" />
-            <x-ui::navbar.link href="/contact" icon="phone" label="Contact" />
+            <x-ui::navbar.link href="/contact" icon="mail" label="Contact" />
         </x-ui::navbar.dropdown>
     </x-slot:navigation>
 
-    <!-- User section -->
-    <x-slot:user>
+    <!-- Right section -->
+    <x-slot:right>
         <x-ui::navbar.dropdown label="User Menu" icon="user">
             <x-ui::navbar.link href="/profile" icon="cog" label="Profile" />
             <x-ui::navbar.form-link action="/logout" method="post" icon="exit" label="Logout" />
         </x-ui::navbar.dropdown>
-    </x-slot:user>
+    </x-slot:right>
 
     <!-- Toolbar (mobile bottom bar) -->
     <x-slot:toolbar>
@@ -197,7 +197,7 @@ The `sidebar` component is a fully responsive (mobile friendly) navigation compo
         <x-ui::sidebar.link href="/" icon="home" label="Home" />
         <x-ui::sidebar.dropdown label="Company" icon="folder">
             <x-ui::sidebar.link href="/about" icon="info" label="About" />
-            <x-ui::sidebar.link href="/contact" icon="phone" label="Contact" />
+            <x-ui::sidebar.link href="/contact" icon="mail" label="Contact" />
         </x-ui::sidebar.dropdown>
     </x-slot:navigation> 
     
@@ -228,8 +228,8 @@ A dropdown menu can be added to the `navbar` or `sidebar` using `navbar.dropdown
 
 ```
 <x-ui::navbar.dropdown label="Dropdown" icon="...">
-    <x-ui::navbar.link active="about" href="..">...</x-ui::navbar.link>
-    <x-ui::navbar.link active="home" href="..">...</x-ui::navbar.link>
+    <x-ui::navbar.link href="..">...</x-ui::navbar.link>
+    <x-ui::navbar.link href="..">...</x-ui::navbar.link>
 </x-ui::navbar.dropdown>
 ```
 
@@ -268,9 +268,9 @@ The `button` and `link` components can be configured with several variants (`'bl
 Following examples provide a `'light'` variant button, and standard `link`. Adding a `variant` property to the link allows it to be styled as one of the buttons.
 
 ```
-<x-ui::button variant="light">Light</button>
-<x-ui::link>Link</button>
-<x-ui::link variant='oblue'>Outline Blue Link</button>
+<x-ui::button variant="light">Light</x-ui::button>
+<x-ui::link>Link</x-ui::link>
+<x-ui::link variant="oblue">Outline Blue Link</x-ui::link>
 ```
 
 Both also accept optional `icon` and `label` properties. For `icon` specify the name of an svg icon (see svg below). The `label` property can be used instead of the slot e.g.
@@ -328,7 +328,7 @@ The `table` component includes `thead` and `tbody` slots in which head and body 
                 Row 1 Column 1
             </x-ui::table.td>
         </x-ui::table.tr>
-    <x-slot:tbody>
+    </x-slot:tbody>
 </x-ui::table>
 ```
 
@@ -352,7 +352,7 @@ A `link-sort` component is available for use in table header columns
 A `paginator` component is available to use when the table is displaying a paginated collection. The component also allows the user to specify the number of rows to display in each page. The paginated collection variable items should be passed via the `:items` property
 
 ```
-<x-paginator :items="$collection" size="10" />
+<x-ui::paginator :items="$collection" size="10" />
 ```
 
 An optional set of `:options` can be added to override the default page options `:options="['15' => 15, '25' => 25, '50' => 50, '100' => 100, '500' => 500]"`. Additionally an optional `variant` can be used to specify a colour `green` `red` `dark` `purple` `light`
@@ -364,7 +364,7 @@ Form elements include single-purpose `input`, `select`, and `textarea` component
 To render a field together with an optional label and validation error using a single declaration, use the corresponding group component: `input-group`, `select-group`, `textarea-group`, `date-group`, `datetime-group`, `toggle-group`, `range-group`, or `otp-group`. `label` and `error` components can still be used individually.
 
 > When using a file input `type="file"` you can specify an optional variant to style the input -
-> `'light'`, `'blue'`, `'gray'`, `'dark'`, `'green'`, `'red'`, `'yellow'`, `'purple'`.
+> `'light'`, `'oblue'`, `'blue'`, `'gray'`, `'dark'`, `'green'`, `'red'`, `'yellow'`, `'purple'`.
 
 Example usage:
 
@@ -442,7 +442,7 @@ A custom datetime picker component is also available and can be used instead of 
 Use `datetime` when you only need the field:
 
 ```
-<x-ui::form.datetime name="date" value="{{ now()->format('Y-m-d H:i:s') }}" class="w-64" />
+<x-ui::form.datetime name="date" label="Date" value="{{ now()->format('Y-m-d H:i:s') }}" class="w-64" />
 ```
 
 Use `datetime-group` when you want the field with an optional label and validation error:
@@ -606,7 +606,7 @@ A simple component to use as a page header. Can be combined with `title` compone
 
 #### Title 
 
-The `title` component can be used to provide consistent page title, with configurable sizes `xl` (default), `lg`, `md`.
+The `title` component can be used to provide consistent page title, with configurable sizes `xl` (default), `lg`, `md`, `sm`.
 
 ```
 <x-ui::title size="lg">
@@ -622,17 +622,16 @@ The `title` component can be used to provide consistent page title, with configu
        Users
     </x-ui::title>
 
-    <x::link href="#">Create</x::link>
+    <x-ui::link href="#">Create</x-ui::link>
 </x-ui::header>
 ```
 
 ### Display
 
-Used to display a `label` (optional) and a `value` - typically used in a show view. For example given a `$model` with a name attribute we can display it as follows:
+Used to display a `label` and a `value` - typically used in a show view. For example given a `$model` with a name attribute we can display it as follows:
 
 ```
 <x-ui::display label="Name" value="{{$model->name}}" />
-<x-ui::display value="{{$model->name}}" />
 ```
 
 Where a more complex value is to be displayed then use the $slot as follows:
@@ -678,7 +677,7 @@ The `tabs` and `tab` components work together to provide tabbed panels and work 
     <x-ui::tabs.tab name="Tab3">
         Tab three content
     </x-ui::tabs.tab>
-</x-ui::tabs.tab>
+</x-ui::tabs>
 ```
 
 ### Svg
@@ -710,7 +709,7 @@ Default `icons` set currently includes:
 
 A `modal` component is used to display a popup modal. The modal accepts a `name` prop which must be unique on the page containing the modal. It also can be configured with optional `title` and `footer` slots.
    
-The modal also accepts a `dismissable` prop that defaults to `true` but when set to `false` prevents closing the modal by clicking oon the backdrop.
+The modal also accepts a `dismissable` prop that defaults to `false`. In the current implementation, clicking the backdrop closes the modal while `dismissable` is `false`.
 
 ```
 <x-ui::modal name="test"  focusable>
@@ -763,14 +762,14 @@ If the modal contains a form and this close trigger is rendered inside that form
 
 ##### Use a Different Trigger Component
 ```
-<x-ui::modal-trigger for="test" component="ui::link" variant="link">
+<x-ui::modal.trigger for="test" component="ui::link" variant="link">
     Open as Link
-</x-ui::modal-trigger>
+</x-ui::modal.trigger>
 ```
 
 #### Trigger
 
-As an alternative to `modal-trigger`, you can still trigger a modal manually using a `button` and `@click` dispatch (named `test` in this example).
+As an alternative to `modal.trigger`, you can still trigger a modal manually using a `button` and `@click` dispatch (named `test` in this example).
 
 ##### Open
 ```
