@@ -15,7 +15,7 @@
 @endphp
 
 <div {{ $attributes->only('class')->class(['space-y-2']) }}>
-    <x-form.toggle
+    <x-ui::form.toggle
         :name="$name"
         :label="$label"
         :description="$description"
