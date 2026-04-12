@@ -454,10 +454,32 @@ Use `datetime-group` when you want the field with an optional label and validati
 
 #### Toggle
 
-Use `toggle` when you need a boolean switch that submits `1` when on and `0` when off.
+Use `toggle` when you need a native checkbox-based boolean field. This component forwards extra attributes such as `wire:model`, `disabled`, `required`, and `class` to the underlying checkbox input so it works cleanly with standard forms and Livewire.
 
 ```
-<x-ui::form.toggle name="published" :value="$model->published" />
+<x-ui::form.toggle name="published" :checked="$model->published" />
+```
+
+You may also provide the visible content directly using `label` and `description` props:
+
+```
+<x-ui::form.toggle
+    name="published"
+    label="Published"
+    description="Make this record visible to other users."
+    :checked="$model->published"
+/>
+```
+
+For fully custom content, pass a slot. The checkbox remains wrapped in a label so the whole row stays clickable:
+
+```
+<x-ui::form.toggle name="published" :checked="$model->published">
+    <span>
+        <span class="block font-medium text-zinc-900 dark:text-zinc-50">Published</span>
+        <span class="mt-1 block text-xs text-zinc-500 dark:text-zinc-400">Make this record visible to other users.</span>
+    </span>
+</x-ui::form.toggle>
 ```
 
 Use `toggle-group` when you want the field with an optional label and validation error:
@@ -466,21 +488,15 @@ Use `toggle-group` when you want the field with an optional label and validation
 <x-ui::form.toggle-group
     name="published"
     label="Published"
-    :value="$model->published"
-    variant="green"
+    description="Make this record visible to other users."
+    :checked="$model->published"
+    variant="card"
 />
 ```
 
-Available toggle variants:
-- `light`
-- `oblue`
-- `blue`
-- `gray`
-- `dark`
-- `green`
-- `red`
-- `yellow`
-- `purple`
+Available `toggle-group` variants:
+- `plain`
+- `card`
 
 #### Range
 
