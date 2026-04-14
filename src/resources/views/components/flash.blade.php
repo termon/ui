@@ -1,14 +1,23 @@
 @props([
-    'position' => 'top-right'
+    'position' => 'top-right',
+    'timeout' => 6000,
 ])
 
 @php
-    $positionClasses = match($position) {
+    $timeout = filter_var($timeout, FILTER_VALIDATE_INT, [
+        'options' => ['min_range' => 0],
+    ]);
+
+    $timeout = $timeout !== false ? $timeout : 6000;
+
+    $positionClasses = match ($position) {
         'top-right' => 'top-5 right-5',
         'top-left' => 'top-5 left-5',
+        'top-center' => 'top-5 left-1/2 -translate-x-1/2',
         'bottom-right' => 'bottom-5 right-5',
         'bottom-left' => 'bottom-5 left-5',
-        default => 'top-5 right-5'
+        'bottom-center' => 'bottom-5 left-1/2 -translate-x-1/2',
+        default => 'top-5 right-5',
     };
 
     $title = Session::get('success') ? "Success" : null;
@@ -26,7 +35,7 @@
 
 <!-- Alert component -->
 @if($message!=null)
-<div class="absolute {{ $positionClasses }} m-auto" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 6000)">
+<div class="absolute {{ $positionClasses }} m-auto" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, @js($timeout))">
     <div class="bg-white rounded-lg border-gray-300 border p-3 shadow-lg dark:text-gray-400 dark:bg-gray-700">
     <div class="flex ">
         <div class="px-2"> 

@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.8.14**
+> **Version 1.8.15**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -582,7 +582,12 @@ The `flash` component should be rendered as part of the main layout
 </main>
 ```
 
-> The position of the flash message can be specified using an optional `position` parameter with values `top-right` `top-left` `bottom-right` `bottom-left`
+> The position of the flash message can be specified using an optional `position` parameter with values `top-right` `top-left` `top-center` `bottom-right` `bottom-left` `bottom-center`
+> The flash timeout can be specified using an optional `timeout` parameter as an integer number of milliseconds. Invalid values fall back to `6000`.
+
+```
+<x-ui::flash position="top-right" timeout="12000" />
+```
 
 ### Breadcrumb
 
