@@ -18,6 +18,8 @@
             => 'py-1.5 px-4 transition-colors font-medium rounded-lg text-blue-600 bg-gray-50    border border-gray-200   hover:bg-blue-600   hover:text-white disabled:opacity-50 focus:outline-none focus:ring-1 focus:ring-blue-600   active:bg-gray-200 dark:text-blue-400 dark:bg-gray-600 dark:hover:bg-blue-500 dark:focus:ring-blue-800 dark:border-gray-500  dark:hover:text-white ',
         'ored'
             => 'py-1.5 px-4 transition-colors font-medium rounded-lg text-red-600  bg-gray-50    border border-gray-200   hover:bg-red-600    hover:text-white disabled:opacity-50 focus:outline-none focus:ring-1 focus:ring-red-600    active:bg-gray-200 dark:text-red-400  dark:bg-gray-600 dark:hover:bg-red-500  dark:focus:ring-red-800  dark:border-gray-500  dark:hover:text-white ',
+        'ogreen'
+            => 'py-1.5 px-4 transition-colors font-medium rounded-lg text-green-600 bg-gray-50   border border-gray-200   hover:bg-green-600  hover:text-white disabled:opacity-50 focus:outline-none focus:ring-1 focus:ring-green-600 active:bg-gray-200 dark:text-green-400 dark:bg-gray-600 dark:hover:bg-green-500 dark:focus:ring-green-800 dark:border-gray-500 dark:hover:text-white ',
         
         'link'
             => 'py-1.5 px-4 transition-colors font-medium text-gray-900 hover:text-bold hover:text-black disabled:opacity-50 hover:underline dark:text-gray-100  dark:hover:text-white',

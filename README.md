@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.8.15**
+> **Version 1.8.16**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -263,7 +263,7 @@ Sidebar link components include intelligent tooltip positioning:
 
 ### Button and Link
 
-The `button` and `link` components can be configured with several variants (`'blue'`, `'red'`, `'green'`, `'yellow'`, `'dark'`, `'light'`, `'oblue'`, `'ored'`, `'link'`)
+The `button` and `link` components can be configured with several variants (`'blue'`, `'red'`, `'green'`, `'yellow'`, `'dark'`, `'light'`, `'oblue'`, `'ored'`, `'ogreen`, `'link'` or `'none'` (no styling))
 
 Following examples provide a `'light'` variant button, and standard `link`. Adding a `variant` property to the link allows it to be styled as one of the buttons.
 
