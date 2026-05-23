@@ -1,10 +1,10 @@
 {{-- 
-    overflow-hidden - clip any content within an element that overflows the bounds of that element
     overflow-x-auto - allow horizontal scrolling if needed 
-    min-w-full      - element should take up full width of container
+    min-w-0         - allow the table wrapper to shrink in flex/grid layouts
+    w-full          - element should take up full width of container
     align-middle    - align element in middle of container which is height of parent
 --}}
-<div {{$attributes->merge(['class' => 'p-1.5 overflow-hidden overflow-x-auto min-w-full align-middle border rounded-md border-gray-200 dark:border-gray-700'])}} >
+<div {{ $attributes->merge(['class' => 'w-full min-w-0 max-w-full p-1.5 overflow-x-auto align-middle border rounded-md border-gray-200 dark:border-gray-700']) }}>
     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
 
         @isset($thead)
@@ -22,4 +22,3 @@
     </table>
 
 </div>
-
