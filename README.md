@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.8.20**
+> **Version 1.8.21**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -699,6 +699,51 @@ The `tabs` and `tab` components work together to provide tabbed panels and work 
         Tab three content
     </x-ui::tabs.tab>
 </x-ui::tabs>
+```
+
+### Accordion
+
+The `accordion` and `accordion.item` components work together to provide collapsible panels. Only one item is open at a time.
+
+```
+<x-ui::accordion>
+    <x-ui::accordion.item name="courses" title="Courses" summary="3 selected">
+        Course content
+    </x-ui::accordion.item>
+
+    <x-ui::accordion.item name="modules" title="Modules" summary="2 selected">
+        Module content
+    </x-ui::accordion.item>
+</x-ui::accordion>
+```
+
+The accordion can open a panel by default by passing the item name to the `open` prop:
+
+```
+<x-ui::accordion open="courses">
+    <x-ui::accordion.item name="courses" title="Courses">
+        Course content
+    </x-ui::accordion.item>
+</x-ui::accordion>
+```
+
+The `accordion.item` component accepts:
+- `name`: unique item identifier, used to track open state
+- `title`: title bar text
+- `summary`: optional right-aligned summary text
+- `variant`: title bar colour when open, one of `sky`, `slate`, `blue`, `green`, `yellow`, `red`
+- `content-class`: optional classes for the panel body wrapper
+
+```
+<x-ui::accordion.item
+    name="students"
+    title="Students"
+    summary="12 selected"
+    variant="blue"
+    content-class="grid gap-4 border-t border-slate-100 p-4 lg:grid-cols-2"
+>
+    Student content
+</x-ui::accordion.item>
 ```
 
 ### Svg
