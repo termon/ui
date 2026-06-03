@@ -13,14 +13,14 @@
             => 'py-1.5 px-4 transition-colors font-medium rounded-lg text-gray-100 bg-gray-900   border border-gray-200   hover:bg-gray-700   hover:text-white disabled:opacity-50 focus:outline-none focus:ring-1 focus:ring-gray-900   active:bg-gray-200 dark:text-gray-300   dark:bg-gray-900   dark:hover:bg-gray-800 focus:outline-none dark:focus:ring-gray-700 dark:border-gray-700 ',
         'light'
             => 'py-1.5 px-4 transition-colors font-medium rounded-lg text-gray-900 bg-gray-50    border border-gray-200   hover:bg-gray-200   hover:text-black disabled:opacity-50 focus:outline-none focus:ring-1 focus:ring-gray-200   active:bg-gray-200 dark:bg-gray-600     dark:text-gray-100 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 ',
-        
         'oblue'
             => 'py-1.5 px-4 transition-colors font-medium rounded-lg text-blue-600 bg-gray-50    border border-gray-200   hover:bg-blue-600   hover:text-white disabled:opacity-50 focus:outline-none focus:ring-1 focus:ring-blue-600   active:bg-gray-200 dark:text-blue-400 dark:bg-gray-600 dark:hover:bg-blue-500 dark:focus:ring-blue-800 dark:border-gray-500  dark:hover:text-white ',
         'ored'
             => 'py-1.5 px-4 transition-colors font-medium rounded-lg text-red-600  bg-gray-50    border border-gray-200   hover:bg-red-600    hover:text-white disabled:opacity-50 focus:outline-none focus:ring-1 focus:ring-red-600    active:bg-gray-200 dark:text-red-400  dark:bg-gray-600 dark:hover:bg-red-500  dark:focus:ring-red-800  dark:border-gray-500  dark:hover:text-white ',
         'ogreen'
             => 'py-1.5 px-4 transition-colors font-medium rounded-lg text-green-600 bg-gray-50   border border-gray-200   hover:bg-green-600  hover:text-white disabled:opacity-50 focus:outline-none focus:ring-1 focus:ring-green-600 active:bg-gray-200 dark:text-green-400 dark:bg-gray-600 dark:hover:bg-green-500 dark:focus:ring-green-800 dark:border-gray-500 dark:hover:text-white ',
-        
+        'oyellow'
+            => 'py-1.5 px-4 transition-colors font-medium rounded-lg text-yellow-600 bg-gray-50  border border-gray-200   hover:bg-yellow-600 hover:text-white disabled:opacity-50 focus:outline-none focus:ring-1 focus:ring-yellow-600 active:bg-gray-200 dark:text-yellow-400 dark:bg-gray-600 dark:hover:bg-yellow-500 dark:focus:ring-yellow-800 dark:border-gray-500 dark:hover:text-white ',
         'link'
             => 'py-1.5 px-4 transition-colors font-medium text-gray-900 hover:text-bold hover:text-black disabled:opacity-50 hover:underline dark:text-gray-100  dark:hover:text-white',
         'none' => '',
