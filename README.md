@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.8.22**
+> **Version 1.8.23**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -361,7 +361,7 @@ An optional set of `:options` can be added to override the default page options 
 
 Form elements include single-purpose `input`, `select`, and `textarea` components. These components render only the field itself (no label or validation error output) and require a minimum of a `name` property. All also accept standard HTML attributes.
 
-To render a field together with an optional label and validation error using a single declaration, use the corresponding group component: `input-group`, `select-group`, `textarea-group`, `date-group`, `datetime-group`, `toggle-group`, `range-group`, or `otp-group`. `label` and `error` components can still be used individually.
+To render a field together with an optional label and validation error using a single declaration, use the corresponding group component: `input-group`, `select-group`, `textarea-group`, `date-group`, `datetime-group`, `checkbox-group`, `toggle-group`, `range-group`, or `otp-group`. `label` and `error` components can still be used individually.
 
 > When using a file input `type="file"` you can specify an optional variant to style the input -
 > `'light'`, `'oblue'`, `'blue'`, `'gray'`, `'dark'`, `'green'`, `'red'`, `'yellow'`, `'purple'`.
@@ -451,6 +451,88 @@ Use `datetime-group` when you want the field with an optional label and validati
 <x-ui::form.datetime-group name="date" label="Date" value="{{ now()->format('Y-m-d H:i:s') }}" class="w-64" />
 ```
 > The input value should be a string in format `Y-m-d H:i:s`
+
+#### Checkbox
+
+Use `checkbox` when you need a single native checkbox field with optional label and description content. Extra attributes such as `wire:model`, `disabled`, and `required` are forwarded to the underlying checkbox input. The `class` attribute is applied to the wrapping label.
+
+```
+<x-ui::form.checkbox
+    name="terms"
+    value="accepted"
+    label="Accept terms"
+    description="I agree to the terms and conditions."
+    :checked="old('terms') === 'accepted'"
+/>
+```
+
+For custom label markup, pass a slot. The input remains wrapped in a label so the whole row stays clickable:
+
+```
+<x-ui::form.checkbox name="terms" value="accepted" :checked="$model->accepted_terms">
+    <span>
+        <span class="block font-medium text-zinc-900 dark:text-zinc-50">Accept terms</span>
+        <span class="mt-1 block text-xs text-zinc-500 dark:text-zinc-400">I agree to the terms and conditions.</span>
+    </span>
+</x-ui::form.checkbox>
+```
+
+Use `checkbox-group` when several checkboxes should submit as one array field. The group automatically appends `[]` to the input name when needed, checks matching values from the `value` array, and renders the validation error for the base field name.
+
+```
+<x-ui::form.checkbox-group
+    name="roles"
+    label="Roles"
+    description="Choose one or more roles for this user."
+    :value="old('roles', $user->roles->pluck('id')->all())"
+    :options="[
+        1 => 'Administrator',
+        2 => 'Editor',
+        3 => 'Viewer',
+    ]"
+/>
+```
+
+Options can also include descriptions and disabled states:
+
+```
+<x-ui::form.checkbox-group
+    name="notifications"
+    label="Notifications"
+    :value="$enabledNotifications"
+    variant="card"
+    :options="[
+        'email' => ['label' => 'Email', 'description' => 'Send updates by email.'],
+        'sms' => ['label' => 'SMS', 'description' => 'Send urgent updates by text.'],
+        'post' => ['label' => 'Post', 'description' => 'Postal updates are unavailable.', 'disabled' => true],
+    ]"
+/>
+```
+
+Available `checkbox-group` variants:
+- `plain`
+- `card`
+
+In Livewire components, pass `wire:model` directly to either component. For a single checkbox, bind a boolean or scalar property:
+
+```
+<x-ui::form.checkbox
+    name="published"
+    label="Published"
+    wire:model="published"
+/>
+```
+
+For a checkbox group, bind an array property. Livewire receives the selected checkbox values from each repeated input:
+
+```
+<x-ui::form.checkbox-group
+    name="selectedRoles"
+    label="Roles"
+    wire:model="selectedRoles"
+    :options="$roles"
+/>
+```
 
 #### Toggle
 

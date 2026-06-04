@@ -1,24 +1,24 @@
 @props([
     'name',
+    'value' => '1',
     'label' => null,
     'description' => null,
     'checked' => false,
-    'value' => '1',
-    'uncheckedValue' => '0',
+    'id' => null,
 ])
 
+@php
+    $inputId = $id ?? str($name.'-'.$value)->replaceMatches('/[^A-Za-z0-9\-_:.]/', '-')->trim('-')->value();
+@endphp
 
-<label for="{{ $name }}" {{ $attributes->only('class')->class(['flex items-start gap-3']) }}>
-    {{-- Unchecked checkboxes are not submitted by browsers, so post the false value first. --}}
-    <input type="hidden" name="{{ $name }}" value="{{ $uncheckedValue }}">
-
+<label for="{{ $inputId }}" {{ $attributes->only('class')->class(['flex items-start gap-3']) }}>
     <input
-        id="{{ $name }}"
+        id="{{ $inputId }}"
         name="{{ $name }}"
         type="checkbox"
         value="{{ $value }}"
         @checked($checked)
-        {{ $attributes->except(['class', 'value', 'uncheckedValue']) }}
+        {{ $attributes->except(['class', 'value', 'label', 'description', 'checked', 'id']) }}
         class="mt-0.5 h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-400 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-100 dark:focus:ring-zinc-500"
     />
 
