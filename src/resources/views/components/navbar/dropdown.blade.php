@@ -41,7 +41,7 @@
         x-transition:leave-start="opacity-100 scale-100"
         x-transition:leave-end="opacity-0 scale-95"
         x-cloak
-        class="mt-1 pl-4 space-y-1 lg:absolute lg:right-0 lg:top-full lg:mt-2 lg:pl-1 lg:py-1 lg:bg-white lg:dark:bg-gray-800 lg:border lg:border-gray-200 lg:dark:border-gray-700 lg:rounded-md lg:shadow-lg lg:z-50 lg:min-w-48 lg:w-max"
+        class="mt-1 pl-4 space-y-1 xl:absolute xl:right-0 xl:top-full xl:mt-2 xl:pl-1 xl:py-1 xl:bg-white xl:dark:bg-gray-800 xl:border xl:border-gray-200 xl:dark:border-gray-700 xl:rounded-md xl:shadow-lg xl:z-50 xl:min-w-48 xl:w-max"
     >
         {{ $slot }}
     </div>

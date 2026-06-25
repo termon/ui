@@ -11,15 +11,15 @@
     "
     @keydown.window.escape="mobileOpen = false"
     :class="{ 'dark': dark }"
-    {{ $attributes->merge(['class' => 'text-gray-900 dark:text-gray-100']) }}
+    {{ $attributes->merge(['class' => 'min-w-0 overflow-x-hidden text-gray-900 dark:text-gray-100']) }}
 >
     <!-- Top Nav -->
     <!-- removed fixed and z-40 and replaced with relative to allow display of dropdowns and allow navbar to scroll with content -->
     <header class="border-b bg-gray-50 border-gray-200 dark:border-gray-700 dark:bg-gray-800 w-full fixed z-40">
-        <div class="mx-auto flex items-center justify-between px-4 py-3 lg:py-4">
+        <div class="mx-auto flex min-w-0 items-center justify-between gap-2 px-4 py-3 xl:py-4">
             
             <!-- Brand Icon/Title slots -->
-            <div class='flex items-center gap-2'>
+            <div class='min-w-0 flex shrink items-center gap-2'>
                 @isset($brandIcon)
                     <div {{ $brandIcon->attributes }}>
                         {{ $brandIcon }}
@@ -34,14 +34,14 @@
 
             <!-- Main navigation -->
             @isset($navigation)
-                <nav {{ $navigation->attributes->merge(['class' => 'hidden lg:flex items-center gap-4']) }}>
+                <nav {{ $navigation->attributes->merge(['class' => 'hidden min-w-0 xl:flex items-center gap-2']) }}>
                     {{ $navigation }}
                 </nav>
             @endisset
 
             <!-- Right Nav -->
             @isset($right)
-                <nav {{ $right->attributes->merge(['class' => 'hidden lg:flex items-center gap-4']) }}>
+                <nav {{ $right->attributes->merge(['class' => 'hidden min-w-0 xl:flex items-center gap-2']) }}>
                     {{ $right }}
                 </nav>
             @endisset
@@ -49,7 +49,7 @@
             <!-- Toolbar Nav -->
             @isset($toolbar)
                 <footer {{ $toolbar->attributes->merge(['class' => 'flex items-center justify-center fixed bottom-0 inset-x-0 mt-2 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-40'])}} >
-                    <div class="flex justify-around items-center py-2">
+                    <div class="flex min-w-0 max-w-full justify-around items-center overflow-x-auto py-2">
                         {{ $toolbar }}
                     </div>
                 </footer>
@@ -58,7 +58,7 @@
             <!-- Mobile menu button -->
             <button 
                 @click="mobileOpen = !mobileOpen" 
-                class="lg:hidden text-gray-600 dark:text-gray-200"
+                class="shrink-0 xl:hidden text-gray-600 dark:text-gray-200"
                 :aria-expanded="mobileOpen">
                 <svg x-show="!mobileOpen" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
                      viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
@@ -83,7 +83,7 @@
             x-transition:leave-end="opacity-0 scale-95"
             x-cloak
              @click.outside="mobileOpen = false"            
-            class="absolute top-full right-0 w-full bg-gray-50 dark:bg-gray-800 border-t shadow-lg border-gray-200 dark:border-gray-700 lg:hidden">
+            class="absolute top-full right-0 w-full max-w-full overflow-x-hidden bg-gray-50 dark:bg-gray-800 border-t shadow-lg border-gray-200 dark:border-gray-700 xl:hidden">
             @isset($navigation)
                 <div class="px-4 py-3 space-y-2">
                         {{ $navigation }}

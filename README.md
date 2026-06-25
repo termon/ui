@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.8.23**
+> **Version 1.8.24**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -103,6 +103,15 @@ The component prefix is `x-ui` followed by the name of the component (separated 
 
 ## Available Components
 
+Component groups currently provided by the package:
+
+- Layout/navigation: `navbar`, `navbar.link`, `navbar.dropdown`, `navbar.form-link`, `sidebar`, `sidebar.link`, `sidebar.dropdown`, `sidebar.form-link`, `header`, `hero`
+- Content/display: `heading`, `title`, `divider`, `card`, `display`, `statistic`, `badge`, `breadcrumb`, `avatar`, `rating`, `steps`
+- Disclosure/overlays: `accordion`, `accordion.item`, `tabs`, `tabs.tab`, `modal`, `modal.trigger`, `flash`
+- Tables/pagination: `table`, `table.tr`, `table.th`, `table.td`, `link-sort`, `paginator`
+- Forms: `form.input`, `form.input-group`, `form.select`, `form.select-group`, `form.textarea`, `form.textarea-group`, `form.date`, `form.date-group`, `form.datetime`, `form.datetime-group`, `form.checkbox`, `form.checkbox-group`, `form.toggle`, `form.toggle-group`, `form.range`, `form.range-group`, `form.otp`, `form.otp-group`, `form.label`, `form.error`, `form.confirm`
+- Charts/icons: `chart`, `highchart`, `svg`, `icon`
+
 ### Heading
 
 The heading component provides styled headings with consistent light/dark mode styling and mobile support. The component takes a level parameter with a value between `1-6`
@@ -134,7 +143,9 @@ Additional HTML attributes and classes can be passed to the wrapper `div`.
 
 ### Navbar
 
-The `navbar` component is a fully responsive (mobile friendly) navigation component with a consistent slot structure. Links can be grouped into dropdowns using `<x-ui::navbar.dropdown icon=".." label=".."> ... </x-ui::navbar.dropdown>`
+The `navbar` component is a responsive navigation component with a consistent slot structure. Links can be grouped into dropdowns using `<x-ui::navbar.dropdown icon=".." label=".."> ... </x-ui::navbar.dropdown>`.
+
+The desktop navigation is shown from the `xl` breakpoint. Below `xl`, the `navigation` and `right` slots are moved into a hamburger dropdown to avoid crowded desktop menus. The optional `toolbar` slot renders as a fixed bottom toolbar.
 
 ```
 <x-ui::navbar>
@@ -165,7 +176,7 @@ The `navbar` component is a fully responsive (mobile friendly) navigation compon
         </x-ui::navbar.dropdown>
     </x-slot:right>
 
-    <!-- Toolbar (mobile bottom bar) -->
+    <!-- Toolbar (fixed bottom bar) -->
     <x-slot:toolbar>
         <x-ui::navbar.link href="/notifications" icon="bell" />
         <x-ui::navbar.link href="/search" icon="search" />
@@ -177,8 +188,17 @@ The `navbar` component is a fully responsive (mobile friendly) navigation compon
 </x-ui::navbar>
 ```
 
+Supported navbar slots:
+- `brandIcon`
+- `brandTitle`
+- `navigation`
+- `right`
+- `toolbar`
+
 ### Sidebar
-The `sidebar` component is a fully responsive (mobile friendly) navigation component that contains navigation links and action buttons. Links can be grouped into dropdowns using `<x-ui::sidebar.dropdown icon=".." label=".."> ... </x-ui::sidebar.dropdown>`
+The `sidebar` component is a responsive application shell with a collapsible desktop sidebar, a mobile slide-out menu, and a topbar. Links can be grouped into dropdowns using `<x-ui::sidebar.dropdown icon=".." label=".."> ... </x-ui::sidebar.dropdown>`.
+
+The component prevents horizontal page overflow by constraining the shell, main content, and topbar with responsive `min-w-0` / overflow handling. The `user` slot is displayed at the bottom of the desktop sidebar and inside the mobile slide-out menu. The `toolbar` slot is displayed in the topbar; sidebar links rendered in the topbar become compact `w-auto` actions while normal sidebar/menu links remain full width.
 
 ```
 <x-ui::sidebar>
@@ -220,6 +240,15 @@ The `sidebar` component is a fully responsive (mobile friendly) navigation compo
 
 </x-ui::sidebar>
 ```
+
+Supported sidebar slots:
+- `brandIcon`
+- `brandTitle`
+- `navigation`
+- `secondary`
+- `user`
+- `bottom` (used as a mobile fallback when `user` is not supplied)
+- `toolbar`
 
 ### Dropdown
 
@@ -263,7 +292,7 @@ Sidebar link components include intelligent tooltip positioning:
 
 ### Button and Link
 
-The `button` and `link` components can be configured with several variants (`'blue'`, `'red'`, `'green'`, `'yellow'`, `'dark'`, `'light'`, `'oblue'`, `'ored'`, `'ogreen`, `'link'` or `'none'` (no styling))
+The `button` and `link` components can be configured with several variants (`blue`, `red`, `green`, `yellow`, `dark`, `light`, `oblue`, `ored`, `ogreen`, `oyellow`, `link`, or `none`).
 
 Following examples provide a `'light'` variant button, and standard `link`. Adding a `variant` property to the link allows it to be styled as one of the buttons.
 
@@ -814,7 +843,6 @@ The `accordion.item` component accepts:
 - `title`: title bar text
 - `summary`: optional right-aligned summary text
 - `variant`: title bar colour when open, one of `sky`, `slate`, `blue`, `green`, `yellow`, `red`
-- `content-class`: optional classes for the panel body wrapper
 
 ```
 <x-ui::accordion.item
@@ -822,7 +850,6 @@ The `accordion.item` component accepts:
     title="Students"
     summary="12 selected"
     variant="blue"
-    content-class="grid gap-4 border-t border-slate-100 p-4 lg:grid-cols-2"
 >
     Student content
 </x-ui::accordion.item>
@@ -939,7 +966,7 @@ The `steps` component can be used to display a list of steps with their completi
 The component also accepts optional parameters
 
 `numbered` - displays step number
-`percent` - displays a percentage completion bar beneath the steps
+`percentage` - displays a percentage completion bar beneath the steps
 `variant` - colour of completed steps `green` `blue` `indigo` (default) 
 
 
@@ -1013,3 +1040,342 @@ The rating component requires a `value` parameter. The `max` parameter is option
 ```
 <x-ui::rating value="3.5" size="md" max="5"  />
 ```
+
+## Props Reference
+
+This section lists the public props currently declared by the Blade components. Standard HTML attributes and classes can also be passed unless noted by the component.
+
+### Navigation
+
+`navbar`
+- Slots: `brandIcon`, `brandTitle`, `navigation`, `right`, `toolbar`
+- Uses `dark` and `mobileOpen` Alpine state.
+- Desktop navigation is shown from `xl`; below `xl`, `navigation` and `right` render in the hamburger dropdown.
+
+`navbar.link`
+- `href` default `#`
+- `label` required by the component declaration, but may be omitted in practice for icon-only usage
+- `icon` required by the component declaration
+- `active` default `request()->url() === url($href ?? '#')`
+
+`navbar.dropdown`
+- `icon` default `folder`
+- `label` default empty string
+
+`navbar.form-link`
+- `action` default `#`
+- `label` default `null`
+- `icon` required by the component declaration
+- `method` default `post`
+
+`sidebar`
+- Slots: `brandIcon`, `brandTitle`, `navigation`, `secondary`, `user`, `bottom`, `toolbar`
+- Uses `dark`, `mobileOpen`, and `collapsed` Alpine state.
+- `user` renders at the desktop sidebar bottom and in the mobile slide-out menu.
+- `bottom` is used as a mobile fallback when no `user` slot is supplied.
+- `toolbar` renders in the topbar.
+
+`sidebar.link`
+- `href` default `#`
+- `label` default `null`
+- `icon` required by the component declaration
+- `collapsed` default `false`
+- `active` default `request()->url() === url($href ?? '#')`
+- Links are full width in sidebar/menu contexts and compact in the topbar.
+
+`sidebar.dropdown`
+- `icon` default `folder`
+- `label` default empty string
+- `collapsed` default `false`
+
+`sidebar.form-link`
+- `action` default `#`
+- `label` default `null`
+- `icon` required by the component declaration
+- `method` default `post`
+- `collapsed` default `false`
+
+### Basic UI
+
+`heading`
+- `level` default `1`; accepted values are `1`, `2`, `3`, `4`, `5`, `6`
+
+`divider`
+- `type` default `top`; accepted values are `top`, `bottom`
+
+`button`
+- `variant` default `blue`
+- `label` default `null`
+- `icon` default `null`
+- Variants: `blue`, `red`, `green`, `yellow`, `dark`, `light`, `oblue`, `ored`, `ogreen`, `oyellow`, `link`, `none`
+
+`link`
+- `variant` default `link`
+- `href` default `#`
+- `label` default `null`
+- `icon` default `null`
+- Variants: `blue`, `red`, `green`, `yellow`, `dark`, `light`, `oblue`, `ored`, `ogreen`, `oyellow`, `link`, `none`
+
+`avatar`
+- `size` default `xs`; accepted values are `xs`, `sm`, `md`, `lg`
+
+`badge`
+- `variant` default `blue`; accepted values are `blue`, `gray`, `light`, `red`, `green`, `yellow`, `indigo`, `purple`, `pink`
+
+`breadcrumb`
+- `crumbs` default `[]`; pass an associative array of label => URL
+
+`card`
+- Slots: default, `header`, `footer`
+
+`display`
+- `label` required
+- `value` default `null`
+- `icon` default `null`
+- `labelWidth` default `md`; accepted values are `sm`, `md`, `lg`, `xl`
+
+`header`
+- No component-specific props
+
+`hero`
+- `heading` required
+- `subheading` default `null`
+
+`rating`
+- `value` default `0`
+- `max` default `5`
+- `size` default `md`; accepted values are `sm`, `md`, `lg`
+
+`statistic`
+- `title` required
+- `value` required by the component declaration, but the slot is used when `value` is null
+- `variant` default `dark`; accepted values are `blue`, `red`, `green`, `yellow`, `pink`, `light`, `dark`
+- `description` default `null`
+- `icon` default `null`
+
+`title`
+- `size` default `xl`; accepted values are `xl`, `lg`, `md`, `sm`
+
+### Tables And Pagination
+
+`table`
+- Slots: `thead`, `tbody`
+
+`table.tr`
+- `hover` default `false`
+
+`table.th`
+- `showOn` default `null`; accepted values are `sm`, `md`, `lg`, `xl`, `2xl`
+- `scope` default `col`
+
+`table.td`
+- `showOn` default `null`; accepted values are `sm`, `md`, `lg`, `xl`, `2xl`
+
+`link-sort`
+- `name` required; toggles the `sort` and `direction` query parameters
+
+`paginator`
+- `items` required; must be an `Illuminate\Pagination\AbstractPaginator`
+- `size` default `10`; overridden by the request `size` query parameter
+- `options` default `['10' => 10, '25' => 25, '50' => 50, '100' => 100, '500' => 500]`
+- `variant` default `default`; supported colour variants include `green`, `red`, `dark`, `purple`, `light`, with default blue styling otherwise
+
+### Forms
+
+`form.input`
+- `name` required
+- `value` default `null`
+- `variant` default `light`; only affects `type="file"` styling
+- `type` default `text`
+
+`form.input-group`
+- `name` required
+- `label` default `null`
+- `value` default `null`
+- `variant` default `light`
+- `type` default `text`
+- `icon` default `null`
+
+`form.select`
+- `name` required
+- `value` default `null`
+- `options` default `[]`
+- `placeholder` default `Choose option...`
+
+`form.select-group`
+- `name` required
+- `icon` default `null`
+- `label` default `null`
+- `value` default `null`
+- `options` default `[]`
+- `placeholder` default `Choose option...`
+
+`form.textarea`
+- `name` required
+- `value` default `null`
+
+`form.textarea-group`
+- `name` required
+- `value` default `null`
+- `icon` default `null`
+- `label` default `null`
+
+`form.date`
+- `name` required
+- `value` default empty string; expected format is `Y-m-d`
+
+`form.date-group`
+- `name` required
+- `label` default `null`
+- `value` default `null`
+- `icon` default `null`
+
+`form.datetime`
+- `name` required
+- `label` required by the component declaration but not rendered by the component
+- `value` default empty string; expected format is `Y-m-d H:i:s`
+
+`form.datetime-group`
+- `name` required
+- `label` default `null`
+- `value` default `null`
+- `icon` default `null`
+
+`form.checkbox`
+- `name` required
+- `value` default `1`
+- `label` default `null`
+- `description` default `null`
+- `checked` default `false`
+- `id` default `null`
+
+`form.checkbox-group`
+- `name` required
+- `label` default `null`
+- `description` default `null`
+- `value` default `[]`
+- `options` default `[]`
+- `variant` default `plain`; accepted values are `plain`, `card`
+- `icon` default `null`
+
+`form.toggle`
+- `name` required
+- `label` default `null`
+- `description` default `null`
+- `checked` default `false`
+- `value` default `1`
+- `uncheckedValue` default `0`
+
+`form.toggle-group`
+- `name` required
+- `label` default `null`
+- `description` default `null`
+- `checked` default `false`
+- `variant` default `plain`; accepted values are `plain`, `card`
+
+`form.range`
+- `name` required
+- `min` default `0`
+- `max` default `100`
+- `step` default `1`
+- `value` default `0`
+- `variant` default `light`; accepted values are `light`, `oblue`, `blue`, `gray`, `dark`, `green`, `red`, `yellow`, `purple`
+
+`form.range-group`
+- `name` required
+- `min` default `0`
+- `max` default `100`
+- `step` default `1`
+- `value` default `0`
+- `variant` default `light`
+- `label` default `null`
+- `icon` default `null`
+
+`form.otp`
+- `name` required
+- `length` default `6`
+
+`form.otp-group`
+- `name` required
+- `label` default `null`
+- `length` default `6`
+- `icon` default `null`
+
+`form.label`
+- `icon` default `null`
+
+`form.error`
+- `for` required by the component declaration; when supplied, renders the validation error for that field
+
+`form.confirm`
+- `message` default `Are you sure?`
+- `variant` default `red`
+- Must be rendered inside a form if the `Yes` button should submit that form.
+
+### Disclosure And Overlays
+
+`accordion`
+- `open` default `null`
+
+`accordion.item`
+- `name` required
+- `title` required
+- `summary` default `null`
+- `variant` default `slate`; accepted values are `blue`, `green`, `red`, `sky`, `slate`, `yellow`
+
+`tabs`
+- `active` required
+- Stores the active tab in `localStorage` and synchronizes the `tab` query parameter
+
+`tabs.tab`
+- `name` required
+
+`modal`
+- `name` required
+- `dismissable` default `false`
+- `show` default `false`
+- `maxWidth` default `2xl`; accepted values are `sm`, `md`, `lg`, `xl`, `2xl`
+- Slots: default, `title`, `footer`
+- The current backdrop click condition closes the modal when `dismissable` is `false`.
+
+`modal.trigger`
+- `for` required
+- `action` default `open`; use `open` or `close`
+- `component` default `ui::button`
+
+`flash`
+- `position` default `top-right`; accepted values are `top-right`, `top-left`, `top-center`, `bottom-right`, `bottom-left`, `bottom-center`
+- `timeout` default `6000`
+- Reads session keys `success`, `info`, `error`, `warning`, and `status`
+
+`steps`
+- `steps` default `[]`; each item should be `[label, complete]`
+- `numbered` default `false`
+- `percentage` default `false`
+- `variant` default `null`; accepted colour variants are `green`, `blue`, or default indigo styling
+
+### Charts And Icons
+
+`chart`
+- `id` required
+- `config` required by the component declaration, but the slot may be used for a JavaScript config object
+- Loads Chart.js from CDN and redraws on dark mode class changes
+
+`highchart`
+- `id` required
+- `config` required by the component declaration, but the slot may be used for a Highcharts config object
+- Deprecated in favour of `chart`
+
+`svg`
+- `icon` default `null`
+- `variant` default `null`; retained as a backward-compatible alias for `icon`
+- `set` default `icons`
+- `size` default `sm`; accepted values are `sm`, `md`, `lg`, `xl`
+- `viewBox` default `0 0 24 24`
+- `fill` default `none`
+- `stroke` default `currentColor`
+- `strokeWidth` default `1.5`
+
+`icon`
+- `icon` required
+- `variant` default empty string; accepted values are `mini`, `micro`, or default standard size

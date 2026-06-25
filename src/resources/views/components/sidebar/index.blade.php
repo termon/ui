@@ -13,7 +13,7 @@
             localStorage.setItem('collapsed', val)
         });"
     :class="{ 'dark': dark }"
-    {{ $attributes->merge(['class' => 'min-h-screen flex']) }}
+    {{ $attributes->merge(['class' => 'min-h-screen flex min-w-0 overflow-x-hidden']) }}
 >
     <!-- Sidebar -->
     <aside
@@ -57,6 +57,17 @@
             </nav>
         @endisset
 
+        <!-- User section (inside the slide-out menu on mobile) -->
+        @isset($user)
+            <div class="px-4 py-4 border-t border-gray-200 dark:border-gray-700 lg:hidden">
+                {{ $user }}
+            </div>
+        @elseif(isset($bottom))
+            <div class="px-4 py-4 border-t border-gray-200 dark:border-gray-700 lg:hidden">
+                {{ $bottom }}
+            </div>
+        @endisset
+
         <!-- User section (bottom of sidebar on desktop) -->
         @isset($user)
             <div class="p-4 w-full absolute bottom-0 left-0 border-t border-gray-200 dark:border-gray-700 hidden lg:block">
@@ -71,14 +82,14 @@
          x-transition.opacity x-cloak></div>
 
     <!-- Main content Scrollable: added max-height-screen -->
-    <div class="flex-1 flex flex-col max-h-screen transition-all duration-300 ease-in-out">
+    <div class="min-w-0 flex-1 flex flex-col max-h-screen transition-all duration-300 ease-in-out">
 
         <!-- Top bar (always visible) Scrollable: added flex-shrink-0 -->
         <header
-            class="flex items-center justify-between flex-shrink-0 p-4 border-b bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 h-14">
+            class="flex min-w-0 items-center justify-between gap-2 flex-shrink-0 p-4 border-b bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 h-14">
             
             <!-- Left side buttons -->
-            <div class="flex items-center gap-2">
+            <div class="flex shrink-0 items-center gap-2">
                 <!-- Mobile menu button (mobile only) -->
                 <button @click="mobileOpen = !mobileOpen" class="text-gray-600 dark:text-gray-200 cursor-pointer focus:outline-none lg:hidden">
                     <svg x-show="!mobileOpen" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
@@ -111,30 +122,17 @@
                 </button>
             </div>
 
-            <!-- Toolbar and User content (right side) -->
-            <div class="flex justify-end items-center gap-2">
-                <!-- Toolbar content (always in topbar) -->
+            <!-- Toolbar content -->
+            <div class="min-w-0 flex flex-1 justify-end items-center gap-2 overflow-x-auto">
                 @isset($toolbar)
                     {{ $toolbar }}
-                @endisset
-                
-                <!-- User content (mobile only - moves from sidebar bottom) -->
-                @isset($user)
-                    <div class="lg:hidden">
-                        {{ $user }}
-                    </div>
-                @elseif(isset($bottom))
-                    <!-- Backward compatibility -->
-                    <div class="lg:hidden">
-                        {{ $bottom }}
-                    </div>
                 @endisset
             </div>
 
         </header>
 
         <!-- Page content  Scrollable: added overflow-y-auto -->
-        <main class="flex-1 text-left overflow-y-auto px-4 py-2 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+        <main class="min-w-0 flex-1 text-left overflow-y-auto overflow-x-hidden px-4 py-2 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
             {{ $slot }}
         </main>
     </div>
