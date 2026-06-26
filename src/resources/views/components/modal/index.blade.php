@@ -82,7 +82,13 @@
 
             <!-- Title -->
             @if (isset($title))
-                <div {{ $title->attributes->merge([
+                @php
+                    $titleAttributes = $title instanceof \Illuminate\View\ComponentSlot
+                        ? $title->attributes
+                        : new \Illuminate\View\ComponentAttributeBag;
+                @endphp
+
+                <div {{ $titleAttributes->merge([
                     'class' => 'pb-4 mb-4 text-2xl font-bold border-b border-gray-400 dark:border-gray-600'
                 ]) }}>
                     {{ $title }}
@@ -94,9 +100,9 @@
 
              <!-- Optional footer -->
             @isset($footer)
-            <div class="mt-6 pt-4 border-t border-gray-400 dark:border-gray-400">
-                {{ $footer }}
-            </div>
+                <div class="mt-6 pt-4 border-t border-gray-400 dark:border-gray-400">
+                    {{ $footer }}
+                </div>
         @endisset
         </div>
     </div>

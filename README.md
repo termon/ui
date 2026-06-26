@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.8.24**
+> **Version 1.8.25**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -99,6 +99,14 @@ The component prefix is `x-ui` followed by the name of the component (separated 
 ```
 <x-ui::<component-name> // using vendor package
 <x-ui.<component-name>  // when published locally 
+```
+
+## Testing
+
+The package includes a PHPUnit/Testbench test suite. Run it from the package root:
+
+```
+composer test
 ```
 
 ## Available Components
@@ -474,12 +482,16 @@ Use `datetime` when you only need the field:
 <x-ui::form.datetime name="date" label="Date" value="{{ now()->format('Y-m-d H:i:s') }}" class="w-64" />
 ```
 
+The `value` may be `null` or an empty string. In that case the visible input starts blank and no datetime value is submitted until the user chooses one. The picker also includes a `Clear` action to return the value to blank.
+
+The component renders a hidden input containing the submitted value and a readonly text input for the picker display. The submitted value uses the canonical `Y-m-d H:i:s` format.
+
 Use `datetime-group` when you want the field with an optional label and validation error:
 
 ```
 <x-ui::form.datetime-group name="date" label="Date" value="{{ now()->format('Y-m-d H:i:s') }}" class="w-64" />
 ```
-> The input value should be a string in format `Y-m-d H:i:s`
+> The input value should be `null`, an empty string, or a string in format `Y-m-d H:i:s`.
 
 #### Checkbox
 
@@ -671,7 +683,13 @@ When placed inside a form, clicking `Yes` submits the wrapping form.
 </form>
 ```
 
-An optional `message` prop can be used to override the default confirmation text (`Are you sure?`).
+An optional `message` prop can be used to override the default confirmation text (`Are you sure?`). An optional `icon` prop can be used to display an icon in the initial button.
+
+```
+<x-ui::form.confirm variant="ored" icon="trash" message="Delete this record?">
+    Delete
+</x-ui::form.confirm>
+```
 
 ### Flash
 
@@ -1232,13 +1250,13 @@ This section lists the public props currently declared by the Blade components. 
 
 `form.datetime`
 - `name` required
-- `label` required by the component declaration but not rendered by the component
-- `value` default empty string; expected format is `Y-m-d H:i:s`
+- `label` default `null`
+- `value` default empty string; accepted values are `null`, empty string, or `Y-m-d H:i:s`
 
 `form.datetime-group`
 - `name` required
 - `label` default `null`
-- `value` default `null`
+- `value` default `null`; accepted values are `null`, empty string, or `Y-m-d H:i:s`
 - `icon` default `null`
 
 `form.checkbox`
@@ -1310,6 +1328,7 @@ This section lists the public props currently declared by the Blade components. 
 `form.confirm`
 - `message` default `Are you sure?`
 - `variant` default `red`
+- `icon` default `null`
 - Must be rendered inside a form if the `Yes` button should submit that form.
 
 ### Disclosure And Overlays

@@ -1,12 +1,13 @@
 @props([
     'message' => 'Are you sure?',
-    'variant' => 'red'
+    'variant' => 'red',
+    'icon' => null,
 ])
 
 <div x-data="{ confirm: false }" class="inline-flex items-center gap-2">
 
     {{-- Default state --}}
-    <x-ui::button x-show="!confirm" type="button"  @click="confirm=true" variant="{{ $variant }}" {{ $attributes }}>
+    <x-ui::button x-show="!confirm" type="button"  @click="confirm=true" variant="{{ $variant }}" :icon="$icon" {{ $attributes->except('icon') }}>
         {{ $slot }}
     </x-ui::button>
 
@@ -15,7 +16,7 @@
         
         <span class="text-sm text-gray-700">{{ $message }}</span>
 
-        <x-ui::button type="button" @click="$el.closest('form').submit()" variant="{{ $variant }}">
+        <x-ui::button type="button" @click="$el.closest('form').requestSubmit ? $el.closest('form').requestSubmit() : $el.closest('form').submit()" variant="{{ $variant }}">
             Yes
         </x-ui::button>
 
@@ -24,4 +25,3 @@
         </x-ui::button>
     </div>
 </div>
-
