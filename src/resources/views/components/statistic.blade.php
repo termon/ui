@@ -7,13 +7,13 @@
             'value' => 'text-blue-900 dark:text-blue-100',
             'description' => 'text-blue-700/80 dark:text-blue-200/80',
         ],
-        'red' => [
+        'red', 'rose' => [
             'wrapper' => 'border border-rose-200 bg-rose-50 text-rose-900 hover:border-rose-300 hover:bg-rose-100/80 dark:border-rose-500/40 dark:bg-rose-500/10 dark:text-rose-100 dark:hover:border-rose-400/60 dark:hover:bg-rose-500/15',
             'title' => 'text-rose-700 dark:text-rose-300',
             'value' => 'text-rose-900 dark:text-rose-100',
             'description' => 'text-rose-700/80 dark:text-rose-200/80',
         ],
-        'green' => [
+        'green', 'emerald' => [
             'wrapper' => 'border border-emerald-200 bg-emerald-50 text-emerald-900 hover:border-emerald-300 hover:bg-emerald-100/80 dark:border-emerald-500/40 dark:bg-emerald-500/10 dark:text-emerald-100 dark:hover:border-emerald-400/60 dark:hover:bg-emerald-500/15',
             'title' => 'text-emerald-700 dark:text-emerald-300',
             'value' => 'text-emerald-900 dark:text-emerald-100',
@@ -31,13 +31,31 @@
             'value' => 'text-pink-900 dark:text-pink-100',
             'description' => 'text-pink-700/80 dark:text-pink-200/80',
         ],
-        'light' => [
+        'sky' => [
+            'wrapper' => 'border border-sky-200 bg-sky-50 text-sky-900 hover:border-sky-300 hover:bg-sky-100/80 dark:border-sky-500/40 dark:bg-sky-500/10 dark:text-sky-100 dark:hover:border-sky-400/60 dark:hover:bg-sky-500/15',
+            'title' => 'text-sky-700 dark:text-sky-300',
+            'value' => 'text-sky-900 dark:text-sky-100',
+            'description' => 'text-sky-700/80 dark:text-sky-200/80',
+        ],
+        'indigo' => [
+            'wrapper' => 'border border-indigo-200 bg-indigo-50 text-indigo-900 hover:border-indigo-300 hover:bg-indigo-100/80 dark:border-indigo-500/40 dark:bg-indigo-500/10 dark:text-indigo-100 dark:hover:border-indigo-400/60 dark:hover:bg-indigo-500/15',
+            'title' => 'text-indigo-700 dark:text-indigo-300',
+            'value' => 'text-indigo-900 dark:text-indigo-100',
+            'description' => 'text-indigo-700/80 dark:text-indigo-200/80',
+        ],
+        'gray' => [
+            'wrapper' => 'border border-gray-200 bg-gray-50 text-gray-900 hover:border-gray-300 hover:bg-gray-100/80 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:border-gray-500 dark:hover:bg-gray-700/80',
+            'title' => 'text-gray-600 dark:text-gray-300',
+            'value' => 'text-gray-900 dark:text-gray-100',
+            'description' => 'text-gray-600/80 dark:text-gray-300/80',
+        ],
+        'light', 'slate' => [
             'wrapper' => 'border border-slate-200 bg-slate-50 text-slate-900 hover:border-slate-300 hover:bg-slate-100/80 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-slate-800/80',
             'title' => 'text-slate-600 dark:text-slate-300',
             'value' => 'text-slate-900 dark:text-slate-100',
             'description' => 'text-slate-600/80 dark:text-slate-300/80',
         ],
-        'dark' => [
+        'dark', 'neutral' => [
             'wrapper' => 'border border-slate-200 bg-white text-slate-900 hover:border-slate-300 hover:bg-slate-50/80 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:border-slate-500 dark:hover:bg-slate-700/80',
             'title' => 'text-slate-500 dark:text-slate-300',
             'value' => 'text-slate-900 dark:text-slate-100',

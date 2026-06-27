@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.8.26**
+> **Version 1.8.27**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -820,6 +820,20 @@ The `statistic` component is used to show numbers and data in a block.
                  variant="dark"/>
 ```
 
+The value may also be supplied through the default slot when `value` is `null`. An optional `icon` prop displays an icon beside the value.
+
+Available statistic variants:
+- `blue`
+- `red` / `rose`
+- `green` / `emerald`
+- `yellow`
+- `pink`
+- `sky`
+- `indigo`
+- `gray`
+- `light` / `slate`
+- `dark` / `neutral`
+
 ### Tabs
 
 The `tabs` and `tab` components work together to provide tabbed panels and work together as follows
@@ -1175,7 +1189,7 @@ This section lists the public props currently declared by the Blade components. 
 `statistic`
 - `title` required
 - `value` required by the component declaration, but the slot is used when `value` is null
-- `variant` default `dark`; accepted values are `blue`, `red`, `green`, `yellow`, `pink`, `light`, `dark`
+- `variant` default `dark`; accepted values are `blue`, `red`, `rose`, `green`, `emerald`, `yellow`, `pink`, `sky`, `indigo`, `gray`, `light`, `slate`, `dark`, `neutral`
 - `description` default `null`
 - `icon` default `null`
 
