@@ -2,43 +2,43 @@
 @php
     $variantStyles = match ($variant) {
         'blue' => [
-            'wrapper' => 'border border-blue-200 bg-blue-50 text-blue-900 hover:border-blue-300 hover:bg-blue-100/80',
+            'wrapper' => 'border border-blue-200 bg-blue-50 text-blue-900 hover:border-blue-300 hover:bg-blue-100/80 dark:border-blue-500/40 dark:bg-blue-500/10 dark:text-blue-100 dark:hover:border-blue-400/60 dark:hover:bg-blue-500/15',
             'title' => 'text-blue-700 dark:text-blue-300',
             'value' => 'text-blue-900 dark:text-blue-100',
             'description' => 'text-blue-700/80 dark:text-blue-200/80',
         ],
         'red' => [
-            'wrapper' => 'border border-rose-200 bg-rose-50 text-rose-900 hover:border-rose-300 hover:bg-rose-100/80',
+            'wrapper' => 'border border-rose-200 bg-rose-50 text-rose-900 hover:border-rose-300 hover:bg-rose-100/80 dark:border-rose-500/40 dark:bg-rose-500/10 dark:text-rose-100 dark:hover:border-rose-400/60 dark:hover:bg-rose-500/15',
             'title' => 'text-rose-700 dark:text-rose-300',
             'value' => 'text-rose-900 dark:text-rose-100',
             'description' => 'text-rose-700/80 dark:text-rose-200/80',
         ],
         'green' => [
-            'wrapper' => 'border border-emerald-200 bg-emerald-50 text-emerald-900 hover:border-emerald-300 hover:bg-emerald-100/80',
+            'wrapper' => 'border border-emerald-200 bg-emerald-50 text-emerald-900 hover:border-emerald-300 hover:bg-emerald-100/80 dark:border-emerald-500/40 dark:bg-emerald-500/10 dark:text-emerald-100 dark:hover:border-emerald-400/60 dark:hover:bg-emerald-500/15',
             'title' => 'text-emerald-700 dark:text-emerald-300',
             'value' => 'text-emerald-900 dark:text-emerald-100',
             'description' => 'text-emerald-700/80 dark:text-emerald-200/80',
         ],
         'yellow' => [
-            'wrapper' => 'border border-amber-200 bg-amber-50 text-amber-900 hover:border-amber-300 hover:bg-amber-100/80',
+            'wrapper' => 'border border-amber-200 bg-amber-50 text-amber-900 hover:border-amber-300 hover:bg-amber-100/80 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-100 dark:hover:border-amber-400/60 dark:hover:bg-amber-500/15',
             'title' => 'text-amber-700 dark:text-amber-300',
             'value' => 'text-amber-900 dark:text-amber-100',
             'description' => 'text-amber-700/80 dark:text-amber-200/80',
         ],
         'pink' => [
-            'wrapper' => 'border border-pink-200 bg-pink-50 text-pink-900 hover:border-pink-300 hover:bg-pink-100/80',
+            'wrapper' => 'border border-pink-200 bg-pink-50 text-pink-900 hover:border-pink-300 hover:bg-pink-100/80 dark:border-pink-500/40 dark:bg-pink-500/10 dark:text-pink-100 dark:hover:border-pink-400/60 dark:hover:bg-pink-500/15',
             'title' => 'text-pink-700 dark:text-pink-300',
             'value' => 'text-pink-900 dark:text-pink-100',
             'description' => 'text-pink-700/80 dark:text-pink-200/80',
         ],
         'light' => [
-            'wrapper' => 'border border-slate-200 bg-slate-50 text-slate-900 hover:border-slate-300 hover:bg-slate-100/80',
+            'wrapper' => 'border border-slate-200 bg-slate-50 text-slate-900 hover:border-slate-300 hover:bg-slate-100/80 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-slate-800/80',
             'title' => 'text-slate-600 dark:text-slate-300',
             'value' => 'text-slate-900 dark:text-slate-100',
             'description' => 'text-slate-600/80 dark:text-slate-300/80',
         ],
         'dark' => [
-            'wrapper' => 'border border-slate-200 bg-white text-slate-900 hover:border-slate-300 hover:bg-slate-50/80',
+            'wrapper' => 'border border-slate-200 bg-white text-slate-900 hover:border-slate-300 hover:bg-slate-50/80 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:border-slate-500 dark:hover:bg-slate-700/80',
             'title' => 'text-slate-500 dark:text-slate-300',
             'value' => 'text-slate-900 dark:text-slate-100',
             'description' => 'text-slate-500/80 dark:text-slate-300/80',

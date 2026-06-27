@@ -1,8 +1,9 @@
 /vendor/
 /packages/
+.phpunit.result.cache
 
 # Update local version numbers (README.md) and composer.json version (v. important)
 # Commit changes and push to origin
 # Create a new tag locally then push to origin e.g. publish tagged version 1.8.20
-# $ git tag -a 1.8.25 -m 'Version 1.8.25'
-# $ git push origin 1.8.25
+# $ git tag -a 1.8.26 -m 'Version 1.8.26'
+# $ git push origin 1.8.26

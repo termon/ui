@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.8.25**
+> **Version 1.8.26**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -347,7 +347,7 @@ Cards can also be configured with optional `header` and `footer` slots
 
 ### Table
 
-The `table` component includes `thead` and `tbody` slots in which head and body can be defined using the `tr` and `th` components. An example table:
+The `table` component includes `thead`, `tbody`, and `tfoot` slots in which head, body, and footer can be defined using the `tr`, `th`, and `td` components. An example table:
 
 ```
 <x-ui::table>
@@ -366,6 +366,14 @@ The `table` component includes `thead` and `tbody` slots in which head and body 
             </x-ui::table.td>
         </x-ui::table.tr>
     </x-slot:tbody>
+
+    <x-slot:tfoot>
+        <x-ui::table.tr>
+            <x-ui::table.td>
+                Footer Column 1
+            </x-ui::table.td>
+        </x-ui::table.tr>
+    </x-slot:tfoot>
 </x-ui::table>
 ```
 
@@ -1177,7 +1185,7 @@ This section lists the public props currently declared by the Blade components. 
 ### Tables And Pagination
 
 `table`
-- Slots: `thead`, `tbody`
+- Slots: `thead`, `tbody`, `tfoot`
 
 `table.tr`
 - `hover` default `false`
