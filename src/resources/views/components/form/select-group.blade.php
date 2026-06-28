@@ -17,14 +17,13 @@
     <x-ui::form.select 
         name="{{ $name }}" 
         :options="$options"
-        value="{{ $value }}"
+        :value="$value"
         placeholder="{{ $placeholder }}"
         {{ $attributes->except(['name', 'options', 'value', 'icon','placeholder']) }}
     />
 
     <x-ui::form.error for="{{ $name }}" />
 </div>
-
 
 
 

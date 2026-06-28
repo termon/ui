@@ -13,14 +13,13 @@
         </x-ui::form.label>
     @endisset
 
-    <x-ui::form.textarea name="{{ $name }}" {{ $attributes->except(['name', 'label', 'value', 'icon']) }}>
-    {{ $value ?? $slot }}
+    <x-ui::form.textarea name="{{ $name }}" :value="$value" {{ $attributes->except(['name', 'label', 'value', 'icon']) }}>
+        {{ $slot }}
     </x-ui::form.textarea>
 
     <x-ui::form.error for="{{ $name }}" />
 
 </div>
-
 
 
 

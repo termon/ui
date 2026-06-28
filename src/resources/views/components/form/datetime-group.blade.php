@@ -14,7 +14,7 @@
 
     <x-ui::form.datetime
         name="{{ $name }}"
-        value="{{ $value }}"
+        :value="$value"
         {{ $attributes->except(['class', 'name', 'label', 'value', 'icon']) }}
     />
 

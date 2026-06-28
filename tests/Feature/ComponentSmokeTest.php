@@ -43,6 +43,128 @@ class ComponentSmokeTest extends TestCase
         $this->assertMatchesRegularExpression('/<option value="50" selected>50<\/option>/', $html);
     }
 
+    public function test_display_renders_bound_values_with_blade_escaping(): void
+    {
+        $html = $this->renderBlade('<x-ui::display label="Name" :value="$name" />', [
+            'name' => 'O\'Connor & Sons <script>alert("x")</script>',
+        ]);
+
+        $this->assertStringContainsString('O&#039;Connor &amp; Sons &lt;script&gt;alert(&quot;x&quot;)&lt;/script&gt;', $html);
+        $this->assertStringNotContainsString('O&amp;#039;Connor', $html);
+        $this->assertStringNotContainsString('<script>alert("x")</script>', $html);
+    }
+
+    public function test_base_form_components_render_bound_html_characters_with_blade_escaping(): void
+    {
+        $value = 'O\'Connor & Sons <script>alert("x")</script>';
+        $expected = 'O&#039;Connor &amp; Sons &lt;script&gt;alert(&quot;x&quot;)&lt;/script&gt;';
+
+        $inputHtml = $this->renderBlade('<x-ui::form.input name="name" :value="$value" />', [
+            'value' => $value,
+        ]);
+
+        $dateHtml = $this->renderBlade('<x-ui::form.date name="name" :value="$value" />', [
+            'value' => $value,
+        ]);
+
+        $datetimeHtml = $this->renderBlade('<x-ui::form.datetime name="name" :value="$value" />', [
+            'value' => $value,
+        ]);
+
+        $selectHtml = $this->renderBlade('<x-ui::form.select name="name" :options="$options" :value="$value" />', [
+            'options' => [$value => $value],
+            'value' => $value,
+        ]);
+
+        $textareaHtml = $this->renderBlade('<x-ui::form.textarea name="name" :value="$value" />', [
+            'value' => $value,
+        ]);
+
+        $this->assertStringContainsString('value="'.$expected.'"', $inputHtml);
+        $this->assertStringContainsString('value="'.$expected.'"', $dateHtml);
+        $this->assertStringContainsString('value="'.$expected.'"', $datetimeHtml);
+        $this->assertStringContainsString('<option value="'.$expected.'" selected>'.$expected.'</option>', $selectHtml);
+        $this->assertStringContainsString($expected, $textareaHtml);
+        $this->assertStringNotContainsString('<script>alert("x")</script>', $inputHtml.$dateHtml.$datetimeHtml.$selectHtml.$textareaHtml);
+    }
+
+    public function test_form_groups_forward_bound_html_character_values_to_child_components(): void
+    {
+        $value = 'O\'Connor & Sons <script>alert("x")</script>';
+        $expected = 'O&#039;Connor &amp; Sons &lt;script&gt;alert(&quot;x&quot;)&lt;/script&gt;';
+
+        $inputGroupHtml = $this->renderBlade('<x-ui::form.input-group name="name" label="Name" :value="$value" />', [
+            'value' => $value,
+        ]);
+
+        $dateGroupHtml = $this->renderBlade('<x-ui::form.date-group name="name" label="Name" :value="$value" />', [
+            'value' => $value,
+        ]);
+
+        $datetimeGroupHtml = $this->renderBlade('<x-ui::form.datetime-group name="name" label="Name" :value="$value" />', [
+            'value' => $value,
+        ]);
+
+        $selectGroupHtml = $this->renderBlade('<x-ui::form.select-group name="name" label="Name" :options="$options" :value="$value" />', [
+            'options' => [$value => $value],
+            'value' => $value,
+        ]);
+
+        $textareaGroupHtml = $this->renderBlade('<x-ui::form.textarea-group name="name" label="Name" :value="$value" />', [
+            'value' => $value,
+        ]);
+
+        $this->assertStringContainsString('value="'.$expected.'"', $inputGroupHtml);
+        $this->assertStringContainsString('value="'.$expected.'"', $dateGroupHtml);
+        $this->assertStringContainsString('value="'.$expected.'"', $datetimeGroupHtml);
+        $this->assertStringContainsString('<option value="'.$expected.'" selected>'.$expected.'</option>', $selectGroupHtml);
+        $this->assertStringContainsString($expected, $textareaGroupHtml);
+        $this->assertStringNotContainsString('<script>alert("x")</script>', $inputGroupHtml.$dateGroupHtml.$datetimeGroupHtml.$selectGroupHtml.$textareaGroupHtml);
+    }
+
+    public function test_form_scalar_groups_forward_bound_values_to_child_components(): void
+    {
+        $dateHtml = $this->renderBlade('<x-ui::form.date-group name="starts_on" label="Starts" :value="$date" />', [
+            'date' => '2026-06-26',
+        ]);
+
+        $datetimeHtml = $this->renderBlade('<x-ui::form.datetime-group name="starts_at" label="Starts" :value="$datetime" />', [
+            'datetime' => '2026-06-26 09:30:00',
+        ]);
+
+        $selectHtml = $this->renderBlade('<x-ui::form.select-group name="role" label="Role" :options="$options" :value="$role" />', [
+            'options' => ['admin' => 'Admin'],
+            'role' => 'admin',
+        ]);
+
+        $textareaHtml = $this->renderBlade('<x-ui::form.textarea-group name="bio" label="Bio" :value="$bio" />', [
+            'bio' => 'O\'Connor & Sons <script>alert("x")</script>',
+        ]);
+
+        $this->assertStringContainsString('value="2026-06-26"', $dateHtml);
+        $this->assertStringContainsString('value="2026-06-26 09:30:00"', $datetimeHtml);
+        $this->assertStringContainsString('<option value="admin" selected>Admin</option>', $selectHtml);
+        $this->assertStringContainsString('O&#039;Connor &amp; Sons &lt;script&gt;alert(&quot;x&quot;)&lt;/script&gt;', $textareaHtml);
+        $this->assertStringNotContainsString('<script>alert("x")</script>', $textareaHtml);
+    }
+
+    public function test_literal_value_attributes_remain_supported_for_scalar_components(): void
+    {
+        $inputHtml = $this->renderBlade('<x-ui::form.input name="title" value="Alice" />');
+        $inputGroupHtml = $this->renderBlade('<x-ui::form.input-group name="title" label="Title" value="Alice" />');
+        $dateGroupHtml = $this->renderBlade('<x-ui::form.date-group name="starts_on" label="Starts" value="2026-06-26" />');
+        $datetimeGroupHtml = $this->renderBlade('<x-ui::form.datetime-group name="starts_at" label="Starts" value="2026-06-26 09:30:00" />');
+        $selectGroupHtml = $this->renderBlade('<x-ui::form.select-group name="role" label="Role" :options="[\'admin\' => \'Admin\']" value="admin" />');
+        $textareaGroupHtml = $this->renderBlade('<x-ui::form.textarea-group name="bio" label="Bio" value="Alice" />');
+
+        $this->assertStringContainsString('value="Alice"', $inputHtml);
+        $this->assertStringContainsString('value="Alice"', $inputGroupHtml);
+        $this->assertStringContainsString('value="2026-06-26"', $dateGroupHtml);
+        $this->assertStringContainsString('value="2026-06-26 09:30:00"', $datetimeGroupHtml);
+        $this->assertStringContainsString('<option value="admin" selected>Admin</option>', $selectGroupHtml);
+        $this->assertStringContainsString('Alice', $textareaGroupHtml);
+    }
+
     #[DataProvider('icons')]
     public function test_icon_renders_through_svg_component(string $icon): void
     {

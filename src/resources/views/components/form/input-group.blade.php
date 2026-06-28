@@ -17,7 +17,7 @@
     <x-ui::form.input
         type="{{ $type }}"
         name="{{ $name }}"
-        value="{{ $value }}"       
+        :value="$value"
         variant="{{ $variant }}" 
         {{ $attributes->except(['class', 'label', 'value', 'variant', 'type', 'icon']) }} 
     />

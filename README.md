@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.8.28**
+> **Version 1.8.29**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -100,6 +100,37 @@ The component prefix is `x-ui` followed by the name of the component (separated 
 <x-ui::<component-name> // using vendor package
 <x-ui.<component-name>  // when published locally 
 ```
+
+### Passing Dynamic Values
+
+Use bound attributes for dynamic component values:
+
+```blade
+<x-ui::display label="Surname" :value="$staff->surname" />
+
+<x-ui::form.input-group
+    name="name"
+    label="Name"
+    :value="old('name', $user->name)"
+/>
+```
+
+Avoid rendering dynamic values into component attributes:
+
+```blade
+{{-- Avoid this for dynamic values --}}
+<x-ui::display label="Surname" value="{{ $staff->surname }}" />
+
+<x-ui::form.input-group
+    name="name"
+    label="Name"
+    value="{{ old('name', $user->name) }}"
+/>
+```
+
+Blade escapes `{{ ... }}` before the component receives the prop. If the value contains HTML-significant characters such as apostrophes, ampersands, or angle brackets, passing it as `value="{{ ... }}"` can result in already-escaped text being escaped again by the component output. That can display entity text such as `O&amp;#039;Connor` instead of `O&#039;Connor`.
+
+Using `:value="..."` passes the original PHP value to the component. The component then performs the final Blade escaping at render time, so values like `O'Connor & Sons <script>` display correctly while remaining safe.
 
 ## Testing
 
