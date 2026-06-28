@@ -6,7 +6,7 @@
 ])
 
 @php
-    $size = request()->get('size', $size);
+    $size = request()->get('size', $items instanceof \Illuminate\Pagination\AbstractPaginator ? $items->perPage() : $size);
     $current = $items->currentPage();
     $last = $items->lastPage();
     $window = 2; // Number of pages on each side of current

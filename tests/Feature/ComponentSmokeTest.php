@@ -32,6 +32,17 @@ class ComponentSmokeTest extends TestCase
         );
     }
 
+    public function test_paginator_uses_item_page_size_when_request_size_is_missing(): void
+    {
+        $items = new LengthAwarePaginator(collect(range(1, 50)), 75, 50, 1, ['path' => '/items']);
+
+        $html = $this->renderBlade('<x-ui::paginator :items="$items" />', [
+            'items' => $items,
+        ]);
+
+        $this->assertMatchesRegularExpression('/<option value="50" selected>50<\/option>/', $html);
+    }
+
     #[DataProvider('icons')]
     public function test_icon_renders_through_svg_component(string $icon): void
     {
