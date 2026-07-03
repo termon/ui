@@ -45,6 +45,21 @@
 
             return value;
         },
+        applyTooltipLabelMap(config) {
+            const labelMap = config.options?.plugins?.tooltip?.labelMap;
+
+            if (!labelMap) return;
+
+            config.options.plugins.tooltip.callbacks ??= {};
+            config.options.plugins.tooltip.callbacks.label ??= (context) => {
+                const label = context.label ?? '';
+                const value = context.formattedValue ?? context.raw ?? '';
+
+                return `${labelMap[label] ?? label}: ${value}`;
+            };
+
+            delete config.options.plugins.tooltip.labelMap;
+        },
         themedConfig() {
             const dark = this.isDark();
             const textColor = dark ? '#e5e7eb' : '#0f172a';
@@ -68,6 +83,8 @@
             config.options.plugins.tooltip.titleColor ??= textColor;
             config.options.plugins.tooltip.bodyColor ??= textColor;
             config.options.scales ??= {};
+
+            this.applyTooltipLabelMap(config);
 
             Object.values(config.options.scales).forEach((scale) => {
                 scale.grid ??= {};

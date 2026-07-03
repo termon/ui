@@ -179,6 +179,57 @@ Available divider types:
 
 Additional HTML attributes and classes can be passed to the wrapper `div`.
 
+### Chart
+
+The `chart` component renders a Chart.js chart from a PHP array config. The component applies light/dark theme defaults for text, grid lines, tooltip colours, and a chart-area background.
+
+```blade
+<x-ui::chart
+    id="student-engagement"
+    :config="[
+        'type' => 'pie',
+        'data' => [
+            'labels' => ['PP (12)', '00 (4)'],
+            'datasets' => [[
+                'label' => 'Student Engagement',
+                'data' => [12, 4],
+                'backgroundColor' => ['#16a34a', '#f59e0b'],
+            ]],
+        ],
+    ]"
+    class="h-96"
+/>
+```
+
+For tooltip labels that need more detail than the visible chart labels, pass a serializable `labelMap` under `options.plugins.tooltip`. The component converts this map into a Chart.js tooltip callback in the browser, then removes `labelMap` before rendering the chart.
+
+```blade
+<x-ui::chart
+    id="student-engagement"
+    :config="[
+        'type' => 'pie',
+        'data' => [
+            'labels' => ['PP (12)', '00 (4)'],
+            'datasets' => [[
+                'label' => 'Student Engagement',
+                'data' => [12, 4],
+                'backgroundColor' => ['#16a34a', '#f59e0b'],
+            ]],
+        ],
+        'options' => [
+            'plugins' => [
+                'tooltip' => [
+                    'labelMap' => [
+                        'PP (12)' => 'PP - Placed',
+                        '00 (4)' => '00 - Unplaced',
+                    ],
+                ],
+            ],
+        ],
+    ]"
+    class="h-96"
+/>
+```
 
 ### Navbar
 
