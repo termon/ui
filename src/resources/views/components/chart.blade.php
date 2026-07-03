@@ -45,20 +45,27 @@
 
             return value;
         },
-        applyTooltipLabelMap(config) {
+        applyTooltipFormatting(config) {
             const labelMap = config.options?.plugins?.tooltip?.labelMap;
+            const datasetLabelMap = config.options?.plugins?.tooltip?.datasetLabelMap;
+            const valueMap = config.options?.plugins?.tooltip?.valueMap;
 
-            if (!labelMap) return;
+            if (!labelMap && !datasetLabelMap && !valueMap) return;
 
             config.options.plugins.tooltip.callbacks ??= {};
             config.options.plugins.tooltip.callbacks.label ??= (context) => {
                 const label = context.label ?? '';
+                const datasetLabel = context.dataset?.label ?? '';
                 const value = context.formattedValue ?? context.raw ?? '';
+                const tooltipLabel = datasetLabelMap?.[datasetLabel] ?? labelMap?.[label] ?? (datasetLabel || label);
+                const tooltipValue = valueMap?.[datasetLabel]?.[label] ?? value;
 
-                return `${labelMap[label] ?? label}: ${value}`;
+                return `${tooltipLabel}: ${tooltipValue}`;
             };
 
             delete config.options.plugins.tooltip.labelMap;
+            delete config.options.plugins.tooltip.datasetLabelMap;
+            delete config.options.plugins.tooltip.valueMap;
         },
         themedConfig() {
             const dark = this.isDark();
@@ -84,7 +91,7 @@
             config.options.plugins.tooltip.bodyColor ??= textColor;
             config.options.scales ??= {};
 
-            this.applyTooltipLabelMap(config);
+            this.applyTooltipFormatting(config);
 
             Object.values(config.options.scales).forEach((scale) => {
                 scale.grid ??= {};

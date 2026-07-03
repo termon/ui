@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.8.29**
+> **Version 1.8.31**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -201,7 +201,7 @@ The `chart` component renders a Chart.js chart from a PHP array config. The comp
 />
 ```
 
-For tooltip labels that need more detail than the visible chart labels, pass a serializable `labelMap` under `options.plugins.tooltip`. The component converts this map into a Chart.js tooltip callback in the browser, then removes `labelMap` before rendering the chart.
+For tooltip labels that need more detail than the visible chart labels, pass a serializable `labelMap` under `options.plugins.tooltip`. To override the dataset label shown in the tooltip while keeping the visible legend unchanged, pass `datasetLabelMap` keyed by dataset label. For tooltip values that need more context than the plotted value, pass `valueMap` keyed by dataset label and chart label. The component converts these maps into a Chart.js tooltip callback in the browser, then removes them before rendering the chart.
 
 ```blade
 <x-ui::chart
@@ -222,6 +222,15 @@ For tooltip labels that need more detail than the visible chart labels, pass a s
                     'labelMap' => [
                         'PP (12)' => 'PP - Placed',
                         '00 (4)' => '00 - Unplaced',
+                    ],
+                    'datasetLabelMap' => [
+                        'Student Engagement' => 'Engagement',
+                    ],
+                    'valueMap' => [
+                        'Student Engagement' => [
+                            'PP (12)' => '75%',
+                            '00 (4)' => '25%',
+                        ],
                     ],
                 ],
             ],
