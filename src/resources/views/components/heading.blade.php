@@ -4,12 +4,12 @@
 @php
     $tag = 'h' . $level;
     $classes = match ($level) {
-        '1' => 'text-3xl  md:text-4xl lg:text-5xl font-extrabold dark:text-gray-100',
-        '2' => 'text-2xl  md:text-3xl lg:text-4xl font-bold      dark:text-gray-100',
-        '3' => 'text-xl   md:text-2xl lg:text-3xl font-bold      dark:text-gray-100',
-        '4' => 'text-base md:text-xl  lg:text-2xl font-semibold  dark:text-gray-100',
-        '5' => 'text-sm   md:text-md  lg:text-xl font-semibold   dark:text-gray-100',
-        '6' => 'text-xs   md:text-smd lg:text-md font-semibold   dark:text-gray-100',
+        '1' => 'text-3xl md:text-4xl font-bold tracking-tight text-slate-950 dark:text-slate-50',
+        '2' => 'text-2xl md:text-3xl font-bold tracking-tight text-slate-950 dark:text-slate-50',
+        '3' => 'text-xl md:text-2xl font-semibold tracking-tight text-slate-950 dark:text-slate-50',
+        '4' => 'text-lg md:text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100',
+        '5' => 'text-base md:text-lg font-semibold text-slate-900 dark:text-slate-100',
+        '6' => 'text-sm md:text-base font-semibold text-slate-900 dark:text-slate-100',
         default => throw new \Exception("heading: No such level {$level}"),
     };
 @endphp

@@ -6,9 +6,9 @@
 ])
 
 @php
-    $baseClasses = 'group relative flex items-center font-medium gap-2 px-4 py-2 rounded-md transition';
-    $activeClasses = 'bg-gray-200 dark:bg-gray-700 font-semibold text-gray-700 dark:text-white';
-    $inactiveClasses = 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-300';
+    $baseClasses = 'group relative flex items-center gap-2 rounded-lg border border-transparent px-3 py-2 font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600/40';
+    $activeClasses = 'border-blue-200/70 bg-blue-50 font-semibold text-blue-800 dark:border-blue-500/20 dark:bg-blue-500/10 dark:text-blue-200';
+    $inactiveClasses = 'text-slate-600 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white';
     $wrapperClasses = $baseClasses . ' ' . ($active ? $activeClasses : $inactiveClasses);
 @endphp
 

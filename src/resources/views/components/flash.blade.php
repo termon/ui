@@ -35,10 +35,10 @@
 
 <!-- Alert component -->
 @if($message!=null)
-<div class="absolute {{ $positionClasses }} m-auto" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, @js($timeout))">
-    <div class="bg-white rounded-lg border-gray-300 border p-3 shadow-lg dark:text-gray-400 dark:bg-gray-700">
-    <div class="flex ">
-        <div class="px-2"> 
+<div class="fixed {{ $positionClasses }} z-50 m-auto max-w-sm" role="status" aria-live="polite" x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, @js($timeout))">
+    <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-xl shadow-slate-900/10 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:shadow-black/20">
+    <div class="flex items-start gap-3">
+        <div class="mt-0.5 shrink-0">
             @if (Session::get('success'))       
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="fill-current text-green-600" width="20" height="20"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg>
             @elseif (Session::get('error'))
@@ -51,14 +51,14 @@
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="fill-current text-amber-600"  width="20" height="20"><path fill-rule="evenodd" d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8zm6.5-.25A.75.75 0 017.25 7h1a.75.75 0 01.75.75v2.75h.25a.75.75 0 010 1.5h-2a.75.75 0 010-1.5h.25v-2h-.25a.75.75 0 01-.75-.75zM8 6a1 1 0 100-2 1 1 0 000 2z"></path></svg>
             @endif
         </div>        
-        <div class="ml-2 mr-6">
-            <div class="font-semibold dark:text-gray-200">{{$title}}</div>
-            <div class="text-gray-500 dark:text-gray-200">{{$message}}</div>
+        <div class="min-w-0 flex-1">
+            <div class="font-semibold text-slate-900 dark:text-slate-100">{{$title}}</div>
+            <div class="mt-0.5 text-sm text-slate-600 dark:text-slate-300">{{$message}}</div>
         </div>
         {{-- <div class="absolute top-0 bottom-0 right-0 px-4 py-3" @click="() => show=false"> --}}
-        <div class="items-start" @click="() => show=false">
-            <svg class="fill-current h-6 w-6 text-gray-900" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
-        </div>
+        <button type="button" class="shrink-0 rounded-md p-1 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600/40 dark:hover:bg-slate-700 dark:hover:text-white" aria-label="Dismiss notification" @click="show=false">
+            <svg class="h-5 w-5 fill-current" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
+        </button>
     </div>
     
     </div>

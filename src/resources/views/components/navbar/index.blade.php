@@ -15,7 +15,7 @@
 >
     <!-- Top Nav -->
     <!-- removed fixed and z-40 and replaced with relative to allow display of dropdowns and allow navbar to scroll with content -->
-    <header class="border-b bg-gray-50 border-gray-200 dark:border-gray-700 dark:bg-gray-800 w-full fixed z-40">
+    <header class="fixed z-40 w-full border-b border-slate-200/80 bg-white/90 shadow-xs backdrop-blur dark:border-slate-700 dark:bg-slate-900/90">
         <div class="mx-auto flex min-w-0 items-center justify-between gap-2 px-4 py-3 xl:py-4">
             
             <!-- Brand Icon/Title slots -->

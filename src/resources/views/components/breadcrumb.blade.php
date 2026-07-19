@@ -5,7 +5,7 @@
 <!-- Breadcrumb -->
 
 {{-- <div {{ $attributes->merge(['class' => 'font-medium px-5 py-3 w-full text-gray-200 border border-gray-200 rounded-lg bg-gray-100 text-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white ']) }} --}}
-<div {{ $attributes->merge(['class' => 'font-medium px-3 py-3 w-full text-gray-900 dark:text-gray-400 dark:hover:text-white ']) }}
+<div {{ $attributes->merge(['class' => 'w-full py-2 text-sm font-medium text-slate-500 dark:text-slate-400']) }}
         aria-label="Breadcrumb">
     <ol class="inline-flex items-center space-x-1">
         @foreach ($crumbs as $name => $link)
@@ -23,7 +23,7 @@
                             clip-rule="evenodd"></path>
                     </svg>
                 @endif
-                <a href="{{ $link }}" class="dark:text-gray-400 dark:hover:text-white " @class(['hover:underline hover:font-bold ' => !$loop->last])>
+                <a href="{{ $link }}" @class(['transition-colors hover:text-blue-700 dark:hover:text-blue-300' => ! $loop->last, 'text-slate-800 dark:text-slate-200' => $loop->last]) @if($loop->last) aria-current="page" @endif>
                     {{ $name }}
                 </a>
             </li>

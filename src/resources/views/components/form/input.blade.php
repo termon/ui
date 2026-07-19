@@ -5,8 +5,8 @@
     $wrapperClasses = $attributes->get('class','');
 
     $baseClasses = $type === 'file'
-        ? 'w-full bg-white block rounded-lg border border-gray-300 cursor-pointer focus:outline-none file:mr-2 file:py-2 file:px-3 file:rounded-l-md file:border-0 file:font-semibold hover:file:cursor-pointer hover:file:opacity-80 dark:text-gray-400 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400'
-        : 'w-full border border-gray-300 rounded-lg p-2.5 text-gray-700 leading-tight focus:ring-blue-500 focus:border-blue-500 dark:focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500';
+        ? 'block w-full cursor-pointer rounded-lg border border-slate-300 bg-white text-slate-700 shadow-xs transition file:mr-2 file:rounded-l-md file:border-0 file:px-3 file:py-2 file:font-semibold hover:file:cursor-pointer hover:file:opacity-80 focus:border-blue-600 focus:outline-none focus:ring-3 focus:ring-blue-600/15 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:placeholder-slate-400'
+        : 'w-full rounded-lg border border-slate-300 bg-white p-2.5 leading-tight text-slate-800 shadow-xs transition placeholder:text-slate-400 focus:border-blue-600 focus:outline-none focus:ring-3 focus:ring-blue-600/15 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-500 dark:border-slate-600 dark:bg-slate-800 dark:text-white dark:placeholder-slate-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/20 dark:disabled:bg-slate-900';
 
     $variantClasses = $type === 'file' ? match ($variant) {
         'light' => 'file:bg-gray-100 file:text-gray-900',
@@ -34,4 +34,3 @@
             $wrapperClasses,
         ])
 >
-

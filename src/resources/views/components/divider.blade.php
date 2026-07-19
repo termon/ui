@@ -4,6 +4,6 @@
 @php
     if ($type != 'top' && $type != 'bottom') throw new \Exception("Invalid divider {$type}");
 @endphp
-<div {{ $attributes->class(['flex justify-between items-baseline border-gray-700 dark:border-gray-500 my-5', 'border-b pb-2' => $type === 'top', 'border-t pt-2' => $type === 'bottom']) }}>
+<div {{ $attributes->class(['my-5 flex items-end justify-between gap-4 border-slate-200 dark:border-slate-700', 'border-b pb-3' => $type === 'top', 'border-t pt-3' => $type === 'bottom']) }}>
     {{ $slot }}
 </div>

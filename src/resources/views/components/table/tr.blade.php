@@ -1,5 +1,4 @@
-@props(['hover' => false])
-<tr {{$attributes->merge(['class' => $hover ? 'hover:bg-gray-50 dark:hover:bg-gray-700' : 'py-3'])}}>
+@props(['hover' => true])
+<tr {{ $attributes->class(['transition-colors hover:bg-sky-50/60 dark:hover:bg-slate-700/70' => $hover]) }}>
     {{$slot}}
 </tr>
-

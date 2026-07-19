@@ -14,6 +14,6 @@
     };
 @endphp
 
-<td {{ $attributes->merge(['class' => 'px-3 py-2'])->class([$responsiveClass]) }}>
+<td {{ $attributes->merge(['class' => 'px-4 py-3'])->class([$responsiveClass]) }}>
     {{ $slot }}
 </td>

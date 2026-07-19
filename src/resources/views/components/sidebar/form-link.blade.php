@@ -7,8 +7,8 @@
 ])
 
 @php
-    $baseClasses = 'group relative flex items-center font-medium px-4 py-2 rounded-md w-full text-left transition-colors duration-200';
-    $inactiveClasses = 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-300';
+    $baseClasses = 'group relative flex w-full items-center rounded-lg border border-transparent px-3 py-2 text-left font-medium transition-colors duration-200';
+    $inactiveClasses = 'text-slate-600 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white';
     $wrapperClasses = $baseClasses . ' ' . $inactiveClasses;
 @endphp
 

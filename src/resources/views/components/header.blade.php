@@ -1,3 +1,3 @@
-<div {{ $attributes->merge(['class' => 'flex justify-between items-baseline border-b border-gray-700 dark:border-gray-500 pb-1 my-5']) }}>
+<div {{ $attributes->merge(['class' => 'my-5 flex items-end justify-between gap-4 border-b border-slate-200 pb-3 dark:border-slate-700']) }}>
     {{ $slot }}
 </div>

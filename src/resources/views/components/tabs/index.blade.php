@@ -61,8 +61,8 @@
     // Activate the correct tab when the page is initialized
     toggleTabs();
 }"
-    class="flex flex-col gap-2 overflow-x-auto">
-    <div class="mb-3 border-b border-neutral-300 dark:border-neutral-700" role="tablist">
+    class="flex flex-col gap-3 overflow-x-auto">
+    <div class="mb-2 flex gap-1 border-b border-slate-200 dark:border-slate-700" role="tablist">
         <template x-for="(tab, index) in tabHeadings" :key="index">
             <button @click="switchTab(tab);"
                 @focus="activateFocusedTab(tab)"
@@ -71,13 +71,13 @@
                 @keydown.home.prevent="$refs.tabButtons[0]?.focus()"
                 @keydown.end.prevent="$refs.tabButtons[tabHeadings.length - 1]?.focus()"
                 x-ref="tabButtons"
-                class="h-min px-1 pt-1 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0" type="button" role="tab" role="tab"
+                class="h-min rounded-t-lg px-1 pt-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600/40" type="button" role="tab"
                 :aria-selected="(tab === activeTab).toString()" :aria-controls="`tab-panel-${index + 1}`">
                 <span x-text="tab"
                     :class="tab === activeTab ?
-                        'font-semibold text-neutral-900 border-b-2 border-neutral-600 dark:border-white dark:text-white' :
-                        'border-b-2 border-transparent text-neutral-500 font-light hover:border-neutral-300 hover:text-neutral-600 dark:text-neutral-300 dark:hover:border-neutral-200 dark:hover:text-white'"
-                    class="block px-3 pb-0.5 transition-colors"></span>
+                        'border-b-2 border-blue-700 bg-blue-50 font-semibold text-blue-800 dark:border-blue-400 dark:bg-blue-500/10 dark:text-blue-200' :
+                        'border-b-2 border-transparent font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-800 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'"
+                    class="block rounded-t-md px-3 py-2 transition-colors"></span>
             </button>
         </template>
     </div>

@@ -23,10 +23,10 @@
             '-translate-x-full': !mobileOpen,
             'translate-x-0': mobileOpen
         }"
-        class="fixed z-40 inset-y-0 left-0 bg-gray-50 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transform transition-all duration-300 ease-in-out lg:static lg:translate-x-0 lg:flex-shrink-0"
+        class="fixed inset-y-0 left-0 z-40 border-r border-slate-200/80 bg-white shadow-sm shadow-slate-900/5 transform transition-all duration-300 ease-in-out dark:border-slate-700 dark:bg-slate-900 dark:shadow-black/20 lg:static lg:translate-x-0 lg:shrink-0"
     >
         <!-- Header -->
-        <div class="p-4 flex items-center bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 h-14">
+        <div class="flex h-14 items-center border-b border-slate-100 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
             <div class="flex items-center gap-2">
                 <!-- Brand icon slot - always visible -->
                 @isset($brandIcon)
@@ -45,21 +45,21 @@
 
         <!-- Primary Navigation slot -->
         @isset($navigation)
-            <nav class="p-4 space-y-2">
+            <nav class="space-y-1.5 p-4">
                 {{ $navigation }}
             </nav>
         @endisset
 
         <!-- Secondary Navigation slot -->
         @isset($secondary)
-            <nav class="px-4 pb-4 space-y-2 border-t border-gray-200 dark:border-gray-700">
+            <nav class="mx-4 space-y-1.5 border-t border-slate-200 px-0 pt-4 dark:border-slate-700">
                 {{ $secondary }}
             </nav>
         @endisset
 
         <!-- User section (inside the slide-out menu on mobile) -->
         @isset($user)
-            <div class="px-4 py-4 border-t border-gray-200 dark:border-gray-700 lg:hidden">
+            <div class="border-t border-slate-200 px-4 py-4 dark:border-slate-700 lg:hidden">
                 {{ $user }}
             </div>
         @elseif(isset($bottom))
@@ -70,7 +70,7 @@
 
         <!-- User section (bottom of sidebar on desktop) -->
         @isset($user)
-            <div class="p-4 w-full absolute bottom-0 left-0 border-t border-gray-200 dark:border-gray-700 hidden lg:block">
+            <div class="absolute bottom-0 left-0 hidden w-full border-t border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900 lg:block">
                 {{ $user }}
             </div>
         @endisset
@@ -78,7 +78,7 @@
     </aside>
 
     <!-- Mobile overlay -->
-    <div x-show="mobileOpen" @click="mobileOpen = false" class="fixed inset-0 bg-opacity-30 z-30 lg:hidden"
+    <div x-show="mobileOpen" @click="mobileOpen = false" class="fixed inset-0 z-30 bg-slate-950/30 backdrop-blur-[1px] lg:hidden"
          x-transition.opacity x-cloak></div>
 
     <!-- Main content Scrollable: added max-height-screen -->
@@ -86,7 +86,7 @@
 
         <!-- Top bar (always visible) Scrollable: added flex-shrink-0 -->
         <header
-            class="flex min-w-0 items-center justify-between gap-2 flex-shrink-0 p-4 border-b bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 h-14">
+            class="flex h-14 min-w-0 shrink-0 items-center justify-between gap-2 border-b border-slate-200/80 bg-white/90 p-4 shadow-xs backdrop-blur dark:border-slate-700 dark:bg-slate-900/90">
             
             <!-- Left side buttons -->
             <div class="flex shrink-0 items-center gap-2">
@@ -132,7 +132,7 @@
         </header>
 
         <!-- Page content  Scrollable: added overflow-y-auto -->
-        <main class="min-w-0 flex-1 text-left overflow-y-auto overflow-x-hidden px-4 py-2 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+        <main class="min-w-0 flex-1 overflow-y-auto overflow-x-hidden bg-slate-50/35 px-4 py-3 text-left text-slate-900 dark:bg-slate-950 dark:text-slate-100">
             {{ $slot }}
         </main>
     </div>

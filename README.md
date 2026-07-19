@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.8.31**
+> **Version 1.8.40**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -144,8 +144,8 @@ composer test
 
 Component groups currently provided by the package:
 
-- Layout/navigation: `navbar`, `navbar.link`, `navbar.dropdown`, `navbar.form-link`, `sidebar`, `sidebar.link`, `sidebar.dropdown`, `sidebar.form-link`, `header`, `hero`
-- Content/display: `heading`, `title`, `divider`, `card`, `display`, `statistic`, `badge`, `breadcrumb`, `avatar`, `rating`, `steps`
+- Layout/navigation: `navbar`, `navbar.link`, `navbar.dropdown`, `navbar.form-link`, `sidebar`, `sidebar.link`, `sidebar.dropdown`, `sidebar.form-link`, `nav-tabs`, `nav-tabs.link`, `header`, `hero`
+- Content/display: `heading`, `title`, `divider`, `card`, `display`, `statistic`, `badge`, `chip`, `breadcrumb`, `avatar`, `rating`, `steps`, `section-header`, `resource-row`
 - Disclosure/overlays: `accordion`, `accordion.item`, `tabs`, `tabs.tab`, `modal`, `modal.trigger`, `flash`
 - Tables/pagination: `table`, `table.tr`, `table.th`, `table.td`, `link-sort`, `paginator`
 - Forms: `form.input`, `form.input-group`, `form.select`, `form.select-group`, `form.textarea`, `form.textarea-group`, `form.date`, `form.date-group`, `form.datetime`, `form.datetime-group`, `form.checkbox`, `form.checkbox-group`, `form.toggle`, `form.toggle-group`, `form.range`, `form.range-group`, `form.otp`, `form.otp-group`, `form.label`, `form.error`, `form.confirm`
@@ -419,6 +419,8 @@ The `card` component acts as a container for content.
    // ... card content
 </x-ui::card>
 ```
+
+Cards use a restrained slate border and shadow treatment. The header and footer slots have subtle contrasting backgrounds and dividers so dense pages can be divided into readable sections without introducing strong colour blocks.
 
 Cards can also be configured with optional `header` and `footer` slots
 
@@ -841,6 +843,17 @@ Badges provide additional contextual information for other user interface (UI) e
 </x-ui::badge>
 ```
 
+The colour names `slate`, `emerald`, `amber`, `rose`, and `sky` are also accepted as aliases for their corresponding gray, green, yellow, red, and blue variants.
+
+### Chip
+
+The `chip` component renders compact metadata or filter labels. It accepts `blue`/`sky`, `green`/`emerald`, and `slate`/`gray` variants, an optional `icon`, an optional `href`, and `default` or `sm` sizes.
+
+```blade
+<x-ui::chip variant="emerald" icon="check-circle">Placement ready</x-ui::chip>
+<x-ui::chip variant="slate" size="sm" :href="$detailsUrl">View details</x-ui::chip>
+```
+
 ### Header
 
 A simple component to use as a page header. Can be combined with `title` component below. For example:
@@ -890,6 +903,51 @@ Where a more complex value is to be displayed then use the $slot as follows:
     <span>{{$model->name}}"</span>
     <x-ui::badge variant="pink">Pro</x-ui::badge>
 </x-ui::display>
+```
+
+Display rows support four density/layout variants:
+
+- `default` — a standard responsive label/value row.
+- `compact` — reduced vertical spacing for side panels and summaries.
+- `tile` — a bordered summary metric suitable for responsive grids.
+- `stacked` — a label above its value without row dividers.
+
+The optional `icon` prop places an icon beside the label, and `labelWidth` accepts `sm`, `md`, `lg`, or `xl`.
+
+```blade
+<x-ui::display variant="tile" label="Open Opportunities" :value="$count" />
+<x-ui::display variant="compact" label="Employer" :value="$employer->name" icon="building-office" />
+```
+
+### Section Header
+
+Use `section-header` inside a card header to provide a consistent title, supporting description, optional status badge, and optional actions.
+
+```blade
+<x-ui::section-header
+    title="Application Details"
+    description="Information supplied by the student."
+    status="Complete"
+    status-variant="emerald"
+>
+    <x-slot:actions>
+        <x-ui::link :href="$editUrl">Edit</x-ui::link>
+    </x-slot:actions>
+</x-ui::section-header>
+```
+
+### Resource Row
+
+The `resource-row` component displays a named resource or checklist item with an icon, optional description, status badge, and action slot. Group rows inside a divided bordered container.
+
+```blade
+<div class="divide-y divide-slate-100 overflow-hidden rounded-lg border border-slate-200">
+    <x-ui::resource-row title="Offer Evidence" status="Available" status-variant="emerald" icon="document">
+        <x-slot:actions>
+            <x-ui::link :href="$documentUrl" icon="eye" label="View" />
+        </x-slot:actions>
+    </x-ui::resource-row>
+</div>
 ```
 
 ### Hero
@@ -942,6 +1000,31 @@ The `tabs` and `tab` components work together to provide tabbed panels and work 
     </x-ui::tabs.tab>
 </x-ui::tabs>
 ```
+
+Tab headings wrap on narrow screens rather than forcing the full page to scroll horizontally. The active heading uses the same subtle blue accent as route-based navigation tabs.
+
+### Navigation Tabs
+
+Use `nav-tabs` for route-based navigation that should visually match interactive tabs. Links wrap responsively and support `primary` and more compact `secondary` variants.
+
+```blade
+<x-ui::nav-tabs label="Student sections">
+    <x-ui::nav-tabs.link :href="$detailsUrl" :active="request()->routeIs('students.show')">
+        Details
+    </x-ui::nav-tabs.link>
+    <x-ui::nav-tabs.link :href="$placementsUrl" :active="request()->routeIs('students.placements')">
+        Placements
+    </x-ui::nav-tabs.link>
+</x-ui::nav-tabs>
+
+<x-ui::nav-tabs variant="secondary" label="Placement sections">
+    <x-ui::nav-tabs.link variant="secondary" :href="$planUrl" :active="$activeSection === 'plan'">
+        Placement Plan
+    </x-ui::nav-tabs.link>
+</x-ui::nav-tabs>
+```
+
+Pass `disabled` to render a non-interactive tab with `aria-disabled="true"`.
 
 ### Accordion
 
@@ -1507,6 +1590,7 @@ This section lists the public props currently declared by the Blade components. 
 - `fill` default `none`
 - `stroke` default `currentColor`
 - `strokeWidth` default `1.5`
+- Includes the `building-office` icon for employer and organisation contexts
 
 `icon`
 - `icon` required

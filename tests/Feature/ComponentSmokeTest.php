@@ -32,6 +32,73 @@ class ComponentSmokeTest extends TestCase
         );
     }
 
+    public function test_card_supports_surface_variants(): void
+    {
+        $soft = $this->renderBlade('<x-ui::card variant="soft">Soft card</x-ui::card>');
+        $elevated = $this->renderBlade('<x-ui::card variant="elevated">Elevated card</x-ui::card>');
+        $flat = $this->renderBlade('<x-ui::card variant="flat">Flat card</x-ui::card>');
+
+        $this->assertStringContainsString('bg-slate-50', $soft);
+        $this->assertStringContainsString('shadow-lg', $elevated);
+        $this->assertStringContainsString('shadow-none', $flat);
+    }
+
+    public function test_table_supports_striped_and_compact_variants(): void
+    {
+        $html = $this->renderBlade('<x-ui::table striped compact><x-slot:tbody><x-ui::table.tr><x-ui::table.td>Cell</x-ui::table.td></x-ui::table.tr></x-slot:tbody></x-ui::table>');
+
+        $this->assertStringContainsString('nth-child(even)', $html);
+        $this->assertStringContainsString('[&_th]:py-2', $html);
+        $this->assertStringContainsString('[&_td]:py-2', $html);
+    }
+
+    public function test_badge_supports_semantic_aliases(): void
+    {
+        $emerald = $this->renderBlade('<x-ui::badge variant="emerald">Complete</x-ui::badge>');
+        $amber = $this->renderBlade('<x-ui::badge variant="amber">Attention</x-ui::badge>');
+        $slate = $this->renderBlade('<x-ui::badge variant="slate">Neutral</x-ui::badge>');
+
+        $this->assertStringContainsString('bg-emerald-50', $emerald);
+        $this->assertStringContainsString('bg-amber-50', $amber);
+        $this->assertStringContainsString('bg-slate-100', $slate);
+    }
+
+    public function test_display_supports_layout_variants(): void
+    {
+        $compact = $this->renderBlade('<x-ui::display variant="compact" label="Employer" value="Acme" />');
+        $tile = $this->renderBlade('<x-ui::display variant="tile" label="Open" value="12" />');
+        $stacked = $this->renderBlade('<x-ui::display variant="stacked" label="Status" value="Ready" />');
+
+        $this->assertStringContainsString('py-1.5', $compact);
+        $this->assertStringContainsString('rounded-lg', $tile);
+        $this->assertStringContainsString('truncate', $tile);
+        $this->assertStringContainsString('flex-col gap-1', $stacked);
+    }
+
+    public function test_chip_supports_links_icons_sizes_and_aliases(): void
+    {
+        $link = $this->renderBlade('<x-ui::chip href="/skills" variant="emerald" size="sm" icon="check-circle">Ready</x-ui::chip>');
+        $label = $this->renderBlade('<x-ui::chip variant="gray">Draft</x-ui::chip>');
+
+        $this->assertStringContainsString('<a href="/skills"', $link);
+        $this->assertStringContainsString('text-xs', $link);
+        $this->assertStringContainsString('bg-emerald-50', $link);
+        $this->assertStringContainsString('<svg', $link);
+        $this->assertStringContainsString('<span', $label);
+        $this->assertStringContainsString('bg-slate-100', $label);
+    }
+
+    public function test_navigation_tabs_support_secondary_active_and_disabled_states(): void
+    {
+        $html = $this->renderBlade('<x-ui::nav-tabs variant="secondary" label="Placement sections"><x-ui::nav-tabs.link variant="secondary" href="/plan" active>Plan</x-ui::nav-tabs.link><x-ui::nav-tabs.link variant="secondary" disabled>Review</x-ui::nav-tabs.link></x-ui::nav-tabs>');
+
+        $this->assertStringContainsString('aria-label="Placement sections"', $html);
+        $this->assertStringContainsString('aria-current="page"', $html);
+        $this->assertStringContainsString('href="/plan"', $html);
+        $this->assertStringContainsString('aria-disabled="true"', $html);
+        $this->assertStringNotContainsString('href="#"', $html);
+    }
+
     public function test_paginator_uses_item_page_size_when_request_size_is_missing(): void
     {
         $items = new LengthAwarePaginator(collect(range(1, 50)), 75, 50, 1, ['path' => '/items']);
@@ -189,6 +256,7 @@ class ComponentSmokeTest extends TestCase
             'button' => ['button', '<x-ui::button icon="trash">Delete</x-ui::button>', 'Delete'],
             'card' => ['card', '<x-ui::card><x-slot name="header">Card Header</x-slot>Card Body<x-slot name="footer">Card Footer</x-slot></x-ui::card>', 'Card Body'],
             'chart' => ['chart', '<x-ui::chart id="sales-chart" :config="[\'type\' => \'bar\', \'data\' => [\'labels\' => [], \'datasets\' => []]]" />', 'sales-chart'],
+            'chip' => ['chip', '<x-ui::chip href="/skills" variant="sky">Laravel</x-ui::chip>', 'Laravel'],
             'display' => ['display', '<x-ui::display label="Name" value="Alice" icon="user" />', 'Alice'],
             'divider' => ['divider', '<x-ui::divider>Section</x-ui::divider>', 'Section'],
             'flash' => ['flash', '@php(session()->flash(\'status\', \'Saved\')) <x-ui::flash />', 'Saved'],
@@ -222,12 +290,16 @@ class ComponentSmokeTest extends TestCase
             'link-sort' => ['link-sort', '<x-ui::link-sort name="title">Title</x-ui::link-sort>', 'Title'],
             'modal' => ['modal', '<x-ui::modal name="delete" show><x-slot name="title">Confirm</x-slot>Modal Body<x-slot name="footer">Footer</x-slot></x-ui::modal>', 'Modal Body'],
             'modal.trigger' => ['modal.trigger', '<x-ui::modal.trigger for="delete">Open</x-ui::modal.trigger>', 'Open'],
+            'nav-tabs' => ['nav-tabs', '<x-ui::nav-tabs><x-ui::nav-tabs.link href="/one" active>One</x-ui::nav-tabs.link></x-ui::nav-tabs>', 'One'],
+            'nav-tabs.link' => ['nav-tabs.link', '<x-ui::nav-tabs.link href="/one" active>One</x-ui::nav-tabs.link>', 'One'],
             'navbar' => ['navbar', '<x-ui::navbar><x-slot:brandTitle>Brand</x-slot:brandTitle><x-slot:navigation><x-ui::navbar.link href="/" icon="home" label="Home" /></x-slot:navigation></x-ui::navbar>', 'Brand'],
             'navbar.dropdown' => ['navbar.dropdown', '<x-ui::navbar.dropdown icon="folder" label="Menu"><x-ui::navbar.link href="/" icon="home" label="Home" /></x-ui::navbar.dropdown>', 'Menu'],
             'navbar.form-link' => ['navbar.form-link', '<x-ui::navbar.form-link action="/logout" icon="exit" label="Logout" />', 'Logout'],
             'navbar.link' => ['navbar.link', '<x-ui::navbar.link href="/" icon="home" label="Home" />', 'Home'],
             'paginator' => ['paginator', '<x-ui::paginator :items="$items" />', 'Page 1 of 1'],
             'rating' => ['rating', '<x-ui::rating value="3" />', '<svg'],
+            'resource-row' => ['resource-row', '<x-ui::resource-row title="Report" status="Available"><x-slot:actions>View</x-slot:actions></x-ui::resource-row>', 'Available'],
+            'section-header' => ['section-header', '<x-ui::section-header title="Visits" description="Two recorded" status="Complete" />', 'Two recorded'],
             'sidebar' => ['sidebar', '<x-ui::sidebar><x-slot:brandTitle>Brand</x-slot:brandTitle><x-slot:navigation><x-ui::sidebar.link href="/" icon="home" label="Home" /></x-slot:navigation>Content</x-ui::sidebar>', 'Content'],
             'sidebar.dropdown' => ['sidebar.dropdown', '<x-ui::sidebar.dropdown icon="folder" label="Menu"><x-ui::sidebar.link href="/" icon="home" label="Home" /></x-ui::sidebar.dropdown>', 'Menu'],
             'sidebar.form-link' => ['sidebar.form-link', '<x-ui::sidebar.form-link action="/logout" icon="exit" label="Logout" />', 'Logout'],
