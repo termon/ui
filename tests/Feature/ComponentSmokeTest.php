@@ -43,6 +43,36 @@ class ComponentSmokeTest extends TestCase
         $this->assertStringContainsString('shadow-none', $flat);
     }
 
+    public function test_chart_supports_accessibility_and_enhanced_interactions(): void
+    {
+        $html = $this->renderBlade('<x-ui::chart id="engagement-chart" aria-label="Student engagement breakdown" fallback-text="A classification breakdown of students." :config="$config" />', [
+            'config' => [
+                'type' => 'doughnut',
+                'data' => ['labels' => ['PP (50%)'], 'datasets' => [['data' => [50]]]],
+                'options' => [
+                    'emitOnClick' => 'chart-segment-clicked',
+                    'plugins' => [
+                        'centreText' => ['text' => '10', 'subtext' => 'students'],
+                        'tooltip' => [
+                            'displayValue' => false,
+                            'secondaryValueMap' => ['PP (50%)' => '5 students'],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $this->assertStringContainsString('chart.js@4.5.1', $html);
+        $this->assertStringContainsString('role="img"', $html);
+        $this->assertStringContainsString('aria-label="Student engagement breakdown"', $html);
+        $this->assertStringContainsString('A classification breakdown of students.', $html);
+        $this->assertStringContainsString('\u0022displayValue\u0022:false', $html);
+        $this->assertStringContainsString('\u0022emitOnClick\u0022:\u0022chart-segment-clicked\u0022', $html);
+        $this->assertStringContainsString('prefers-reduced-motion: reduce', $html);
+        $this->assertStringContainsString("id: 'ouiChartCentreText'", $html);
+        $this->assertStringContainsString('secondaryValueMap', $html);
+    }
+
     public function test_table_supports_striped_and_compact_variants(): void
     {
         $html = $this->renderBlade('<x-ui::table striped compact><x-slot:tbody><x-ui::table.tr><x-ui::table.td>Cell</x-ui::table.td></x-ui::table.tr></x-slot:tbody></x-ui::table>');

@@ -1,14 +1,17 @@
 @props([
     'id',
     'config',
+    'ariaLabel' => null,
+    'fallbackText' => null,
 ])
 
 @php
     $chartConfig = isset($config) ? \Illuminate\Support\Js::from($config) : trim((string) $slot);
+    $accessibleLabel = $ariaLabel ?: \Illuminate\Support\Str::headline($id);
 @endphp
 
 @once
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1"></script>
 @endonce
 
 <div
@@ -18,6 +21,9 @@
         config: {{ $chartConfig }},
         isDark() {
             return document.documentElement.classList.contains('dark');
+        },
+        prefersReducedMotion() {
+            return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         },
         init() {
             this.render();
@@ -49,8 +55,10 @@
             const labelMap = config.options?.plugins?.tooltip?.labelMap;
             const datasetLabelMap = config.options?.plugins?.tooltip?.datasetLabelMap;
             const valueMap = config.options?.plugins?.tooltip?.valueMap;
+            const secondaryValueMap = config.options?.plugins?.tooltip?.secondaryValueMap;
+            const displayValue = config.options?.plugins?.tooltip?.displayValue ?? true;
 
-            if (!labelMap && !datasetLabelMap && !valueMap) return;
+            if (!labelMap && !datasetLabelMap && !valueMap && !secondaryValueMap && displayValue) return;
 
             config.options.plugins.tooltip.callbacks ??= {};
             config.options.plugins.tooltip.callbacks.label ??= (context) => {
@@ -59,13 +67,19 @@
                 const value = context.formattedValue ?? context.raw ?? '';
                 const tooltipLabel = datasetLabelMap?.[datasetLabel] ?? labelMap?.[label] ?? (datasetLabel || label);
                 const tooltipValue = valueMap?.[datasetLabel]?.[label] ?? value;
+                const secondaryValue = secondaryValueMap?.[datasetLabel]?.[label] ?? secondaryValueMap?.[label];
+                const lines = [displayValue ? `${tooltipLabel}: ${tooltipValue}` : tooltipLabel];
 
-                return `${tooltipLabel}: ${tooltipValue}`;
+                if (secondaryValue) lines.push(secondaryValue);
+
+                return lines;
             };
 
             delete config.options.plugins.tooltip.labelMap;
             delete config.options.plugins.tooltip.datasetLabelMap;
             delete config.options.plugins.tooltip.valueMap;
+            delete config.options.plugins.tooltip.secondaryValueMap;
+            delete config.options.plugins.tooltip.displayValue;
         },
         themedConfig() {
             const dark = this.isDark();
@@ -76,9 +90,12 @@
             const tooltipBg = dark ? '#1f2937' : '#f8fafc';
 
             const config = this.cloneValue(this.config);
+            const centreText = config.options?.plugins?.centreText;
+            const clickEventName = config.options?.emitOnClick;
             config.options ??= {};
             config.options.responsive ??= true;
             config.options.maintainAspectRatio ??= false;
+            if (this.prefersReducedMotion()) config.options.animation = false;
             config.options.plugins ??= {};
             config.options.plugins.legend ??= {};
             config.options.plugins.legend.labels ??= {};
@@ -90,6 +107,40 @@
             config.options.plugins.tooltip.titleColor ??= textColor;
             config.options.plugins.tooltip.bodyColor ??= textColor;
             config.options.scales ??= {};
+
+            if (config.type === 'pie' || config.type === 'doughnut') {
+                config.options.plugins.legend.position ??= 'bottom';
+                config.options.plugins.legend.align ??= 'start';
+                config.options.plugins.legend.labels.usePointStyle ??= true;
+                config.options.plugins.legend.labels.pointStyle ??= 'circle';
+                config.options.plugins.legend.labels.padding ??= 16;
+
+                config.data?.datasets?.forEach((dataset) => {
+                    dataset.hoverOffset ??= 8;
+                    dataset.spacing ??= 2;
+                    dataset.borderRadius ??= 3;
+                });
+            }
+
+            if (clickEventName) {
+                config.options.onClick ??= (event, elements, chart) => {
+                    const element = elements[0];
+                    if (!element) return;
+
+                    this.$el.dispatchEvent(new CustomEvent(clickEventName, {
+                        bubbles: true,
+                        detail: {
+                            dataIndex: element.index,
+                            datasetIndex: element.datasetIndex,
+                            label: chart.data.labels?.[element.index] ?? null,
+                            value: chart.data.datasets?.[element.datasetIndex]?.data?.[element.index] ?? null,
+                        },
+                    }));
+                };
+            }
+
+            delete config.options.emitOnClick;
+            delete config.options.plugins.centreText;
 
             this.applyTooltipFormatting(config);
 
@@ -117,6 +168,33 @@
                 },
             });
 
+            if (centreText?.text) {
+                config.plugins.push({
+                    id: 'ouiChartCentreText',
+                    afterDatasetsDraw: (chart) => {
+                        const { ctx, chartArea } = chart;
+                        if (!chartArea) return;
+
+                        const x = (chartArea.left + chartArea.right) / 2;
+                        const y = (chartArea.top + chartArea.bottom) / 2;
+                        ctx.save();
+                        ctx.fillStyle = centreText.color ?? textColor;
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.font = `600 ${centreText.fontSize ?? 24}px sans-serif`;
+                        ctx.fillText(centreText.text, x, y - (centreText.subtext ? 8 : 0));
+
+                        if (centreText.subtext) {
+                            ctx.fillStyle = centreText.subtextColor ?? mutedTextColor;
+                            ctx.font = `400 ${centreText.subtextFontSize ?? 12}px sans-serif`;
+                            ctx.fillText(centreText.subtext, x, y + 16);
+                        }
+
+                        ctx.restore();
+                    },
+                });
+            }
+
             return config;
         },
         render() {
@@ -127,6 +205,8 @@
     }"
 >
     <div {{ $attributes->merge(['class' => 'w-full h-96']) }}>
-        <canvas id="{{ $id }}" x-ref="canvas"></canvas>
+        <canvas id="{{ $id }}" x-ref="canvas" role="img" aria-label="{{ $accessibleLabel }}">
+            {{ $fallbackText ?: $accessibleLabel }}
+        </canvas>
     </div>
 </div>

@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.8.41**
+> **Version 1.8.42**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -181,13 +181,24 @@ Additional HTML attributes and classes can be passed to the wrapper `div`.
 
 ### Chart
 
-The `chart` component renders a Chart.js chart from a PHP array config. The component applies light/dark theme defaults for text, grid lines, tooltip colours, and a chart-area background.
+The `chart` component renders a Chart.js 4.5.1 chart from a PHP array config. It applies light/dark theme defaults for text, grid lines, tooltip colours, and the chart-area background. Animations are disabled automatically when the browser requests reduced motion.
+
+The component accepts these props:
+
+- `id` (required): the canvas ID.
+- `config`: a serializable Chart.js configuration. A JavaScript configuration can be supplied through the default slot instead.
+- `aria-label`: an accessible name for the canvas. It defaults to a headline generated from `id`.
+- `fallback-text`: text exposed when the canvas cannot be rendered. It defaults to the accessible label.
+
+Pie and doughnut charts receive overridable presentation defaults: a bottom/start-aligned legend, circular legend markers, additional legend padding, rounded segments, segment spacing, and an offset for the hovered segment.
 
 ```blade
 <x-ui::chart
     id="student-engagement"
+    aria-label="Student engagement classification breakdown"
+    fallback-text="Student engagement classifications and percentages."
     :config="[
-        'type' => 'pie',
+        'type' => 'doughnut',
         'data' => [
             'labels' => ['PP (12)', '00 (4)'],
             'datasets' => [[
@@ -201,13 +212,23 @@ The `chart` component renders a Chart.js chart from a PHP array config. The comp
 />
 ```
 
-For tooltip labels that need more detail than the visible chart labels, pass a serializable `labelMap` under `options.plugins.tooltip`. To override the dataset label shown in the tooltip while keeping the visible legend unchanged, pass `datasetLabelMap` keyed by dataset label. For tooltip values that need more context than the plotted value, pass `valueMap` keyed by dataset label and chart label. The component converts these maps into a Chart.js tooltip callback in the browser, then removes them before rendering the chart.
+### Serializable tooltip options
+
+Chart.js tooltip callbacks cannot be passed in a PHP array. The component provides serializable alternatives under `options.plugins.tooltip`:
+
+- `labelMap`: replaces a visible chart label with a more descriptive tooltip label.
+- `datasetLabelMap`: replaces the tooltip dataset label without changing the legend.
+- `valueMap`: replaces the plotted value, keyed first by dataset label and then chart label.
+- `displayValue`: set to `false` to display only the tooltip label rather than repeating a value already present in the title.
+- `secondaryValueMap`: adds a second tooltip line. It may be keyed directly by chart label or nested under a dataset label.
+
+The component converts these options into a Chart.js tooltip callback and removes the custom keys before rendering.
 
 ```blade
 <x-ui::chart
     id="student-engagement"
     :config="[
-        'type' => 'pie',
+        'type' => 'doughnut',
         'data' => [
             'labels' => ['PP (12)', '00 (4)'],
             'datasets' => [[
@@ -219,6 +240,7 @@ For tooltip labels that need more detail than the visible chart labels, pass a s
         'options' => [
             'plugins' => [
                 'tooltip' => [
+                    'displayValue' => false,
                     'labelMap' => [
                         'PP (12)' => 'PP - Placed',
                         '00 (4)' => '00 - Unplaced',
@@ -232,13 +254,50 @@ For tooltip labels that need more detail than the visible chart labels, pass a s
                             '00 (4)' => '25%',
                         ],
                     ],
+                    'secondaryValueMap' => [
+                        'PP (12)' => '12 students',
+                        '00 (4)' => '4 students',
+                    ],
+                ],
+                'centreText' => [
+                    'text' => '16',
+                    'subtext' => 'students',
                 ],
             ],
+            'cutout' => '58%',
         ],
     ]"
     class="h-96"
 />
 ```
+
+### Doughnut centre text
+
+Set `options.plugins.centreText.text` to draw a summary in the middle of a doughnut. The following keys are supported:
+
+- `text` (required to enable the centre text)
+- `subtext`
+- `color` and `subtextColor`
+- `fontSize` (default `24`) and `subtextFontSize` (default `12`)
+
+### Segment click events
+
+Set `options.emitOnClick` to a browser event name. Clicking a chart element dispatches a bubbling `CustomEvent` from the component root. Its `detail` contains `dataIndex`, `datasetIndex`, `label`, and `value`.
+
+```blade
+<div x-on:engagement-selected="console.log($event.detail)">
+    <x-ui::chart
+        id="student-engagement"
+        :config="[
+            'type' => 'doughnut',
+            'data' => $chartData,
+            'options' => ['emitOnClick' => 'engagement-selected'],
+        ]"
+    />
+</div>
+```
+
+All standard Chart.js options remain available. Explicit chart and dataset values override the component defaults.
 
 ### Navbar
 
@@ -1193,7 +1252,7 @@ It accepts:
 - a `config` prop containing a Chart.js configuration array/object
 - or a slot containing a JavaScript chart config object
 
-The component loads Chart.js from CDN and applies light/dark theme defaults for legend, title, tooltip, axes, and chart background.
+The component loads pinned Chart.js 4.5.1 from CDN and applies light/dark theme defaults for legend, title, tooltip, axes, and chart background. It also supports the serializable tooltip maps, doughnut centre text, click events, accessibility props, pie/doughnut presentation defaults, and reduced-motion behaviour documented in the earlier Chart section.
 
 Using the `config` prop:
 
@@ -1574,7 +1633,12 @@ This section lists the public props currently declared by the Blade components. 
 `chart`
 - `id` required
 - `config` required by the component declaration, but the slot may be used for a JavaScript config object
-- Loads Chart.js from CDN and redraws on dark mode class changes
+- `ariaLabel` default `null`; falls back to a headline generated from `id`
+- `fallbackText` default `null`; falls back to the accessible label
+- Loads pinned Chart.js 4.5.1 from CDN and redraws on dark mode class changes
+- Disables animation when `prefers-reduced-motion: reduce` is active
+- Supports `labelMap`, `datasetLabelMap`, `valueMap`, `secondaryValueMap`, and `displayValue` under `options.plugins.tooltip`
+- Supports `options.plugins.centreText` and `options.emitOnClick`
 
 `highchart`
 - `id` required
