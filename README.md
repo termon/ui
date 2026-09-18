@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.8.42**
+> **Version 1.8.43**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -450,23 +450,29 @@ Sidebar link components include intelligent tooltip positioning:
 
 ### Button and Link
 
-The `button` and `link` components can be configured with several variants (`blue`, `red`, `green`, `yellow`, `dark`, `light`, `oblue`, `ored`, `ogreen`, `oyellow`, `link`, or `none`).
+The `button` and `link` components share a consistent set of semantic variants: `primary`, `danger`, `success`, `warning`, `outline-primary`, `outline-danger`, `outline-success`, `outline-warning`, `dark`, `light`, `link`, and `none`.
 
-Following examples provide a `'light'` variant button, and standard `link`. Adding a `variant` property to the link allows it to be styled as one of the buttons.
+Buttons use `primary` by default and render with `type="button"`, preventing accidental form submission. Pass another type explicitly when required. Links use the text-style `link` variant by default and can use any button-style variant.
 
-```
-<x-ui::button variant="light">Light</x-ui::button>
-<x-ui::link>Link</x-ui::link>
-<x-ui::link variant="oblue">Outline Blue Link</x-ui::link>
-```
+```blade
+<x-ui::button>Save</x-ui::button>
+<x-ui::button type="submit" variant="success">Submit</x-ui::button>
+<x-ui::button variant="danger">Delete</x-ui::button>
 
-Both also accept optional `icon` and `label` properties. For `icon` specify the name of an svg icon (see svg below). The `label` property can be used instead of the slot e.g.
-
-```
-<x-ui::button variant="light" icon="folder" label="Information"/>
+<x-ui::link href="/account">Account</x-ui::link>
+<x-ui::link href="/reports" variant="outline-primary">View reports</x-ui::link>
 ```
 
-> The component will display only the icon on `sm` screens and both on larger screens.
+Both components accept an optional `icon`; provide the visible text through the default slot.
+
+```blade
+<x-ui::button variant="light" icon="folder">Information</x-ui::button>
+<x-ui::link href="/edit" icon="pencil">Edit</x-ui::link>
+```
+
+When an icon is present, the visible text is hidden below the `md` breakpoint while an accessible screen-reader label remains available.
+
+The earlier colour-based variant names (`blue`, `red`, `green`, `yellow`, `oblue`, `ored`, `ogreen`, and `oyellow`) remain supported as backwards-compatible aliases.
 
 
 ### Card
@@ -1377,17 +1383,18 @@ This section lists the public props currently declared by the Blade components. 
 - `type` default `top`; accepted values are `top`, `bottom`
 
 `button`
-- `variant` default `blue`
-- `label` default `null`
+- `variant` default `primary`
 - `icon` default `null`
-- Variants: `blue`, `red`, `green`, `yellow`, `dark`, `light`, `oblue`, `ored`, `ogreen`, `oyellow`, `link`, `none`
+- `type` defaults to `button`; standard button attributes may override it
+- Variants: `primary`, `danger`, `success`, `warning`, `outline-primary`, `outline-danger`, `outline-success`, `outline-warning`, `dark`, `light`, `link`, `none`
+- Legacy aliases remain supported: `blue`, `red`, `green`, `yellow`, `oblue`, `ored`, `ogreen`, `oyellow`
 
 `link`
 - `variant` default `link`
 - `href` default `#`
-- `label` default `null`
 - `icon` default `null`
-- Variants: `blue`, `red`, `green`, `yellow`, `dark`, `light`, `oblue`, `ored`, `ogreen`, `oyellow`, `link`, `none`
+- Variants: `primary`, `danger`, `success`, `warning`, `outline-primary`, `outline-danger`, `outline-success`, `outline-warning`, `dark`, `light`, `link`, `none`
+- Legacy aliases remain supported: `blue`, `red`, `green`, `yellow`, `oblue`, `ored`, `ogreen`, `oyellow`
 
 `avatar`
 - `size` default `xs`; accepted values are `xs`, `sm`, `md`, `lg`

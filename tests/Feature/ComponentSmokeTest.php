@@ -93,6 +93,76 @@ class ComponentSmokeTest extends TestCase
         $this->assertStringContainsString('bg-slate-100', $slate);
     }
 
+    public function test_button_supports_semantic_variants_and_defaults_to_button_type(): void
+    {
+        $variants = [
+            'primary' => 'bg-blue-700',
+            'danger' => 'bg-red-700',
+            'success' => 'bg-green-700',
+            'warning' => 'bg-yellow-600',
+            'outline-primary' => 'border-blue-700',
+            'outline-danger' => 'border-red-700',
+            'outline-success' => 'border-green-700',
+            'outline-warning' => 'border-yellow-700',
+        ];
+
+        foreach ($variants as $variant => $expectedClass) {
+            $html = $this->renderBlade('<x-ui::button :variant="$variant">Action</x-ui::button>', compact('variant'));
+
+            $this->assertStringContainsString($expectedClass, $html);
+        }
+
+        $default = $this->renderBlade('<x-ui::button>Action</x-ui::button>');
+        $submit = $this->renderBlade('<x-ui::button type="submit">Save</x-ui::button>');
+
+        $this->assertStringContainsString('type="button"', $default);
+        $this->assertStringContainsString('bg-blue-700', $default);
+        $this->assertStringContainsString('type="submit"', $submit);
+    }
+
+    public function test_link_supports_semantic_variants(): void
+    {
+        $variants = [
+            'primary' => 'bg-blue-700',
+            'danger' => 'bg-red-700',
+            'success' => 'bg-green-700',
+            'warning' => 'bg-yellow-600',
+            'outline-primary' => 'border-blue-700',
+            'outline-danger' => 'border-red-700',
+            'outline-success' => 'border-green-700',
+            'outline-warning' => 'border-yellow-700',
+        ];
+
+        foreach ($variants as $variant => $expectedClass) {
+            $html = $this->renderBlade('<x-ui::link href="/action" :variant="$variant">Action</x-ui::link>', compact('variant'));
+
+            $this->assertStringContainsString($expectedClass, $html);
+            $this->assertStringContainsString('href="/action"', $html);
+        }
+    }
+
+    public function test_button_and_link_keep_legacy_variants_and_label_prop_compatible(): void
+    {
+        $legacyVariants = ['blue', 'red', 'green', 'yellow', 'oblue', 'ored', 'ogreen', 'oyellow'];
+
+        foreach ($legacyVariants as $variant) {
+            $this->assertStringContainsString('Action', $this->renderBlade('<x-ui::button :variant="$variant" label="Action" />', compact('variant')));
+            $this->assertStringContainsString('Action', $this->renderBlade('<x-ui::link :variant="$variant" label="Action" />', compact('variant')));
+        }
+    }
+
+    public function test_button_and_link_icon_labels_remain_accessible_on_small_screens(): void
+    {
+        $button = $this->renderBlade('<x-ui::button icon="trash">Delete</x-ui::button>');
+        $link = $this->renderBlade('<x-ui::link href="/home" icon="home">Home</x-ui::link>');
+
+        foreach ([$button, $link] as $html) {
+            $this->assertStringContainsString('<svg', $html);
+            $this->assertStringContainsString('sr-only md:hidden', $html);
+            $this->assertStringContainsString('hidden md:inline', $html);
+        }
+    }
+
     public function test_display_supports_layout_variants(): void
     {
         $compact = $this->renderBlade('<x-ui::display variant="compact" label="Employer" value="Acme" />');
