@@ -8,6 +8,8 @@
 ])
 
 @php
+    $stepCount = $step > 0 ? max(0, (int) floor(($max - $min) / $step)) : 0;
+    $tickCount = min($stepCount, 10) + 1;
     [$accentColor, $accentDarkColor] = match ($variant) {
         'light' => ['#9ca3af', '#d1d5db'],
         'oblue' => ['#2563eb', '#60a5fa'],
@@ -96,7 +98,7 @@
 
             <!-- Ticks -->
             <div class="relative px-2 w-full flex justify-between text-xs text-neutral-500 select-none">
-                @for ($i = $min; $i <= $max; $i++)
+                @for ($i = 0; $i < $tickCount; $i++)
                     <div class="p-0 m-0 w-0.5 h-2 bg-neutral-400"></div>
                 @endfor
             </div>

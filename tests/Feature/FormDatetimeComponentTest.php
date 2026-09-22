@@ -64,4 +64,13 @@ class FormDatetimeComponentTest extends TestCase
         $this->assertStringContainsString('name="report_opens_at"', $html);
         $this->assertSame(1, substr_count($html, 'wire:model="report_opens_at"'));
     }
+
+    public function test_datetime_preserves_exact_incoming_minutes(): void
+    {
+        $html = Blade::render('<x-ui::form.datetime name="starts_at" value="2026-09-22 09:02:00" wire:model="starts_at" />');
+
+        $this->assertStringContainsString('value="2026-09-22 09:02:00"', $html);
+        $this->assertStringContainsString('length: 60', $html);
+        $this->assertStringNotContainsString('roundToNearestFiveMinutes', $html);
+    }
 }

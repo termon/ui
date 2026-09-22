@@ -53,7 +53,7 @@
                 x-on:click.away="open = false"
                 x-on:keydown.escape.window="open = false"
                 x-bind:style="panelStyle"
-                class="fixed left-0 top-0 z-[1000] max-h-[min(80vh,36rem)] w-[17rem] overflow-y-auto rounded-lg border border-gray-200/70 bg-white p-4 shadow dark:border-gray-700 dark:bg-gray-900"
+                class="fixed left-0 top-0 z-1000 max-h-[min(80vh,36rem)] w-68 overflow-y-auto rounded-lg border border-gray-200/70 bg-white p-4 shadow dark:border-gray-700 dark:bg-gray-900"
             >
                 <div class="mb-2 flex items-center justify-between gap-1">
                     <div class="min-w-0 flex-1 whitespace-nowrap">
@@ -152,6 +152,7 @@
             value: '',
             displayValue: '',
             selectedDate: null,
+            syncingCalendar: false,
 
             year: null,
             month: null,
@@ -171,19 +172,17 @@
                 length: 24
             }, (_, i) => i.toString().padStart(2, '0')),
             minutes: Array.from({
-                length: 12
-            }, (_, i) => (i * 5).toString().padStart(2, '0')),
+                length: 60
+            }, (_, i) => i.toString().padStart(2, '0')),
 
             init() {
                 const parsedDate = this.parseDate(initialValue);
                 const viewportDate = parsedDate || new Date();
-                const roundedDate = this.roundToNearestFiveMinutes(viewportDate);
-
-                this.setCalendarState(roundedDate);
+                this.setCalendarState(viewportDate);
 
                 if (parsedDate) {
-                    this.selectedDate = roundedDate;
-                    this.value = this.formatValue(this.selectedDate);
+                    this.selectedDate = parsedDate;
+                    this.value = String(initialValue);
                     this.displayValue = this.formatDateTime(this.selectedDate);
                 }
 
@@ -255,6 +254,7 @@
             },
 
             updateSelectedTime() {
+                if (this.syncingCalendar) return;
                 if (!this.selectedDate) {
                     this.selectedDate = new Date(this.year, this.month, this.day);
                 }
@@ -324,7 +324,8 @@
             },
 
             setNow() {
-                const now = this.roundToNearestFiveMinutes(new Date());
+                const now = new Date();
+                now.setSeconds(0, 0);
                 this.setCalendarState(now);
                 this.selectedDate = now;
                 this.commitSelectedDate();
@@ -356,20 +357,20 @@
                     return;
                 }
 
-                const roundedDate = this.roundToNearestFiveMinutes(parsedDate);
-                this.setCalendarState(roundedDate);
-                this.selectedDate = roundedDate;
-                this.value = this.formatValue(roundedDate);
-                this.displayValue = this.formatDateTime(roundedDate);
+                this.setCalendarState(parsedDate);
+                this.selectedDate = parsedDate;
+                this.displayValue = this.formatDateTime(parsedDate);
                 this.calculateDays();
             },
 
             setCalendarState(date) {
+                this.syncingCalendar = true;
                 this.year = date.getFullYear();
                 this.month = date.getMonth();
                 this.day = date.getDate();
                 this.hour = date.getHours().toString().padStart(2, '0');
                 this.minute = date.getMinutes().toString().padStart(2, '0');
+                this.$nextTick(() => { this.syncingCalendar = false; });
             },
 
             parseDate(rawValue) {
@@ -400,14 +401,6 @@
                 const parsed = new Date(v);
 
                 return Number.isNaN(parsed.getTime()) ? null : parsed;
-            },
-
-            roundToNearestFiveMinutes(date) {
-                const roundedDate = new Date(date);
-                const roundedMinute = Math.round(roundedDate.getMinutes() / 5) * 5;
-                roundedDate.setMinutes(roundedMinute, 0, 0);
-
-                return roundedDate;
             },
 
             formatValue(date) {

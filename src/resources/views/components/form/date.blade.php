@@ -3,10 +3,10 @@
     'value' => '' 
 ])
 
-<!-- make sure $value is in 'YYYY-MM-DD' format for proper initialization -->
-<div x-data="datePicker(@js($value))" x-cloak>
+<div x-data="datePicker(@js($value))" x-modelable="value" x-cloak {{ $attributes }}>
         <div class="relative">
-            <input x-ref="input" name="{{ $name }}" value="{{ $value }}" type="text" @click.stop="toggle()"
+            <input type="hidden" name="{{ $name }}" value="{{ $value }}" x-bind:value="value" />
+            <input x-ref="input" id="{{ $name }}" type="text" @click.stop="toggle()"
                 x-model="displayValue" x-on:keydown.escape="open = false" placeholder="Select date" readonly
                 class="w-full border border-gray-300 rounded-lg p-2.5 pr-10 text-gray-700 leading-tight cursor-pointer
                      focus:ring-blue-500 focus:border-blue-500
@@ -22,8 +22,8 @@
             </div>
 
             <template x-teleport="body">
-            <div x-show="open" x-ref="panel" x-transition @click.away="open = false" x-on:keydown.escape.window="open = false" x-bind:style="panelStyle"
-                class="fixed left-0 top-0 z-[1000] p-4 bg-white border rounded-lg shadow w-[17rem] max-h-[min(80vh,32rem)] overflow-y-auto
+            <div x-show="open" x-cloak x-ref="panel" x-transition @click.away="open = false" x-on:keydown.escape.window="open = false" x-bind:style="panelStyle"
+                class="fixed left-0 top-0 z-1000 p-4 bg-white border rounded-lg shadow w-68 max-h-[min(80vh,32rem)] overflow-y-auto
                      border-gray-200/70 dark:bg-gray-700 dark:border-gray-600">
                 <!-- Calendar Header -->
                 <div class="flex items-center justify-between gap-1 mb-2">
@@ -96,6 +96,10 @@
 
                 <!-- Actions -->
                 <div class="mt-3 flex justify-between">
+                    <button type="button" @click="clear"
+                        class="px-3 py-1 text-sm font-medium text-gray-700 bg-gray-100 rounded hover:bg-gray-200 dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500">
+                        Clear
+                    </button>
                     <button type="button" @click="setToday"
                         class="px-3 py-1 text-sm font-medium text-gray-700 bg-gray-100 rounded hover:bg-gray-200
                                dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500">
@@ -118,6 +122,7 @@
         return {
             open: false,
             panelStyle: '',
+            value: '',
             displayValue: '',
             selectedDate: null,
 
@@ -134,36 +139,7 @@
             daysInMonth: [],
 
             init() {
-                let date = null;
-
-                if (initialValue) {
-                    const v = String(initialValue).trim();
-
-                    // 1. Match YYYY-MM-DD
-                    const re1 = /^(\d{4})-(\d{2})-(\d{2})$/;
-                    // 2. Match DD-MM-YYYY
-                    const re2 = /^(\d{2})-(\d{2})-(\d{4})$/;
-
-                    let m;
-                    if ((m = v.match(re1))) {
-                        const [, y, mo, d] = m;
-                        date = new Date(Number(y), Number(mo) - 1, Number(d));
-                    } else if ((m = v.match(re2))) {
-                        const [, d, mo, y] = m;
-                        date = new Date(Number(y), Number(mo) - 1, Number(d));
-                    } else {
-                        const parsed = new Date(v);
-                        if (!isNaN(parsed)) date = parsed;
-                    }
-                }
-
-                if (!date || isNaN(date)) date = new Date();
-                this.year = date.getFullYear();
-                this.month = date.getMonth();
-                this.day = date.getDate();
-
-                this.selectedDate = new Date(this.year, this.month, this.day);
-                this.displayValue = this.formatDate(this.selectedDate);
+                this.syncFromValue(initialValue);
                 this.calculateDays();
 
                 const reposition = () => {
@@ -175,6 +151,7 @@
                 document.addEventListener('scroll', reposition, true);
 
                 if (this.$watch) {
+                    this.$watch('value', (newValue) => this.syncFromValue(newValue));
                     this.$watch('open', (isOpen) => {
                         if (isOpen) {
                             this.$nextTick(() => this.positionPanel());
@@ -280,7 +257,7 @@
             selectDate(d) {
                 this.day = d;
                 this.selectedDate = new Date(this.year, this.month, this.day);
-                this.displayValue = this.formatDate(this.selectedDate);
+                this.commitSelectedDate();
                 this.calculateDays();
             },
 
@@ -290,8 +267,41 @@
                 this.month = now.getMonth();
                 this.day = now.getDate();
                 this.selectedDate = new Date(this.year, this.month, this.day);
-                this.displayValue = this.formatDate(this.selectedDate);
+                this.commitSelectedDate();
                 this.calculateDays();
+            },
+
+            clear() {
+                this.value = '';
+                this.displayValue = '';
+                this.selectedDate = null;
+                this.open = false;
+            },
+
+            commitSelectedDate() {
+                this.value = this.formatValue(this.selectedDate);
+                this.displayValue = this.formatDate(this.selectedDate);
+            },
+
+            syncFromValue(rawValue) {
+                const match = String(rawValue ?? '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+                const date = match ? new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3])) : null;
+                const valid = date && date.getFullYear() === Number(match[1]) &&
+                    date.getMonth() === Number(match[2]) - 1 && date.getDate() === Number(match[3]);
+                const viewportDate = valid ? date : new Date();
+                this.year = viewportDate.getFullYear();
+                this.month = viewportDate.getMonth();
+                this.day = viewportDate.getDate();
+                this.selectedDate = valid ? date : null;
+                if (this.value !== (valid ? this.formatValue(date) : '')) {
+                    this.value = valid ? this.formatValue(date) : '';
+                }
+                this.displayValue = valid ? this.formatDate(date) : '';
+                this.calculateDays();
+            },
+
+            formatValue(date) {
+                return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
             },
 
             apply() {

@@ -7,7 +7,7 @@
     'placeholder' => 'Choose option...',
 ])
 
-<div {{ $attributes->merge(['class' => 'w-full']) }}>
+<div {{ $attributes->only('class')->merge(['class' => 'w-full']) }}>
     @isset($label)
         <x-ui::form.label for="{{ $name }}" :icon="$icon">
             {{ $label }}
@@ -19,11 +19,10 @@
         :options="$options"
         :value="$value"
         placeholder="{{ $placeholder }}"
-        {{ $attributes->except(['name', 'options', 'value', 'icon','placeholder']) }}
+        {{ $attributes->except(['class', 'name', 'options', 'value', 'icon', 'label', 'placeholder']) }}
     />
 
     <x-ui::form.error for="{{ $name }}" />
 </div>
-
 
 

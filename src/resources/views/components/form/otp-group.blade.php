@@ -5,7 +5,7 @@
     'icon' => null,
 ])
 
-<div {{ $attributes->merge(['class' => 'w-full']) }}>
+<div {{ $attributes->only('class')->merge(['class' => 'w-full']) }}>
     @isset($label)
         <x-ui::form.label for="{{ $name }}-1" class="mb-2" :icon="$icon">
             {{ $label }}

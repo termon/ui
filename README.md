@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.8.43**
+> **Version 1.8.44**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -621,6 +621,8 @@ A custom placeholder property can also be provided which overrides the default.
                          placeholder="Select a role.." />
 ```
 
+Extra attributes such as `wire:model` and `required` are applied to the `<select>`. On `select-group`, `class` styles the outer wrapper.
+
 #### Date
 
 A custom date picker component is also available and can be used instead of a standard date input.
@@ -636,7 +638,7 @@ Use `date-group` when you want the field with an optional label and validation e
 ```
 <x-ui::form.date-group name="date" label="Date" value="{{ now()->format('Y-m-d') }}" class="w-64" />
 ```
-> The input value should be a string in format `Y-m-d`
+The value may be `null`, empty, or a string in `Y-m-d` format. An empty value stays blank. The picker displays a readable date while its hidden input submits `Y-m-d`; `Clear` empties both. Pass `wire:model` to `date` or `date-group` to bind that ISO value in Livewire.
 
 #### DateTime
 
@@ -658,6 +660,8 @@ Use `datetime-group` when you want the field with an optional label and validati
 <x-ui::form.datetime-group name="date" label="Date" value="{{ now()->format('Y-m-d H:i:s') }}" class="w-64" />
 ```
 > The input value should be `null`, an empty string, or a string in format `Y-m-d H:i:s`.
+
+Existing times retain their exact minute when the picker initializes or receives a new Livewire value. The picker offers every minute of the hour.
 
 #### Checkbox
 
@@ -791,6 +795,8 @@ Available `toggle-group` variants:
 
 Use `range` for a styled slider input with a live value display and tick marks.
 
+Tick marks follow the configured `step` for short ranges and are limited to 11 for larger ranges.
+
 ```
 <x-ui::form.range name="score" min="1" max="5" step="1" :value="$model->score" />
 ```
@@ -823,6 +829,8 @@ Available range variants:
 #### OTP
 
 Use `otp` to render a one-time-passcode style sequence of single-character inputs. The component stores values as an array using the provided field name.
+
+Extra input attributes such as `required` and `inputmode` are applied to every digit. With `wire:model="code"` (or `wire:model.live="code"`), digits bind to `code.0`, `code.1`, and so on, so the Livewire property should be an array.
 
 ```
 <x-ui::form.otp name="code" length="6" />
@@ -1502,7 +1510,7 @@ This section lists the public props currently declared by the Blade components. 
 
 `form.date`
 - `name` required
-- `value` default empty string; expected format is `Y-m-d`
+- `value` default empty string; accepts `null`, empty string, or `Y-m-d`
 
 `form.date-group`
 - `name` required
