@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.8.44**
+> **Version 1.8.45**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -134,10 +134,16 @@ Using `:value="..."` passes the original PHP value to the component. The compone
 
 ## Testing
 
-The package includes a PHPUnit/Testbench test suite. Run it from the package root:
+The package includes a PHPUnit/Testbench test suite with Livewire integration tests for `form.confirm`. Livewire is a development dependency for these tests. Run the suite from the package root:
 
 ```
 composer test
+```
+
+Run the JavaScript handler regression tests separately (requires Node.js). These cover normal form submission and Livewire action handling, including validation, retries, busy state, cancellation, and focus callbacks. They execute component handlers with test doubles; they do not replace browser tests for native dialog behavior:
+
+```sh
+composer test:js
 ```
 
 ## Available Components
@@ -844,23 +850,74 @@ Use `otp-group` when you want the field with an optional label and validation er
 
 #### Confirm
 
-The `confirm` component displays an inline AlpineJS confirmation prompt for destructive actions. It renders an initial button, then swaps to a confirmation state with `Yes` / `No`.
+The `confirm` component uses AlpineJS to display a native browser dialog with a message and `Yes` / `No` buttons. It supports `mode="form"` (the default) and `mode="livewire"`. Other mode values are rejected.
 
-When placed inside a form, clicking `Yes` submits the wrapping form.
+In both modes, initial focus goes to `No`. Clicking `No`, pressing Escape, or clicking the backdrop requests cancellation. Dismissal is ignored while an action is busy. Focus returns to the trigger after cancellation or a completed Livewire action that closes the dialog.
 
-```
-<form action="{{ ... }}" method="POST">
+**Normal forms**
+
+In form mode, clicking the trigger opens the dialog. Clicking `Yes` closes it, checks browser form validation, and submits the nearest wrapping form through `requestSubmit()`, preserving submit event handlers. A successful native submission keeps the buttons disabled while navigation proceeds. If validation fails, submission is prevented, no submit event occurs, or submission throws, the component remains retryable. For intercepted asynchronous form submissions, the application must manage loading state while its request is pending.
+
+```blade
+<form action="{{ route('records.destroy', $record) }}" method="POST">
     @csrf
     @method('DELETE')
 
-    <x-ui::form.confirm variant="ored">Delete</x-ui::form.confirm>
+    <x-ui::form.confirm mode="form" variant="ored" message="Delete this record?">
+        Delete
+    </x-ui::form.confirm>
 </form>
 ```
 
-An optional `message` prop can be used to override the default confirmation text (`Are you sure?`). An optional `icon` prop can be used to display an icon in the initial button.
+**Livewire components**
 
+Livewire mode calls actions on the containing Livewire component and does not submit a wrapping form. It requires `confirming-property`, `prepare-action`, `confirm-action`, and `cancel-action`. Pass public property and method names, without parentheses or arguments; keep the selected record or other action data in the host component.
+
+```blade
+<x-ui::form.confirm
+    mode="livewire"
+    confirming-property="confirmingDelete"
+    prepare-action="prepareDelete"
+    confirm-action="deleteRecord"
+    cancel-action="cancelDelete"
+    variant="ored"
+    icon="trash"
+    message="Delete this record?"
+>
+    Delete
+</x-ui::form.confirm>
 ```
-<x-ui::form.confirm variant="ored" icon="trash" message="Delete this record?">
+
+For example, the host Livewire component can define:
+
+```php
+public bool $confirmingDelete = false;
+
+public function prepareDelete(): void
+{
+    $this->confirmingDelete = true;
+}
+
+public function deleteRecord(): void
+{
+    $this->record->delete(); // Apply the host application's authorization and validation here.
+    $this->confirmingDelete = false;
+}
+
+public function cancelDelete(): void
+{
+    $this->confirmingDelete = false;
+}
+```
+
+The trigger calls the prepare action; the dialog follows the boolean confirming property. `Yes` calls the confirm action, and cancellation calls the cancel action. The host actions control when the dialog closes by setting the property to `false`. If validation or an error leaves it `true`, the dialog stays open and the buttons unlock for a retry. Buttons stay disabled while each action is pending, preventing duplicate actions and cancellation during that request.
+
+The dialog uses `wire:ignore.self` to preserve its native open state during Livewire updates. The trigger also receives `wire:loading.attr="disabled"` and a `wire:target` containing the three action names. Override the loading target with `target="deleteRecord,refresh"` when needed.
+
+In either mode, `message` overrides the default text (`Are you sure?`) and is escaped when rendered. The optional `icon` appears on the trigger. Use `variant` for the trigger and `confirm-variant` for the `Yes` button; both default to `red`.
+
+```blade
+<x-ui::form.confirm variant="ored" confirm-variant="red" icon="trash" message="Delete this record?">
     Delete
 </x-ui::form.confirm>
 ```
@@ -1169,12 +1226,12 @@ Default `icons` set currently includes:
 
 ### Modal
 
-A `modal` component is used to display a popup modal. The modal accepts a `name` prop which must be unique on the page containing the modal. It also can be configured with optional `title` and `footer` slots.
+The `modal` component uses a native browser dialog, which handles focus containment and restores focus when closed. Use `autofocus` on a content element to choose its initial focus; the legacy `focusable` attribute is no longer needed. The modal accepts a `name` prop which must be unique on the page containing the modal. It also can be configured with optional `title` and `footer` slots.
    
-The modal also accepts a `dismissable` prop that defaults to `false`. In the current implementation, clicking the backdrop closes the modal while `dismissable` is `false`.
+The modal accepts a `dismissable` prop that defaults to `false`, preventing Escape and backdrop dismissal. Set `:dismissable="true"` to allow both. The close button and named close events remain available in either mode.
 
 ```
-<x-ui::modal name="test"  focusable>
+<x-ui::modal name="test" :dismissable="true">
     <x-slot:title>
         ...
     </x-slot:title>
@@ -1596,10 +1653,15 @@ This section lists the public props currently declared by the Blade components. 
 - `for` required by the component declaration; when supplied, renders the validation error for that field
 
 `form.confirm`
+- `mode` default `form`; accepted values are `form` and `livewire`
+- `confirmingProperty` default `null`; pass as `confirming-property` (required in Livewire mode)
+- `prepareAction`, `confirmAction`, `cancelAction` default `null`; pass as `prepare-action`, `confirm-action`, `cancel-action` (all required in Livewire mode)
+- `target` default `null`; in Livewire mode, defaults to the comma-separated action names for `wire:target`
 - `message` default `Are you sure?`
-- `variant` default `red`
+- `variant` default `red` (trigger button)
+- `confirmVariant` default `red`; pass as `confirm-variant` (confirmation button)
 - `icon` default `null`
-- Must be rendered inside a form if the `Yes` button should submit that form.
+- Form mode submits the nearest wrapping form; Livewire mode calls host component actions and does not require a form.
 
 ### Disclosure And Overlays
 
@@ -1625,7 +1687,7 @@ This section lists the public props currently declared by the Blade components. 
 - `show` default `false`
 - `maxWidth` default `2xl`; accepted values are `sm`, `md`, `lg`, `xl`, `2xl`
 - Slots: default, `title`, `footer`
-- The current backdrop click condition closes the modal when `dismissable` is `false`.
+- Escape and backdrop dismissal require `:dismissable="true"`; the close button and named close events work in either mode.
 
 `modal.trigger`
 - `for` required

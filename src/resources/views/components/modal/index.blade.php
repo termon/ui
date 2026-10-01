@@ -1,109 +1,79 @@
 @props(['name', 'dismissable' => false, 'show' => false, 'maxWidth' => '2xl'])
 
 @php
-    $maxWidth = [
+    $widthClass = [
         'sm' => 'sm:max-w-sm',
         'md' => 'sm:max-w-md',
         'lg' => 'sm:max-w-lg',
         'xl' => 'sm:max-w-xl',
         '2xl' => 'sm:max-w-2xl',
     ][$maxWidth];
+    $titleId = isset($title) ? (($title instanceof \Illuminate\View\ComponentSlot ? $title->attributes->get('id') : null) ?? 'modal-title-'.\Illuminate\Support\Str::uuid()) : null;
 @endphp
 
-<div
+<dialog
     x-data="{
+        name: @js($name),
         show: @js($show),
         dismissable: @js($dismissable),
-        focusables() {
-        // All focusable element types...
-        let selector = 'a, button, input:not([type=\'hidden\']), textarea, select, details, [tabindex]:not([tabindex=\'-1\'])';
-            return [...$el.querySelectorAll(selector)]
-                // All non-disabled elements...
-                .filter(el => !el.hasAttribute('disabled'));
+        backdropPressed: false,
+        init() {
+            this.$watch('show', () => this.sync());
+            this.$nextTick(() => this.sync());
         },
-        firstFocusable() { return this.focusables()[0] },
-        lastFocusable() { return this.focusables().slice(-1)[0] },
-        nextFocusable() { return this.focusables()[this.nextFocusableIndex()] || this.firstFocusable() },
-        prevFocusable() { return this.focusables()[this.prevFocusableIndex()] || this.lastFocusable() },
-        nextFocusableIndex() { return (this.focusables().indexOf(document.activeElement) + 1) % (this.focusables().length + 1) },
-        prevFocusableIndex() { return Math.max(0, this.focusables().indexOf(document.activeElement)) - 1 }
-    }" x-init="$watch('show', value => {
-        if (value) {
-            document.body.classList.add('overflow-y-hidden');
-            {{ $attributes->has('focusable') ? 'setTimeout(() => firstFocusable()?.focus(), 100)' : '' }}
-        } else {
-            document.body.classList.remove('overflow-y-hidden');
+        sync() {
+            if (this.show && !this.$el.open) { this.$el.showModal(); }
+            if (!this.show && this.$el.open) { this.$el.close(); }
+        },
+        outside(event) {
+            const bounds = this.$el.getBoundingClientRect();
+            return event.target === this.$el && (
+                event.clientX < bounds.left || event.clientX > bounds.right ||
+                event.clientY < bounds.top || event.clientY > bounds.bottom
+            );
         }
-    })"
-    x-on:open-modal.window="$event.detail == '{{ $name }}' ? show = true : null"
-    x-on:close-modal.window="$event.detail == '{{ $name }}' ? show = false : null"
-    x-on:keydown.escape.window="show = false"
-    x-on:keydown.tab.prevent="!$event.shiftKey && nextFocusable()?.focus()"
-    x-on:keydown.shift.tab.prevent="prevFocusable()?.focus()"
-    x-show="show"
-    x-cloak
-    class="fixed inset-0 z-50 overflow-y-auto px-4 py-6 sm:px-0"
-    style="display: none;"
+    }"
+    x-on:open-modal.window="if ($event.detail === name) show = true"
+    x-on:close-modal.window="if ($event.detail === name) show = false"
+    x-on:cancel.self="if (!dismissable) $event.preventDefault()"
+    x-on:close.self="show = $el.open"
+    x-on:pointerdown="backdropPressed = outside($event)"
+    x-on:click="if (dismissable && backdropPressed && outside($event)) show = false; backdropPressed = false"
+    {{ $attributes->except(['focusable', 'dismissable'])->merge([
+        'aria-labelledby' => $titleId,
+        'class' => 'fixed inset-0 m-auto max-h-[calc(100dvh-3rem)] w-[calc(100%-3rem)] overflow-y-auto rounded-lg border-0 bg-white p-6 text-gray-900 shadow-xl sm:w-full '.$widthClass.' dark:bg-gray-800 dark:text-gray-100 backdrop:bg-gray-200/85 dark:backdrop:bg-gray-900/85',
+    ]) }}
 >
-    <div
-        class="flex items-center justify-center min-h-screen"
-        @click.self="show = false"
-        x-transition:enter="ease-out duration-300"
-        x-transition:enter-start="opacity-0"
-        x-transition:enter-end="opacity-100"
-        x-transition:leave="ease-in duration-200"
-        x-transition:leave-start="opacity-100"
-        x-transition:leave-end="opacity-0"
-    >
-        <!-- Backdrop -->
-        <div class="fixed inset-0 bg-gray-200 dark:bg-gray-900 opacity-85" x-on:click="!dismissable ? show = false : null"></div>
-        
-        <!-- Modal content -->
-        <div
-            class="relative p-6 m-6 bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-xl sm:w-full {{ $maxWidth }} sm:mx-auto z-50"
-            @click.stop
-            x-transition:enter="ease-out duration-300"
-            x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-            x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-            x-transition:leave="ease-in duration-200"
-            x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
-            x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-        >
-            <!-- Close button -->
-            <button @click="show = false" type="button"
-                class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
-                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                     viewBox="0 0 14 14">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                </svg>
-                <span class="sr-only">Close modal</span>
-            </button>
+    <button x-on:click="show = false" type="button"
+        class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+             viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+        </svg>
+        <span class="sr-only">Close modal</span>
+    </button>
 
-            <!-- Title -->
-            @if (isset($title))
-                @php
-                    $titleAttributes = $title instanceof \Illuminate\View\ComponentSlot
-                        ? $title->attributes
-                        : new \Illuminate\View\ComponentAttributeBag;
-                @endphp
+    @if (isset($title))
+        @php
+            $titleAttributes = $title instanceof \Illuminate\View\ComponentSlot
+                ? $title->attributes
+                : new \Illuminate\View\ComponentAttributeBag;
+        @endphp
 
-                <div {{ $titleAttributes->merge([
-                    'class' => 'pb-4 mb-4 text-2xl font-bold border-b border-gray-400 dark:border-gray-600'
-                ]) }}>
-                    {{ $title }}
-                </div>
-            @endif
-
-            <!-- Modal slot content -->
-            {{ $slot }}
-
-             <!-- Optional footer -->
-            @isset($footer)
-                <div class="mt-6 pt-4 border-t border-gray-400 dark:border-gray-400">
-                    {{ $footer }}
-                </div>
-        @endisset
+        <div {{ $titleAttributes->merge([
+            'id' => $titleId,
+            'class' => 'pb-4 mb-4 text-2xl font-bold border-b border-gray-400 dark:border-gray-600'
+        ]) }}>
+            {{ $title }}
         </div>
-    </div>
-</div>
+    @endif
+
+    {{ $slot }}
+
+    @isset($footer)
+        <div class="mt-6 pt-4 border-t border-gray-400 dark:border-gray-400">
+            {{ $footer }}
+        </div>
+    @endisset
+</dialog>
