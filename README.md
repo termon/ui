@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.8.46**
+> **Version 1.8.47**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -551,20 +551,143 @@ In this example the column is only visible at `lg` and greater breakpoints
 
 ```
 #### Table Sort Link
-A `link-sort` component is available for use in table header columns
 
+`name` is required and identifies the column to sort. The slot supplies the label. The optional `paginator` prop derives sort parameter names from the table's paginator. The controller must apply the requested sorting.
+
+```blade
+<x-ui::link-sort name="name" default-sort="name">Name</x-ui::link-sort>
 ```
-<x-ui::link-sort name="attribute-name" />
-```
+
+Without a paginator or explicit overrides, this uses `sort` and `direction`. Set `default-sort` to match the controller's default column; it otherwise defaults to `id`.
 
 #### Paginator
-A `paginator` component is available to use when the table is displaying a paginated collection. The component also allows the user to specify the number of rows to display in each page. The paginated collection variable items should be passed via the `:items` property
 
-```
-<x-ui::paginator :items="$collection" size="10" />
+Pass the length-aware paginator returned by Laravel's `paginate()` through `:items`:
+
+```blade
+<x-ui::paginator :items="$users" />
 ```
 
-An optional set of `:options` can be added to override the default page options `:options="['15' => 15, '25' => 25, '50' => 50, '100' => 100, '500' => 500]"`. Additionally an optional `variant` can be used to specify a colour `green` `red` `dark` `purple` `light`
+The component derives the size parameter from `getPageName()`. Default `page` uses `size`. The selected size falls back to the paginator's `perPage()`. The controller must read the size parameter before fetching records; the component does not change the database query.
+
+Use `:options` to override the default sizes (`10`, `25`, `50`, `100`, `500`). Supported `variant` colours are `green`, `red`, `dark`, `purple`, and `light`.
+
+```blade
+<x-ui::paginator :items="$users" :options="[10 => 10, 25 => 25, 50 => 50]" variant="green" />
+```
+
+#### Multiple Tables With Independent Sorting And Pagination
+
+Give each query a unique Laravel `pageName`, then pass the matching paginator to both components. No component identity prop is needed. A trailing `_page` is removed before deriving the other parameter names; other custom names have `_size`, `_sort`, and `_direction` appended directly. Use distinct prefixes for each table.
+
+| Page name | Size | Sort | Direction |
+| --- | --- | --- | --- |
+| `page` | `size` | `sort` | `direction` |
+| `users_page` | `users_size` | `users_sort` | `users_direction` |
+| `projects_page` | `projects_size` | `projects_sort` | `projects_direction` |
+
+Controller example (using `App\Models\User`, `App\Models\Project`, `Illuminate\Http\Request`, and `Illuminate\Validation\Rule`):
+
+```php
+public function index(Request $request)
+{
+    $state = $request->validate([
+        'users_size' => ['sometimes', 'integer', Rule::in([10, 25, 50, 100, 500])],
+        'users_sort' => ['sometimes', Rule::in(['name', 'email'])],
+        'users_direction' => ['sometimes', Rule::in(['asc', 'desc'])],
+        'projects_size' => ['sometimes', 'integer', Rule::in([10, 25, 50, 100, 500])],
+        'projects_sort' => ['sometimes', Rule::in(['name', 'created_at'])],
+        'projects_direction' => ['sometimes', Rule::in(['asc', 'desc'])],
+    ]);
+
+    $users = User::query()
+        ->orderBy($state['users_sort'] ?? 'name', $state['users_direction'] ?? 'asc')
+        ->orderBy('id')
+        ->paginate(
+            perPage: (int) ($state['users_size'] ?? 10),
+            pageName: 'users_page',
+        )
+        ->withQueryString();
+
+    $projects = Project::query()
+        ->orderBy($state['projects_sort'] ?? 'name', $state['projects_direction'] ?? 'asc')
+        ->orderBy('id')
+        ->paginate(
+            perPage: (int) ($state['projects_size'] ?? 10),
+            pageName: 'projects_page',
+        )
+        ->withQueryString();
+
+    return view('dashboard', compact('users', 'projects'));
+}
+```
+
+In `dashboard.blade.php`:
+
+```blade
+<x-ui::table>
+    <x-slot:thead>
+        <x-ui::table.tr>
+            <x-ui::table.th>
+                <x-ui::link-sort :paginator="$users" name="name" default-sort="name">Name</x-ui::link-sort>
+            </x-ui::table.th>
+            <x-ui::table.th>
+                <x-ui::link-sort :paginator="$users" name="email" default-sort="name">Email</x-ui::link-sort>
+            </x-ui::table.th>
+        </x-ui::table.tr>
+    </x-slot:thead>
+    <x-slot:tbody>
+        @foreach ($users as $user)
+            <x-ui::table.tr>
+                <x-ui::table.td>{{ $user->name }}</x-ui::table.td>
+                <x-ui::table.td>{{ $user->email }}</x-ui::table.td>
+            </x-ui::table.tr>
+        @endforeach
+    </x-slot:tbody>
+</x-ui::table>
+<x-ui::paginator :items="$users" />
+
+<x-ui::table>
+    <x-slot:thead>
+        <x-ui::table.tr>
+            <x-ui::table.th>
+                <x-ui::link-sort :paginator="$projects" name="name" default-sort="name">Project</x-ui::link-sort>
+            </x-ui::table.th>
+            <x-ui::table.th>
+                <x-ui::link-sort :paginator="$projects" name="created_at" default-sort="name">Created</x-ui::link-sort>
+            </x-ui::table.th>
+        </x-ui::table.tr>
+    </x-slot:thead>
+    <x-slot:tbody>
+        @foreach ($projects as $project)
+            <x-ui::table.tr>
+                <x-ui::table.td>{{ $project->name }}</x-ui::table.td>
+                <x-ui::table.td>{{ $project->created_at }}</x-ui::table.td>
+            </x-ui::table.tr>
+        @endforeach
+    </x-slot:tbody>
+</x-ui::table>
+<x-ui::paginator :items="$projects" />
+```
+
+`withQueryString()` preserves the other table's state in pagination links. Sort links also preserve existing query parameters. Changing size resets only the matching paginator to page one; sorting preserves its current page.
+
+For a single paginator, use the default page name and read `size` in the controller:
+
+```php
+$users = User::query()->paginate($request->integer('size', 10))->withQueryString();
+```
+
+For multiple tables without pagination, give each table explicit sorting parameters:
+
+```blade
+<x-ui::link-sort name="name" default-sort="name"
+    sort-parameter="users_sort" direction-parameter="users_direction">
+    Name
+</x-ui::link-sort>
+```
+
+Explicit `sort-parameter`, `direction-parameter`, and paginator `size-parameter` overrides take precedence over derived names. The controller must read the matching parameters.
 
 ### Form
 
@@ -1517,11 +1640,17 @@ This section lists the public props currently declared by the Blade components. 
 - `showOn` default `null`; accepted values are `sm`, `md`, `lg`, `xl`, `2xl`
 
 `link-sort`
-- `name` required; toggles the `sort` and `direction` query parameters
+- `name` required; the column to sort
+- `paginator` optional; derives sort and direction parameter names from `getPageName()`
+- `defaultSort` default `id`; match the controller's default sort column
+- `sortParameter` and `directionParameter` default `null`; explicit overrides
+- Without a paginator or overrides, uses `sort` and `direction`
 
 `paginator`
-- `items` required; must be an `Illuminate\Pagination\AbstractPaginator`
-- `size` default `10`; overridden by the request `size` query parameter
+- `items` required; use an `Illuminate\Pagination\LengthAwarePaginator` (needs `lastPage()`)
+- `size` default `10`; selected size uses the derived request parameter, falling back to `perPage()`
+- `sizeParameter` default `null`; derives from `getPageName()`, or accepts an explicit override
+- Page links and size changes use the supplied paginator's page name
 - `options` default `['10' => 10, '25' => 25, '50' => 50, '100' => 100, '500' => 500]`
 - `variant` default `default`; supported colour variants include `green`, `red`, `dark`, `purple`, `light`, with default blue styling otherwise
 

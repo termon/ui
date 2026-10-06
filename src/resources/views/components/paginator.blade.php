@@ -1,12 +1,17 @@
 @props([
     'items', 
-    'size' => 10, 
+    'size' => 10,
+    'sizeParameter' => null,
     'options' => ['10' => 10, '25' => 25, '50' => 50, '100' => 100, '500' => 500],
     'variant' => 'default'
 ])
 
 @php
-    $size = request()->get('size', $items instanceof \Illuminate\Pagination\AbstractPaginator ? $items->perPage() : $size);
+    $pageName = $items->getPageName();
+    $prefix = $pageName === 'page' ? '' : preg_replace('/_page$/', '', $pageName) . '_';
+    $sizeParameter ??= $prefix . 'size';
+
+    $size = request()->get($sizeParameter, $items instanceof \Illuminate\Pagination\AbstractPaginator ? $items->perPage() : $size);
     $current = $items->currentPage();
     $last = $items->lastPage();
     $window = 2; // Number of pages on each side of current
@@ -98,11 +103,11 @@
 
         {{-- Page size form --}}
         <form method="get" action="{{ request()->url() }}" class="flex items-center gap-2">
-            @foreach(request()->except(['size', 'page']) as $key => $value)
+            @foreach(request()->except([$sizeParameter, $items->getPageName()]) as $key => $value)
                 <input type="hidden" name="{{ $key }}" value="{{ $value }}">
             @endforeach
-            <label for="size" class="hidden md:block text-sm dark:text-gray-300">Page Size</label>
-            <select id="size" name="size" onchange="this.form.submit()" class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white rounded p-2">
+            <label for="{{ $sizeParameter }}" class="hidden md:block text-sm dark:text-gray-300">Page Size</label>
+            <select id="{{ $sizeParameter }}" name="{{ $sizeParameter }}" onchange="this.form.submit()" class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white rounded p-2">
                 @foreach ($options as $key => $val)
                     <option value="{{ $key }}" {{ $key == $size ? 'selected' : '' }}>{{ $val }}</option>
                 @endforeach
