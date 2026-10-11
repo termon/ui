@@ -15,9 +15,12 @@
     }" 
     @click.away="open = false"
     x-effect="if (collapsed) open = false" 
-    class="relative group"
+    {{ $attributes->class(['relative group']) }}
 >
     <button
+        type="button"
+        aria-label="{{ $label ?: __('Open menu') }}"
+        :aria-expanded="open"
         x-ref="button"
         @click="open = !open; collapsed = false"
         class="flex w-full cursor-pointer items-center justify-between gap-3 rounded-lg border border-transparent px-3 py-2 text-left font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600/40 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"

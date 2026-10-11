@@ -56,7 +56,7 @@
             @endisset
 
             <!-- Mobile menu button -->
-            <button 
+            <button type="button" aria-label="Toggle navigation"
                 @click="mobileOpen = !mobileOpen" 
                 class="shrink-0 xl:hidden text-gray-600 dark:text-gray-200"
                 :aria-expanded="mobileOpen">

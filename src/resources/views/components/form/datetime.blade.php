@@ -1,14 +1,21 @@
 @props([
     'name',
+    'id' => null,
     'label' => null,
     'value' => '',
 ])
+
+@php
+    $inputId = $id ?? $name;
+    $fieldAttributes = $attributes->filter(fn ($value, $key) => $key !== 'class' && !str_starts_with($key, 'wire:') && !str_starts_with($key, 'x-'));
+    $wrapperAttributes = $attributes->filter(fn ($value, $key) => $key === 'class' || str_starts_with($key, 'wire:') || str_starts_with($key, 'x-'));
+@endphp
 
 <div
     x-data="dateTimePicker(@js($value))"
     x-modelable="value"
     x-cloak
-    {{ $attributes }}
+    {{ $wrapperAttributes }}
 >
     <div class="relative">
         <input
@@ -16,17 +23,23 @@
             name="{{ $name }}"
             value="{{ $value }}"
             x-bind:value="value"
+            {{ $attributes->only(['disabled', 'form']) }}
         />
 
         <input
             x-ref="input"
-            id="{{ $name }}"
+            id="{{ $inputId }}"
             type="text"
             x-model="displayValue"
             x-on:click.stop="toggle()"
             x-on:keydown.escape="open = false"
-            placeholder="Select date and time"
-            readonly
+                x-on:keydown.enter.prevent="openCalendar()"
+                x-on:keydown.space.prevent="openCalendar()"
+                x-on:keydown.arrow-down.prevent="openCalendar()"
+
+            {{ $fieldAttributes->except('readonly')->merge(['placeholder' => 'Select date and time']) }}
+            @readonly(!$attributes->get('required', false) || $attributes->get('readonly', false))
+            x-on:beforeinput.prevent x-on:paste.prevent x-on:drop.prevent
             class="w-full cursor-pointer rounded-lg border border-gray-300 p-2.5 pr-10 leading-tight text-gray-700 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-gray-500"
         />
 
@@ -51,7 +64,7 @@
                 x-ref="panel"
                 x-transition
                 x-on:click.away="open = false"
-                x-on:keydown.escape.window="open = false"
+                x-on:keydown.escape.window="if (open) { open = false; $refs.input.focus(); }"
                 x-bind:style="panelStyle"
                 class="fixed left-0 top-0 z-1000 max-h-[min(80vh,36rem)] w-68 overflow-y-auto rounded-lg border border-gray-200/70 bg-white p-4 shadow dark:border-gray-700 dark:bg-gray-900"
             >
@@ -97,7 +110,9 @@
 
                     <template x-for="(d, idx) in daysInMonth" :key="idx">
                         <div class="mb-1 aspect-square px-0.5">
-                            <div
+                            <button type="button" data-calendar-day
+                                :aria-label="formatDateTime(new Date(year, month, d))"
+                                :aria-pressed="!!isSelectedDate(d)"
                                 x-text="d"
                                 x-on:click="selectDate(d)"
                                 x-bind:class="{
@@ -105,8 +120,8 @@
                                     'text-gray-600 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700': !isToday(d) && !isSelectedDate(d),
                                     'bg-gray-800 text-white dark:bg-gray-100 dark:text-gray-900': isSelectedDate(d)
                                 }"
-                                class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full text-sm"
-                            ></div>
+                                class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                            ></button>
                         </div>
                     </template>
                 </div>
@@ -218,10 +233,22 @@
             },
 
             toggle() {
+                if (this.$refs.input.disabled) return;
                 this.open = !this.open;
                 if (this.open) {
                     this.$nextTick(() => this.positionPanel());
                 }
+            },
+
+            openCalendar() {
+                if (this.$refs.input.disabled) return;
+                this.open = true;
+                this.$nextTick(() => {
+                    const panel = this.$refs.panel;
+                    const day = panel?.querySelector('[data-calendar-day][aria-pressed=true]')
+                        ?? panel?.querySelector('[data-calendar-day]');
+                    day?.focus();
+                });
             },
 
             positionPanel() {
@@ -254,6 +281,7 @@
             },
 
             updateSelectedTime() {
+                if (this.$refs.input.disabled) return;
                 if (this.syncingCalendar) return;
                 if (!this.selectedDate) {
                     this.selectedDate = new Date(this.year, this.month, this.day);
@@ -317,6 +345,7 @@
             },
 
             selectDate(d) {
+                if (this.$refs.input.disabled) return;
                 this.day = d;
                 this.selectedDate = new Date(this.year, this.month, this.day, parseInt(this.hour), parseInt(this.minute));
                 this.commitSelectedDate();
@@ -324,6 +353,7 @@
             },
 
             setNow() {
+                if (this.$refs.input.disabled) return;
                 const now = new Date();
                 now.setSeconds(0, 0);
                 this.setCalendarState(now);
@@ -333,6 +363,7 @@
             },
 
             clear() {
+                if (this.$refs.input.disabled) return;
                 this.value = '';
                 this.displayValue = '';
                 this.selectedDate = null;
@@ -341,6 +372,7 @@
 
             apply() {
                 this.open = false;
+                this.$nextTick(() => this.$refs.input.focus());
             },
 
             commitSelectedDate() {
@@ -352,6 +384,7 @@
                 const parsedDate = this.parseDate(newValue);
 
                 if (!parsedDate) {
+                    this.value = '';
                     this.displayValue = '';
                     this.selectedDate = null;
                     return;
@@ -387,15 +420,21 @@
                 const re1 = /^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?$/;
                 const re2 = /^(\d{2})-(\d{2})-(\d{4})[ T](\d{2}):(\d{2})(?::(\d{2}))?$/;
 
-                let m;
-                if ((m = v.match(re1))) {
-                    const [, y, mo, d, hh, mm, ss] = m;
-                    return new Date(`${y}-${mo}-${d}T${hh}:${mm}:${ss ?? '00'}`);
+                let match = v.match(re1);
+                let parts = match ? match.slice(1) : null;
+                if (!parts && (match = v.match(re2))) {
+                    parts = [match[3], match[2], match[1], ...match.slice(4)];
                 }
-
-                if ((m = v.match(re2))) {
-                    const [, d, mo, y, hh, mm, ss] = m;
-                    return new Date(`${y}-${mo}-${d}T${hh}:${mm}:${ss ?? '00'}`);
+                if (parts) {
+                    const [y, mo, d, hh, mm, ss = '00'] = parts.map(part => part ?? '00');
+                    const parsed = new Date(`${y}-${mo}-${d}T${hh}:${mm}:${ss}`);
+                    if (Number.isNaN(parsed.getTime()) ||
+                        parsed.getFullYear() !== Number(y) || parsed.getMonth() + 1 !== Number(mo) ||
+                        parsed.getDate() !== Number(d) || parsed.getHours() !== Number(hh) ||
+                        parsed.getMinutes() !== Number(mm) || parsed.getSeconds() !== Number(ss)) {
+                        return null;
+                    }
+                    return parsed;
                 }
 
                 const parsed = new Date(v);

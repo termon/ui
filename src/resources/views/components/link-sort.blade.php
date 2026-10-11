@@ -18,9 +18,9 @@
             : request()->fullUrlWithQuery([$sortParameter => $name, $directionParameter => 'asc']);
 @endphp
 
-<div class="flex items-center">
+<div {{ $attributes->only('class')->class(['flex items-center']) }}>
     <span>{{ $slot }}</span>
-    <a href="{{ $url }}">
+    <a href="{{ $url }}" {{ $attributes->except('class')->merge(['aria-label' => 'Sort by '.trim(strip_tags((string) $slot))]) }}>
         @if ($name == $sort && $direction == 'asc')
             <x-ui::svg icon="bars-up" size="sm" />
         @elseif ($name == $sort && $direction == 'desc')

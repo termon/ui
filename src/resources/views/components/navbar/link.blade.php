@@ -12,7 +12,7 @@
     $wrapperClasses = $baseClasses . ' ' . ($active ? $activeClasses : $inactiveClasses);
 @endphp
 
-<a {{ $attributes->merge(['href' => $href]) }} class="{{ $wrapperClasses }}">
+<a {{ $attributes->merge(['href' => $href])->class([$wrapperClasses]) }}>
     @isset($icon)
         <x-ui::icon :icon="$icon" class="w-5 h-5 shrink-0" />
     @endisset

@@ -13,7 +13,7 @@
 <div
     x-data="{
         chart: null,
-        id:'{{ $id }}',
+        id: @js($id),
         darker: localStorage.getItem('dark') === 'true' || (localStorage.getItem('dark') === null && window.matchMedia('(prefers-color-scheme: dark)').matches ),
         init() {
             //console.log('Highcharts component initialized');           
@@ -52,7 +52,7 @@
         render(config) {
             //console.log('Rendering chart');
             if (this.chart) this.chart.destroy();           
-            this.chart = Highcharts.chart('{{ $id }}', {{ $config ?? $slot }});            
+            this.chart = Highcharts.chart(this.id, {{ $config ?? $slot }});
         }, 
     }"  
 >

@@ -91,7 +91,7 @@
             <!-- Left side buttons -->
             <div class="flex shrink-0 items-center gap-2">
                 <!-- Mobile menu button (mobile only) -->
-                <button @click="mobileOpen = !mobileOpen" class="text-gray-600 dark:text-gray-200 cursor-pointer focus:outline-none lg:hidden">
+                <button type="button" aria-label="Toggle navigation" :aria-expanded="mobileOpen" @click="mobileOpen = !mobileOpen" class="text-gray-600 dark:text-gray-200 cursor-pointer focus:outline-none lg:hidden">
                     <svg x-show="!mobileOpen" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
                          viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M4 6h16M4 12h16M4 18h16" />
@@ -103,7 +103,7 @@
                 </button>
 
                 <!-- Desktop sidebar collapse button -->
-                <button @click="collapsed = !collapsed"
+                <button type="button" aria-label="Toggle sidebar" :aria-expanded="!collapsed" @click="collapsed = !collapsed"
                         class="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white hidden lg:block cursor-pointer focus:outline-none">
                     <!-- Collapse sidebar icon (show when expanded) -->
                     <svg x-show="!collapsed" class="w-5 h-5" fill="none" stroke="currentColor"

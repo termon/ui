@@ -18,6 +18,9 @@ class ComponentSmokeTest extends TestCase
         $html = $this->renderBlade($blade, $this->bladeData($component));
 
         $this->assertIsString($html, "Component [{$component}] did not render a string.");
+        $this->assertNotSame('', trim($html), "Component [{$component}] rendered empty output.");
+        $this->assertStringNotContainsString('<x-ui::', $html, "Component [{$component}] left unresolved Blade component tags.");
+        $this->assertStringNotContainsString('<x-dynamic-component', $html, "Component [{$component}] left an unresolved dynamic component.");
 
         if ($expected !== null) {
             $this->assertStringContainsString($expected, $html, "Component [{$component}] did not render the expected marker.");
@@ -250,7 +253,7 @@ class ComponentSmokeTest extends TestCase
         $this->assertStringContainsString('value="'.$expected.'"', $inputHtml);
         $this->assertStringContainsString('value="'.$expected.'"', $dateHtml);
         $this->assertStringContainsString('value="'.$expected.'"', $datetimeHtml);
-        $this->assertStringContainsString('<option value="'.$expected.'" selected>'.$expected.'</option>', $selectHtml);
+        $this->assertMatchesRegularExpression('/<option value="'.preg_quote($expected, '/').'" selected>\s*'.preg_quote($expected, '/').'\s*<\/option>/', $selectHtml);
         $this->assertStringContainsString($expected, $textareaHtml);
         $this->assertStringNotContainsString('<script>alert("x")</script>', $inputHtml.$dateHtml.$datetimeHtml.$selectHtml.$textareaHtml);
     }
@@ -284,7 +287,7 @@ class ComponentSmokeTest extends TestCase
         $this->assertStringContainsString('value="'.$expected.'"', $inputGroupHtml);
         $this->assertStringContainsString('value="'.$expected.'"', $dateGroupHtml);
         $this->assertStringContainsString('value="'.$expected.'"', $datetimeGroupHtml);
-        $this->assertStringContainsString('<option value="'.$expected.'" selected>'.$expected.'</option>', $selectGroupHtml);
+        $this->assertMatchesRegularExpression('/<option value="'.preg_quote($expected, '/').'" selected>\s*'.preg_quote($expected, '/').'\s*<\/option>/', $selectGroupHtml);
         $this->assertStringContainsString($expected, $textareaGroupHtml);
         $this->assertStringNotContainsString('<script>alert("x")</script>', $inputGroupHtml.$dateGroupHtml.$datetimeGroupHtml.$selectGroupHtml.$textareaGroupHtml);
     }
@@ -310,7 +313,7 @@ class ComponentSmokeTest extends TestCase
 
         $this->assertStringContainsString('value="2026-06-26"', $dateHtml);
         $this->assertStringContainsString('value="2026-06-26 09:30:00"', $datetimeHtml);
-        $this->assertStringContainsString('<option value="admin" selected>Admin</option>', $selectHtml);
+        $this->assertMatchesRegularExpression('/<option value="admin" selected>\s*Admin\s*<\/option>/', $selectHtml);
         $this->assertStringContainsString('O&#039;Connor &amp; Sons &lt;script&gt;alert(&quot;x&quot;)&lt;/script&gt;', $textareaHtml);
         $this->assertStringNotContainsString('<script>alert("x")</script>', $textareaHtml);
     }
@@ -328,7 +331,7 @@ class ComponentSmokeTest extends TestCase
         $this->assertStringContainsString('value="Alice"', $inputGroupHtml);
         $this->assertStringContainsString('value="2026-06-26"', $dateGroupHtml);
         $this->assertStringContainsString('value="2026-06-26 09:30:00"', $datetimeGroupHtml);
-        $this->assertStringContainsString('<option value="admin" selected>Admin</option>', $selectGroupHtml);
+        $this->assertMatchesRegularExpression('/<option value="admin" selected>\s*Admin\s*<\/option>/', $selectGroupHtml);
         $this->assertStringContainsString('Alice', $textareaGroupHtml);
     }
 

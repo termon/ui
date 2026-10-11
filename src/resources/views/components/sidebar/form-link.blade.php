@@ -12,7 +12,7 @@
     $wrapperClasses = $baseClasses . ' ' . $inactiveClasses;
 @endphp
 
-<form method="POST" action="{{ $action }}" class="{{ $wrapperClasses }}"
+<form {{ $attributes->merge(['method' => 'POST', 'action' => $action])->class([$wrapperClasses]) }}
       x-data="{ 
           get isInToolbar() {
               return !!this.$el.closest('header');

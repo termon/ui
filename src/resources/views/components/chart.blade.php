@@ -96,24 +96,34 @@
             config.options.responsive ??= true;
             config.options.maintainAspectRatio ??= false;
             if (this.prefersReducedMotion()) config.options.animation = false;
-            config.options.plugins ??= {};
-            config.options.plugins.legend ??= {};
-            config.options.plugins.legend.labels ??= {};
-            config.options.plugins.legend.labels.color ??= mutedTextColor;
-            config.options.plugins.title ??= {};
-            config.options.plugins.title.color ??= textColor;
-            config.options.plugins.tooltip ??= {};
-            config.options.plugins.tooltip.backgroundColor ??= tooltipBg;
-            config.options.plugins.tooltip.titleColor ??= textColor;
-            config.options.plugins.tooltip.bodyColor ??= textColor;
+            if (config.options.plugins !== false) {
+                config.options.plugins ??= {};
+                if (config.options.plugins.legend !== false) {
+                    config.options.plugins.legend ??= {};
+                    config.options.plugins.legend.labels ??= {};
+                    config.options.plugins.legend.labels.color ??= mutedTextColor;
+                }
+                if (config.options.plugins.title !== false) {
+                    config.options.plugins.title ??= {};
+                    config.options.plugins.title.color ??= textColor;
+                }
+                if (config.options.plugins.tooltip !== false) {
+                    config.options.plugins.tooltip ??= {};
+                    config.options.plugins.tooltip.backgroundColor ??= tooltipBg;
+                    config.options.plugins.tooltip.titleColor ??= textColor;
+                    config.options.plugins.tooltip.bodyColor ??= textColor;
+                }
+            }
             config.options.scales ??= {};
 
             if (config.type === 'pie' || config.type === 'doughnut') {
-                config.options.plugins.legend.position ??= 'bottom';
-                config.options.plugins.legend.align ??= 'start';
-                config.options.plugins.legend.labels.usePointStyle ??= true;
-                config.options.plugins.legend.labels.pointStyle ??= 'circle';
-                config.options.plugins.legend.labels.padding ??= 16;
+                if (config.options.plugins !== false && config.options.plugins.legend !== false) {
+                    config.options.plugins.legend.position ??= 'bottom';
+                    config.options.plugins.legend.align ??= 'start';
+                    config.options.plugins.legend.labels.usePointStyle ??= true;
+                    config.options.plugins.legend.labels.pointStyle ??= 'circle';
+                    config.options.plugins.legend.labels.padding ??= 16;
+                }
 
                 config.data?.datasets?.forEach((dataset) => {
                     dataset.hoverOffset ??= 8;
@@ -140,7 +150,7 @@
             }
 
             delete config.options.emitOnClick;
-            delete config.options.plugins.centreText;
+            if (config.options.plugins !== false) delete config.options.plugins.centreText;
 
             this.applyTooltipFormatting(config);
 

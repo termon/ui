@@ -1,5 +1,6 @@
 @props([
     'name',
+    'id' => null,
     'min' => 0,
     'max' => 100,
     'step' => 1,
@@ -8,6 +9,7 @@
 ])
 
 @php
+    $inputId = $id ?? $name;
     $stepCount = $step > 0 ? max(0, (int) floor(($max - $min) / $step)) : 0;
     $tickCount = min($stepCount, 10) + 1;
     [$accentColor, $accentDarkColor] = match ($variant) {
@@ -80,9 +82,9 @@
 
 <div {{ $attributes->only('class') }}>
     <div class="flex items-start space-x-4" x-data="{
-        v: Number('{{ $value }}'),
-        min: Number('{{ $min }}'),
-        max: Number('{{ $max }}'),
+        v: Number(@js($value)),
+        min: Number(@js($min)),
+        max: Number(@js($max)),
     }">
 
         <!-- Left: slider + ticks as a column -->
@@ -90,11 +92,10 @@
 
             <!-- Slider -->
             <input
-                class="oui-range w-full"
-                id="{{ $name }}" name="{{ $name }}" type="range" min="{{ $min }}"
+                id="{{ $inputId }}" name="{{ $name }}" type="range" min="{{ $min }}"
                 max="{{ $max }}" step="{{ $step }}" x-model="v"
                 style="--range-accent: {{ $accentColor }}; --range-accent-dark: {{ $accentDarkColor }};"
-                {{ $attributes->class(['w-full']) }} />
+                {{ $attributes->except('class')->class(['oui-range w-full']) }} />
 
             <!-- Ticks -->
             <div class="relative px-2 w-full flex justify-between text-xs text-neutral-500 select-none">

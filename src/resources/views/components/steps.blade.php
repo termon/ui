@@ -14,7 +14,7 @@
 
     $completedSteps = count(array_filter($steps, fn($step) => $step[1]));
     $totalSteps = count($steps);
-    $completedPercentage = ($completedSteps / $totalSteps) * 100;
+    $completedPercentage = $totalSteps > 0 ? ($completedSteps / $totalSteps) * 100 : 0;
 @endphp
 
 <div {{ $attributes->merge([

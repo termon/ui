@@ -1,13 +1,26 @@
 @props([
-    'name', 
-    'value' => '' 
+    'name',
+    'id' => null,
+    'value' => ''
 ])
 
-<div x-data="datePicker(@js($value))" x-modelable="value" x-cloak {{ $attributes }}>
+@php
+    $inputId = $id ?? $name;
+    $fieldAttributes = $attributes->filter(fn ($value, $key) => $key !== 'class' && !str_starts_with($key, 'wire:') && !str_starts_with($key, 'x-'));
+    $wrapperAttributes = $attributes->filter(fn ($value, $key) => $key === 'class' || str_starts_with($key, 'wire:') || str_starts_with($key, 'x-'));
+@endphp
+
+<div x-data="datePicker(@js($value))" x-modelable="value" x-cloak {{ $wrapperAttributes }}>
         <div class="relative">
-            <input type="hidden" name="{{ $name }}" value="{{ $value }}" x-bind:value="value" />
-            <input x-ref="input" id="{{ $name }}" type="text" @click.stop="toggle()"
-                x-model="displayValue" x-on:keydown.escape="open = false" placeholder="Select date" readonly
+            <input type="hidden" name="{{ $name }}" value="{{ $value }}" x-bind:value="value" {{ $attributes->only(['disabled', 'form']) }} />
+            <input x-ref="input" id="{{ $inputId }}" type="text" @click.stop="toggle()"
+                x-model="displayValue" x-on:keydown.escape="open = false"
+                x-on:keydown.enter.prevent="openCalendar()"
+                x-on:keydown.space.prevent="openCalendar()"
+                x-on:keydown.arrow-down.prevent="openCalendar()"
+                {{ $fieldAttributes->except('readonly')->merge(['placeholder' => 'Select date']) }}
+                @readonly(!$attributes->get('required', false) || $attributes->get('readonly', false))
+                x-on:beforeinput.prevent x-on:paste.prevent x-on:drop.prevent
                 class="w-full border border-gray-300 rounded-lg p-2.5 pr-10 text-gray-700 leading-tight cursor-pointer
                      focus:ring-blue-500 focus:border-blue-500
                      dark:focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
@@ -22,7 +35,7 @@
             </div>
 
             <template x-teleport="body">
-            <div x-show="open" x-cloak x-ref="panel" x-transition @click.away="open = false" x-on:keydown.escape.window="open = false" x-bind:style="panelStyle"
+            <div x-show="open" x-cloak x-ref="panel" x-transition @click.away="open = false" x-on:keydown.escape.window="if (open) { open = false; $refs.input.focus(); }" x-bind:style="panelStyle"
                 class="fixed left-0 top-0 z-1000 p-4 bg-white border rounded-lg shadow w-68 max-h-[min(80vh,32rem)] overflow-y-auto
                      border-gray-200/70 dark:bg-gray-700 dark:border-gray-600">
                 <!-- Calendar Header -->
@@ -81,15 +94,17 @@
 
                     <template x-for="(d, idx) in daysInMonth" :key="idx">
                         <div class="px-0.5 mb-1 aspect-square">
-                            <div x-text="d" @click="selectDate(d)"
+                            <button type="button" data-calendar-day x-text="d" @click="selectDate(d)"
+                                :aria-label="formatDate(new Date(year, month, d))"
+                                :aria-pressed="!!isSelectedDate(d)"
                                 :class="{
                                     'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-white': isToday(d),
                                     'text-gray-600 hover:bg-gray-200 dark:text-gray-200 dark:hover:bg-gray-600': !
                                         isToday(d) && !isSelectedDate(d),
                                     'bg-gray-800 text-white dark:bg-gray-900 dark:text-white': isSelectedDate(d)
                                 }"
-                                class="flex items-center justify-center text-sm rounded-full cursor-pointer h-7 w-7">
-                            </div>
+                                class="flex items-center justify-center text-sm rounded-full cursor-pointer h-7 w-7 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
+                            </button>
                         </div>
                     </template>
                 </div>
@@ -114,7 +129,7 @@
                 </div>
             </div>
             </template>
-        </div>       
+        </div>
 </div>
 
 <script>
@@ -168,10 +183,22 @@
             },
 
             toggle() {
+                if (this.$refs.input.disabled) return;
                 this.open = !this.open;
                 if (this.open) {
                     this.$nextTick(() => this.positionPanel());
                 }
+            },
+
+            openCalendar() {
+                if (this.$refs.input.disabled) return;
+                this.open = true;
+                this.$nextTick(() => {
+                    const panel = this.$refs.panel;
+                    const day = panel?.querySelector('[data-calendar-day][aria-pressed=true]')
+                        ?? panel?.querySelector('[data-calendar-day]');
+                    day?.focus();
+                });
             },
 
             positionPanel() {
@@ -255,6 +282,7 @@
             },
 
             selectDate(d) {
+                if (this.$refs.input.disabled) return;
                 this.day = d;
                 this.selectedDate = new Date(this.year, this.month, this.day);
                 this.commitSelectedDate();
@@ -262,6 +290,7 @@
             },
 
             setToday() {
+                if (this.$refs.input.disabled) return;
                 const now = new Date();
                 this.year = now.getFullYear();
                 this.month = now.getMonth();
@@ -272,6 +301,7 @@
             },
 
             clear() {
+                if (this.$refs.input.disabled) return;
                 this.value = '';
                 this.displayValue = '';
                 this.selectedDate = null;
@@ -306,6 +336,7 @@
 
             apply() {
                 this.open = false;
+                this.$nextTick(() => this.$refs.input.focus());
             },
 
             formatDate(date) {

@@ -2,6 +2,7 @@
     'level' => '1',
 ])
 @php
+    $level = is_int($level) ? (string) $level : $level;
     $tag = 'h' . $level;
     $classes = match ($level) {
         '1' => 'text-3xl md:text-4xl font-bold tracking-tight text-slate-950 dark:text-slate-50',

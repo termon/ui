@@ -12,6 +12,19 @@
     $sizeParameter ??= $prefix . 'size';
 
     $size = request()->get($sizeParameter, $items instanceof \Illuminate\Pagination\AbstractPaginator ? $items->perPage() : $size);
+    $queryInputs = [];
+    $flattenQuery = function ($values, $prefix = null) use (&$flattenQuery, &$queryInputs) {
+        foreach ($values as $key => $value) {
+            $field = $prefix === null ? (string) $key : $prefix.'['.$key.']';
+            if (is_array($value)) {
+                $flattenQuery($value, $field);
+            } elseif ($value !== null) {
+                $queryInputs[$field] = $value;
+            }
+        }
+    };
+    $flattenQuery(request()->except([$sizeParameter, $items->getPageName()]));
+
     $current = $items->currentPage();
     $last = $items->lastPage();
     $window = 2; // Number of pages on each side of current
@@ -103,7 +116,7 @@
 
         {{-- Page size form --}}
         <form method="get" action="{{ request()->url() }}" class="flex items-center gap-2">
-            @foreach(request()->except([$sizeParameter, $items->getPageName()]) as $key => $value)
+            @foreach($queryInputs as $key => $value)
                 <input type="hidden" name="{{ $key }}" value="{{ $value }}">
             @endforeach
             <label for="{{ $sizeParameter }}" class="hidden md:block text-sm dark:text-gray-300">Page Size</label>

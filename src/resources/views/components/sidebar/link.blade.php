@@ -13,8 +13,8 @@
     $wrapperClasses = $baseClasses . ' ' . ($active ? $activeClasses : $inactiveClasses);
 @endphp
 
-<a {{ $attributes->merge(['href' => $href]) }}
-   class="{{ $wrapperClasses }}"
+<a {{ $attributes->merge(['href' => $href])->class([$wrapperClasses]) }}
+
    x-data="{ 
        get isInToolbar() {
            return !!this.$el.closest('header');

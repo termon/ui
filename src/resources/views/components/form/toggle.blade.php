@@ -1,5 +1,6 @@
 @props([
     'name',
+    'id' => null,
     'label' => null,
     'description' => null,
     'checked' => false,
@@ -7,13 +8,17 @@
     'uncheckedValue' => '0',
 ])
 
+@php
+    $inputId = $id ?? $name;
+@endphp
 
-<label for="{{ $name }}" {{ $attributes->only('class')->class(['flex items-start gap-3']) }}>
+
+<label for="{{ $inputId }}" {{ $attributes->only('class')->class(['flex items-start gap-3']) }}>
     {{-- Unchecked checkboxes are not submitted by browsers, so post the false value first. --}}
-    <input type="hidden" name="{{ $name }}" value="{{ $uncheckedValue }}">
+    <input type="hidden" name="{{ $name }}" value="{{ $uncheckedValue }}" {{ $attributes->only(['disabled', 'form']) }}>
 
     <input
-        id="{{ $name }}"
+        id="{{ $inputId }}"
         name="{{ $name }}"
         type="checkbox"
         value="{{ $value }}"

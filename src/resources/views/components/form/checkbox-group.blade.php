@@ -1,5 +1,6 @@
 @props([
     'name',
+    'id' => null,
     'label' => null,
     'description' => null,
     'value' => [],
@@ -11,7 +12,16 @@
 @php
     $selectedValues = collect(is_array($value) ? $value : [$value])->map(fn ($selectedValue) => (string) $selectedValue)->all();
     $inputName = str_ends_with($name, '[]') ? $name : $name.'[]';
+    $usedIds = [];
     $errorName = str_ends_with($name, '[]') ? substr($name, 0, -2) : $name;
+    $errorId = ($id ?? $errorName).'-error';
+    if ($errors->has($errorName)) {
+        $describedBy = trim($attributes->get('aria-describedby', '').' '.$errorId);
+        $attributes = $attributes->except(['aria-describedby', 'aria-invalid'])->merge([
+            'aria-describedby' => $describedBy,
+            'aria-invalid' => 'true',
+        ]);
+    }
 
     $optionWrapperClasses = match ($variant) {
         'plain' => 'space-y-3',
@@ -25,11 +35,14 @@
     };
 @endphp
 
-<div {{ $attributes->only('class')->class(['w-full space-y-2']) }}>
+<fieldset {{ $attributes->only('class')->class(['w-full space-y-2']) }}>
     @isset($label)
-        <x-ui::form.label for="{{ $errorName }}" :icon="$icon">
+        <legend class="mb-1.5 flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-300">
+            @isset($icon)
+                <x-ui::svg :icon="$icon" class="h-4 w-4 text-slate-400 dark:text-slate-500" />
+            @endisset
             {{ $label }}
-        </x-ui::form.label>
+        </legend>
     @endisset
 
     @if (filled($description))
@@ -43,10 +56,18 @@
                 $resolvedValue = (string) ($option['value'] ?? $optionValue);
                 $resolvedLabel = $option['label'] ?? $resolvedValue;
                 $resolvedDescription = $option['description'] ?? null;
+                $baseId = $id !== null ? $id.'-'.$loop->iteration : str($inputName.'-'.$resolvedValue)->replaceMatches('/[^A-Za-z0-9\-_:.]/', '-')->trim('-')->value();
+                $optionId = $baseId;
+                $suffix = 2;
+                while (in_array($optionId, $usedIds, true)) {
+                    $optionId = $baseId.'-'.$suffix++;
+                }
+                $usedIds[] = $optionId;
                 $isDisabled = (bool) ($option['disabled'] ?? false);
             @endphp
 
             <x-ui::form.checkbox
+                :id="$optionId"
                 :name="$inputName"
                 :value="$resolvedValue"
                 :label="$resolvedLabel"
@@ -59,5 +80,5 @@
         @endforeach
     </div>
 
-    <x-ui::form.error for="{{ $errorName }}" />
-</div>
+    <x-ui::form.error :id="$errorId" for="{{ $errorName }}" />
+</fieldset>

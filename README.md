@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.8.47**
+> **Version 1.8.50**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -145,6 +145,19 @@ Run the JavaScript handler regression tests separately (requires Node.js). These
 ```sh
 composer test:js
 ```
+
+Compatibility tests supplement the render checks with representative consuming-app
+contracts: submitted form keys and values, existing IDs and label targets, literal
+and bound props, Livewire modifiers, upload attributes, legacy variant aliases,
+CSRF and method spoofing, named slots, host icon overrides, and chart configuration
+formats. JavaScript tests also check established date formats, custom chart callbacks
+and plugins, and chart event payloads. Smoke tests cover every public component and
+reject unresolved Blade component tags.
+
+Run both commands before releasing. These tests protect the covered contracts on the
+installed dependency versions; they do not guarantee compatibility with every host
+app, published view override, browser, or supported Laravel/Livewire version. New bug
+fixes should add regression tests alongside these compatibility checks.
 
 ## Available Components
 
@@ -698,7 +711,38 @@ To render a field together with an optional label and validation error using a s
 > When using a file input `type="file"` you can specify an optional variant to style the input -
 > `'light'`, `'oblue'`, `'blue'`, `'gray'`, `'dark'`, `'green'`, `'red'`, `'yellow'`, `'purple'`.
 
-Example usage:
+Form controls derive their HTML ID from `name` by default. Pass an optional `id`
+when the same field appears more than once on a page. Group components connect their
+labels to the resolved control ID; submitted names and validation keys stay unchanged.
+
+```blade
+<x-ui::form.input-group name="email" label="Email" />
+<x-ui::form.input-group name="email" id="modal-email" label="Email" />
+```
+
+Standalone labels must use the same ID as their control. Checkbox IDs default to a
+sanitized combination of name and value. For `checkbox-group` and `otp`/`otp-group`,
+`id` supplies a prefix: `id="modal-code"` produces `modal-code-1`, `modal-code-2`,
+and so on. Choose distinct prefixes for repeated groups. Checkbox groups use a
+fieldset and legend for the collection label, with individual labels for each option.
+Names containing brackets remain unchanged; use an explicit ID if a simpler selector
+is needed.
+
+Selects accept array values when using `multiple`. An empty scalar value selects the
+placeholder rather than an option keyed by zero. Checkbox groups preserve their usual
+IDs and append a suffix only when sanitized option IDs collide.
+
+Date and datetime pickers forward native field and accessibility attributes to the
+visible input, while Livewire and Alpine bindings remain on the picker wrapper.
+`disabled` also disables the submitted hidden value. Required pickers participate in
+native browser validation and prevent direct text editing; an explicitly readonly
+field retains normal browser readonly semantics. Disabled toggles omit both the
+checkbox and its hidden fallback from submission.
+
+Groups with validation errors add `aria-invalid` and reference the error message via
+`aria-describedby`, preserving any existing help-text references. Standalone controls
+can reference `<x-ui::form.error for="email" />` using `aria-describedby="email-error"`;
+for repeated forms, pass matching custom IDs to the control and error component.
 
 #### Input
 
@@ -1806,6 +1850,7 @@ This section lists the public props currently declared by the Blade components. 
 `tabs`
 - `active` required
 - Stores the active tab in `localStorage` and synchronizes the `tab` query parameter
+- Arrow keys, Home, and End move between tabs; tab buttons reference their corresponding panels through accessible IDs.
 
 `tabs.tab`
 - `name` required
