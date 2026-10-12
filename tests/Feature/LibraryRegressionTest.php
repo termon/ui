@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Blade;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\Process\Process;
 use Termon\Ui\Tests\TestCase;
 
 class LibraryRegressionTest extends TestCase
@@ -26,6 +27,40 @@ class LibraryRegressionTest extends TestCase
                 }
             }
         }
+    }
+
+    public function test_date_pickers_initialize_from_rendered_attributes_without_global_factories(): void
+    {
+        $expressions = [];
+        foreach (['date' => '2026-10-11', 'datetime' => '2026-10-11 09:30:00'] as $type => $value) {
+            $html = Blade::render('<x-ui::form.'.$type.' name="starts_at" :value="$value" />', compact('value'));
+            $crawler = new Crawler($html);
+            $this->assertSame(0, $crawler->filter('script')->count());
+            $expressions[] = [$crawler->filter('[x-data]')->attr('x-data'), $value];
+        }
+
+        $process = new Process(['node', '-e', <<<'JAVASCRIPT'
+const assert = require('node:assert/strict');
+const expressions = JSON.parse(require('node:fs').readFileSync(0, 'utf8'));
+const window = { addEventListener() {}, removeEventListener() {} };
+const document = { addEventListener() {}, removeEventListener() {} };
+for (const [expression, value] of expressions) {
+    const state = Function('window', 'document', `return (${expression});`)(window, document);
+    state.$nextTick = callback => callback();
+    state.$watch = () => {};
+    state.$refs = { input: {} };
+    state.init();
+    assert.equal(state.value, value);
+    assert.equal(state.text, value);
+    assert.equal(state.open, false);
+    state.destroy();
+}
+assert.equal(typeof globalThis.datePicker, 'undefined');
+assert.equal(typeof globalThis.dateTimePicker, 'undefined');
+JAVASCRIPT]);
+        $process->setInput(json_encode($expressions, JSON_THROW_ON_ERROR));
+        $process->run();
+        $this->assertTrue($process->isSuccessful(), $process->getErrorOutput());
     }
 
     public function test_empty_steps_render_with_and_without_percentage(): void
@@ -147,20 +182,21 @@ class LibraryRegressionTest extends TestCase
         }
     }
 
-    public function test_calendar_days_are_native_buttons_and_inputs_have_keyboard_open_handlers(): void
+    public function test_calendar_days_are_buttons_and_only_the_icon_opens_the_popup(): void
     {
         foreach (['date', 'datetime'] as $type) {
             $html = Blade::render('<x-ui::form.'.$type.' name="starts" />');
-            $this->assertStringContainsString('<button type="button" data-calendar-day', $html);
             $crawler = new Crawler($html);
-            $this->assertSame(1, $crawler->filter('button[data-calendar-day][type="button"]')->count());
-            $input = $crawler->filter('input[type="text"]');
-            foreach (['enter', 'space', 'arrow-down'] as $key) {
-                $this->assertSame('openCalendar()', $input->attr('x-on:keydown.'.$key.'.prevent'));
+            $input = $crawler->filter('input[type="text"]')->getNode(0);
+            $this->assertFalse($input->hasAttribute('@click.stop'));
+            $this->assertFalse($input->hasAttribute('@keydown.arrow-down.prevent'));
+            $this->assertSame(1, $crawler->filter('button[aria-label="Open calendar"] svg')->count());
+            foreach (['Previous year', 'Previous month', 'Next month', 'Next year'] as $label) {
+                $this->assertSame(1, $crawler->filter('button[aria-label="'.$label.'"] svg')->count());
             }
-            // Calendar content sits in an Alpine template, so check its source too.
-            $this->assertStringContainsString(':aria-pressed="!!isSelectedDate(d)"', $html);
-            $this->assertStringContainsString('focus-visible:ring-2', $html);
+            $this->assertStringContainsString(':data-day="cell.key"', $html);
+            $this->assertStringContainsString(':tabindex="cursor === cell.key ? 0 : -1"', $html);
+            $this->assertStringContainsString('border-gray-200/70', $html);
         }
     }
 }

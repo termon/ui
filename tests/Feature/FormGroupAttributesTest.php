@@ -144,7 +144,10 @@ class FormGroupAttributesTest extends TestCase
         $html = Blade::render('<x-ui::form.date-group name="starts_on" label="Start" wire:model="starts_on" />');
 
         $this->assertSame(1, substr_count($html, 'wire:model="starts_on"'));
-        $this->assertMatchesRegularExpression('/<div x-data="datePicker[^>]*wire:model="starts_on"/s', $html);
+        $picker = (new Crawler($html))->filter('[x-modelable]');
+        $this->assertSame(1, $picker->count());
+        $this->assertSame('starts_on', $picker->attr('wire:model'));
+        $this->assertSame('value', $picker->attr('x-modelable'));
     }
 
     public function test_otp_forwards_attributes_and_binds_each_digit_to_an_array_index(): void

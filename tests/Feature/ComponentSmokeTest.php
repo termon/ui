@@ -368,6 +368,7 @@ class ComponentSmokeTest extends TestCase
             'form.confirm' => ['form.confirm', '<form><x-ui::form.confirm icon="trash">Delete</x-ui::form.confirm></form>', 'Delete'],
             'form.date' => ['form.date', '<x-ui::form.date name="starts_on" value="2026-06-26" />', 'starts_on'],
             'form.date-group' => ['form.date-group', '<x-ui::form.date-group name="starts_on" label="Starts" value="2026-06-26" />', 'Starts'],
+            'form.date-picker' => ['form.date-picker', '<x-ui::form.date-picker name="starts_on" value="2026-06-26" />', 'starts_on'],
             'form.datetime' => ['form.datetime', '<x-ui::form.datetime name="starts_at" value="2026-06-26 09:00:00" />', 'starts_at'],
             'form.datetime-group' => ['form.datetime-group', '<x-ui::form.datetime-group name="starts_at" label="Starts" value="2026-06-26 09:00:00" />', 'Starts'],
             'form.error' => ['form.error', '<x-ui::form.error>Required.</x-ui::form.error>', 'Required.'],

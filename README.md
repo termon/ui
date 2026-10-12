@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.8.50**
+> **Version 1.8.51**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -150,7 +150,7 @@ Compatibility tests supplement the render checks with representative consuming-a
 contracts: submitted form keys and values, existing IDs and label targets, literal
 and bound props, Livewire modifiers, upload attributes, legacy variant aliases,
 CSRF and method spoofing, named slots, host icon overrides, and chart configuration
-formats. JavaScript tests also check established date formats, custom chart callbacks
+formats. JavaScript tests also check date parsing, manual entry, calendar navigation, custom chart callbacks
 and plugins, and chart event payloads. Smoke tests cover every public component and
 reject unresolved Blade component tags.
 
@@ -734,9 +734,10 @@ IDs and append a suffix only when sanitized option IDs collide.
 
 Date and datetime pickers forward native field and accessibility attributes to the
 visible input, while Livewire and Alpine bindings remain on the picker wrapper.
-`disabled` also disables the submitted hidden value. Required pickers participate in
-native browser validation and prevent direct text editing; an explicitly readonly
-field retains normal browser readonly semantics. Disabled toggles omit both the
+`disabled` also disables the submitted hidden value. Date fields allow manual entry
+and defer validation to Laravel/Livewire. `required` sets `aria-required`; browser
+constraints (`required`, `pattern`, `minlength`, `maxlength`) are omitted. An explicitly
+readonly field prevents editing and calendar changes. Disabled toggles omit both the
 checkbox and its hidden fallback from submission.
 
 Groups with validation errors add `aria-invalid` and reference the error message via
@@ -811,7 +812,7 @@ Use `date-group` when you want the field with an optional label and validation e
 ```
 <x-ui::form.date-group name="date" label="Date" value="{{ now()->format('Y-m-d') }}" class="w-64" />
 ```
-The value may be `null`, empty, or a string in `Y-m-d` format. An empty value stays blank. The picker displays a readable date while its hidden input submits `Y-m-d`; `Clear` empties both. Pass `wire:model` to `date` or `date-group` to bind that ISO value in Livewire.
+The value may be `null`, empty, or a string in `Y-m-d` format. An empty value stays blank. The editable text input and hidden submission input use `Y-m-d`; `Clear` empties both. Invalid typed text is preserved for server validation. Pass `wire:model` to `date` or `date-group` to bind that ISO value in Livewire.
 
 #### DateTime
 
@@ -825,7 +826,7 @@ Use `datetime` when you only need the field:
 
 The `value` may be `null` or an empty string. In that case the visible input starts blank and no datetime value is submitted until the user chooses one. The picker also includes a `Clear` action to return the value to blank.
 
-The component renders a hidden input containing the submitted value and a readonly text input for the picker display. The submitted value uses the canonical `Y-m-d H:i:s` format.
+The component renders a hidden submission input and an editable text input. Valid selections use the canonical `Y-m-d H:i:s` format; invalid typed values are preserved for server validation.
 
 Use `datetime-group` when you want the field with an optional label and validation error:
 

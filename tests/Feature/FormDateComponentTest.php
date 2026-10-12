@@ -3,6 +3,7 @@
 namespace Termon\Ui\Tests\Feature;
 
 use Illuminate\Support\Facades\Blade;
+use Symfony\Component\DomCrawler\Crawler;
 use Termon\Ui\Tests\TestCase;
 
 class FormDateComponentTest extends TestCase
@@ -13,17 +14,19 @@ class FormDateComponentTest extends TestCase
 
         $this->assertStringContainsString('x-modelable="value"', $html);
         $this->assertStringContainsString('wire:model="starts_on"', $html);
-        $this->assertStringContainsString('type="hidden" name="starts_on" value="" x-bind:value="value"', $html);
-        $this->assertStringContainsString('x-model="displayValue"', $html);
-        $this->assertStringContainsString('@click="clear"', $html);
-        $this->assertStringContainsString('this.selectedDate = valid ? date : null', $html);
+        $this->assertStringContainsString('type="hidden" name="starts_on" value="" :value="value"', $html);
+        $this->assertStringContainsString('x-model="text"', $html);
+        $this->assertStringContainsString('@click="clear()"', $html);
+        $this->assertStringNotContainsString('<script>', $html);
     }
 
     public function test_date_component_preserves_an_initial_iso_value(): void
     {
         $html = Blade::render('<x-ui::form.date name="starts_on" value="2026-09-22" />');
 
-        $this->assertStringContainsString('value="2026-09-22" x-bind:value="value"', $html);
-        $this->assertStringContainsString("datePicker('2026-09-22')", $html);
+        $this->assertStringContainsString('value="2026-09-22" :value="value"', $html);
+        $expression = (new Crawler($html))->filter('[x-data]')->attr('x-data');
+        $this->assertStringStartsWith('(function createDatePicker(options) {', $expression);
+        $this->assertStringContainsString('2026-09-22', $expression);
     }
 }

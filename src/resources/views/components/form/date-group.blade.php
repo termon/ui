@@ -9,7 +9,8 @@
 @php
     $inputId = $id ?? $name;
     $errorId = $inputId.'-error';
-    if ($errors->has($name)) {
+    $errorKey = str_replace([']', '['], ['', '.'], $name);
+    if ($errors->has($errorKey)) {
         $describedBy = trim($attributes->get('aria-describedby', '').' '.$errorId);
         $attributes = $attributes->except(['aria-describedby', 'aria-invalid'])->merge([
             'aria-describedby' => $describedBy,
@@ -32,5 +33,5 @@
         {{ $attributes->except(['class', 'name', 'label', 'value', 'icon']) }}
     />
 
-    <x-ui::form.error :id="$errorId" :for="$name" />
+    <x-ui::form.error :id="$errorId" :for="$errorKey" />
 </div>

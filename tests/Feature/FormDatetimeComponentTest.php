@@ -23,9 +23,9 @@ class FormDatetimeComponentTest extends TestCase
         $this->assertStringContainsString('type="hidden"', $html);
         $this->assertStringContainsString('name="visible_from"', $html);
         $this->assertStringContainsString('value=""', $html);
-        $this->assertStringContainsString('x-bind:value="value"', $html);
-        $this->assertStringContainsString('placeholder="Select date and time"', $html);
-        $this->assertStringContainsString('x-on:click="clear"', $html);
+        $this->assertStringContainsString(':value="value"', $html);
+        $this->assertStringContainsString('placeholder="YYYY-MM-DD HH:MM:SS"', $html);
+        $this->assertStringContainsString('@click="clear()"', $html);
         $this->assertStringNotContainsString('name="visible_from" value="" type="text"', $html);
     }
 
@@ -41,9 +41,9 @@ class FormDatetimeComponentTest extends TestCase
         $this->assertStringContainsString('type="hidden"', $html);
         $this->assertStringContainsString('name="scheduled_at"', $html);
         $this->assertStringContainsString('value="2026-06-26 09:30:00"', $html);
-        $this->assertStringContainsString('x-model="displayValue"', $html);
-        $this->assertStringContainsString('formatValue(date)', $html);
-        $this->assertStringContainsString('formatDateTime(date)', $html);
+        $this->assertStringContainsString('x-model="text"', $html);
+        $this->assertStringContainsString('format(date)', $html);
+        $this->assertStringContainsString('this.parse(this.text)', $html);
     }
 
     public function test_datetime_group_forwards_livewire_binding_to_datetime_component(): void
@@ -70,7 +70,7 @@ class FormDatetimeComponentTest extends TestCase
         $html = Blade::render('<x-ui::form.datetime name="starts_at" value="2026-09-22 09:02:00" wire:model="starts_at" />');
 
         $this->assertStringContainsString('value="2026-09-22 09:02:00"', $html);
-        $this->assertStringContainsString('length: 60', $html);
+        $this->assertStringContainsString('step="1"', $html);
         $this->assertStringNotContainsString('roundToNearestFiveMinutes', $html);
     }
 }

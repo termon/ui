@@ -68,7 +68,7 @@ class FormRegressionTest extends TestCase
             $crawler = new Crawler($html);
             $visible = $crawler->filter('input[type="text"]');
             $hidden = $crawler->filter('input[type="hidden"]');
-            $this->assertSame(1, $visible->filter('[disabled][required]')->count(), $component);
+            $this->assertSame(1, $visible->filter('[disabled][aria-required="true"]')->count(), $component);
             $this->assertSame(1, $hidden->filter('[disabled]')->count(), $component);
             $this->assertSame('booking', $visible->attr('form'));
             $this->assertSame('booking', $hidden->attr('form'));
@@ -80,16 +80,16 @@ class FormRegressionTest extends TestCase
         }
     }
 
-    public function test_required_picker_is_not_barred_from_constraint_validation(): void
+    public function test_picker_manual_entry_defers_validation_to_laravel(): void
     {
         foreach (['date', 'datetime'] as $component) {
-            $html = Blade::render('<x-ui::form.'.$component.' name="starts_on" required />');
+            $html = Blade::render('<x-ui::form.'.$component.' name="starts_on" required pattern=".*" minlength="10" maxlength="10" />');
             $input = (new Crawler($html))->filter('input[type="text"]');
-            $this->assertTrue($input->getNode(0)->hasAttribute('required'));
-            $this->assertFalse($input->getNode(0)->hasAttribute('readonly'));
-            $this->assertTrue($input->getNode(0)->hasAttribute('x-on:beforeinput.prevent'));
-            $default = new Crawler(Blade::render('<x-ui::form.'.$component.' name="starts_on" />'));
-            $this->assertTrue($default->filter('input[type="text"]')->getNode(0)->hasAttribute('readonly'));
+            foreach (['required', 'pattern', 'minlength', 'maxlength', 'readonly', 'x-on:beforeinput.prevent'] as $attribute) {
+                $this->assertFalse($input->getNode(0)->hasAttribute($attribute));
+            }
+            $this->assertSame('true', $input->attr('aria-required'));
+            $this->assertStringNotContainsString('setCustomValidity', $html);
         }
     }
 
