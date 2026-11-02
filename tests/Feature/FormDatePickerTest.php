@@ -3,9 +3,9 @@
 namespace Termon\Ui\Tests\Feature;
 
 use Illuminate\Support\Facades\Blade;
-use Symfony\Component\DomCrawler\Crawler;
-use Illuminate\Support\ViewErrorBag;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\ViewErrorBag;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Process\Process;
 use Termon\Ui\Tests\TestCase;
 
@@ -48,6 +48,7 @@ JS]);
             $this->assertSame(1, substr_count($html, 'wire:model="starts"'));
         }
     }
+
     public function test_nested_laravel_errors_are_visible_and_invalid_values_are_preserved(): void
     {
         foreach (['date' => '2027-03-99', 'datetime' => '2027-03-99 09:00:00'] as $type => $value) {
@@ -72,4 +73,37 @@ JS]);
         }
     }
 
+    public function test_livewire_bound_picker_initialization_does_not_change_with_its_value(): void
+    {
+        foreach (['date', 'datetime'] as $type) {
+            foreach (['wire:model', 'wire:model.live', 'wire:model.blur'] as $binding) {
+                $render = static fn (string $value): Crawler => new Crawler(Blade::render('<x-ui::form.'.$type.'-group name="starts" :value="$value" '.$binding.'="starts" />', compact('value')));
+                $initial = $render('2026-10-12');
+                $updated = $render('2026-11-15');
+                $this->assertSame('starts', $initial->filter('[x-modelable]')->attr($binding));
+                $this->assertSame($initial->filter('[x-modelable]')->attr('x-data'), $updated->filter('[x-modelable]')->attr('x-data'));
+            }
+        }
+    }
+
+    public function test_ordinary_blade_pickers_preserve_initial_values_and_have_a_valid_calendar_before_alpine_init(): void
+    {
+        foreach (['date' => '2026-10-12', 'datetime' => '2026-10-12 09:02:17'] as $type => $value) {
+            $crawler = new Crawler(Blade::render('<x-ui::form.'.$type.'-group name="starts" :value="$value" />', compact('value')));
+            $this->assertSame($value, $crawler->filter('input[type=hidden]')->attr('value'));
+            $process = new Process(['node', '-e', <<<'JS'
+const expression = require('node:fs').readFileSync(0, 'utf8');
+const state = Function(`return (${expression})`)();
+console.log(JSON.stringify({ value: state.value, text: state.text, month: state.month, title: state.title, cells: state.cells.length }));
+JS]);
+            $process->setInput($crawler->filter('[x-modelable]')->attr('x-data'));
+            $process->mustRun();
+            $calendar = json_decode($process->getOutput(), true, flags: JSON_THROW_ON_ERROR);
+            $this->assertSame($value, $calendar['value']);
+            $this->assertSame($value, $calendar['text']);
+            $this->assertSame('2026-10', $calendar['month']);
+            $this->assertSame('October 2026', $calendar['title']);
+            $this->assertGreaterThanOrEqual(31, $calendar['cells']);
+        }
+    }
 }

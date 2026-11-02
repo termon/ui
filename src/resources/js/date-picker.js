@@ -1,5 +1,5 @@
 function createDatePicker(options) {
-    return {
+    const picker = {
         value: options.value ?? '', text: '', open: false, cursor: '', month: '',
         panelStyle: { visibility: 'hidden' },
         localNow() { const date = new Date(); return new Date(date.getTime() - date.getTimezoneOffset() * 60000); },
@@ -65,7 +65,9 @@ function createDatePicker(options) {
             }
         },
         get title() {
-            return new Intl.DateTimeFormat(options.locale, { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(this.dayDate(this.month + '-01'));
+            const date = this.dayDate(this.month + '-01');
+            return Number.isNaN(date.getTime()) ? ''
+                : new Intl.DateTimeFormat(options.locale, { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(date);
         },
         dayDate(key) {
             const date = new Date(0);
@@ -79,6 +81,7 @@ function createDatePicker(options) {
         },
         get cells() {
             const first = this.dayDate(this.month + '-01');
+            if (Number.isNaN(first.getTime())) return [];
             const count = this.dayDate(this.month + '-01');
             count.setUTCMonth(count.getUTCMonth() + 1, 0);
             return Array.from({ length: first.getUTCDay() + count.getUTCDate() }, (_, i) => {
@@ -156,4 +159,6 @@ function createDatePicker(options) {
             this.panelStyle = { visibility: 'visible', top: `${top}px`, left: `${left}px` };
         },
     };
+    picker.sync();
+    return picker;
 }

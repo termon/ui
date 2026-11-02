@@ -2,7 +2,8 @@
 @php
     $inputId = $id ?? $name;
     $factory = \Termon\Ui\DatePicker::source();
-    $options = compact('value', 'datetime', 'min', 'max', 'locale');
+    $hasWireModel = $attributes->filter(fn ($v, $k) => $k === 'wire:model' || str_starts_with($k, 'wire:model.'))->isNotEmpty();
+    $options = ['value' => $hasWireModel ? '' : $value, ...compact('datetime', 'min', 'max', 'locale')];
     $wrapper = $attributes->filter(fn ($v, $k) => $k === 'class' || str_starts_with($k, 'wire:') || str_starts_with($k, 'x-'));
     $field = $attributes->except(array_merge(array_keys($wrapper->getAttributes()), ['required', 'pattern', 'minlength', 'maxlength']));
 @endphp

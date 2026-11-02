@@ -98,3 +98,40 @@ for (const datetime of [false, true]) {
         assert.equal(state.open, false);
     });
 }
+
+for (const datetime of [false, true]) {
+    test(`${datetime ? 'datetime' : 'date'}: calendar getters are safe before Alpine init and during reconciliation`, () => {
+        const create = Function(`return (${source})`)();
+        const fresh = create({ datetime, locale: 'en-GB', value: datetime ? '2026-02-15 09:30:00' : '2026-02-15' });
+        assert.equal(fresh.month, '2026-02');
+        assert.equal(fresh.title, 'February 2026');
+        assert.ok(fresh.cells.some(cell => cell.key === '2026-02-15'));
+        const { state } = picker({ datetime, value: datetime ? '2025-11-01 09:30:00' : '2025-11-01' });
+        for (const key of Object.keys(fresh)) {
+            const descriptor = Object.getOwnPropertyDescriptor(fresh, key);
+            if (descriptor.get || descriptor.set) {
+                Object.defineProperty(state, key, descriptor);
+            } else {
+                state[key] = fresh[key];
+            }
+            assert.doesNotThrow(() => [state.title, state.cells]);
+        }
+        assert.equal(state.month, '2026-02');
+        assert.equal(state.value, fresh.value);
+        for (const month of ['', 'invalid', '2026-99']) {
+            state.month = month;
+            assert.doesNotThrow(() => [state.title, state.cells]);
+        }
+    });
+
+    test(`${datetime ? 'datetime' : 'date'}: empty and invalid initial values still produce a usable calendar`, () => {
+        const create = Function(`return (${source})`)();
+        for (const value of ['', null, 'invalid', '2026-02-30']) {
+            const state = create({ datetime, locale: 'en-GB', value });
+            assert.match(state.month, /^\d{4}-\d{2}$/);
+            assert.doesNotThrow(() => [state.title, state.cells]);
+            assert.ok(state.cells.length >= 28);
+            assert.equal(state.value, value ?? '');
+        }
+    });
+}

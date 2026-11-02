@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.8.51**
+> **Version 1.8.52**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -836,6 +836,32 @@ Use `datetime-group` when you want the field with an optional label and validati
 > The input value should be `null`, an empty string, or a string in format `Y-m-d H:i:s`.
 
 Existing times retain their exact minute when the picker initializes or receives a new Livewire value. The picker offers every minute of the hour.
+
+#### Livewire date and datetime bindings
+
+For ordinary Blade forms, pass the initial `value` as shown above. In Livewire,
+initialize the component property and bind the picker with `wire:model`:
+
+```php
+public ?string $startsOn = '2026-10-12';
+public ?string $scheduledAt = '2026-10-12 09:30:00';
+```
+
+```blade
+<x-ui::form.date-group name="starts_on" label="Start date" wire:model="startsOn" />
+<x-ui::form.datetime-group name="scheduled_at" label="Scheduled at" wire:model="scheduledAt" />
+```
+
+The Livewire property supplies both the initial selection and subsequent updates.
+Do not also pass `value` or `:value` for the same field. When a `wire:model` binding
+is present, the picker leaves initialization of the selected value to Livewire so
+saving or rerendering does not reset its Alpine calendar state. Modifiers such as
+`wire:model.live` and `wire:model.blur` are supported too.
+
+Use `date` / `date-group` for date-only values (`Y-m-d`), and `datetime` /
+`datetime-group` when a time is required (`Y-m-d H:i:s`). Empty or null values show
+a blank field; invalid typed values remain available for server-side validation.
+These binding rules apply to both the standalone fields and their group variants.
 
 #### Checkbox
 
