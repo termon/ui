@@ -25,7 +25,7 @@
             </svg>
         </button>
     </div>
-    <template x-teleport="body">
+    <template x-teleport="body" wire:ignore>
         <div x-ref="panel" hidden :hidden="!open" :id="$id('calendar')" role="dialog" aria-label="Choose date"
             :style="panelStyle" @click.outside="close(false)" @keydown.escape.stop.prevent="close()"
             @keydown.tab="$nextTick(() => { if (!$refs.panel.contains(document.activeElement)) close(false); })"

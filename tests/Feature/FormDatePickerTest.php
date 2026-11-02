@@ -73,6 +73,19 @@ JS]);
         }
     }
 
+    public function test_popup_is_alpine_managed_while_the_input_remains_livewire_bound(): void
+    {
+        foreach (['date', 'datetime'] as $type) {
+            $crawler = new Crawler(Blade::render('<x-ui::form.'.$type.'-group name="starts" wire:model="starts" />'));
+            $popup = $crawler->filter('template[x-teleport]');
+            $picker = $crawler->filter('[x-modelable]');
+            $this->assertCount(1, $popup);
+            $this->assertTrue($popup->getNode(0)->hasAttribute('wire:ignore'));
+            $this->assertFalse($picker->getNode(0)->hasAttribute('wire:ignore'));
+            $this->assertSame('starts', $picker->attr('wire:model'));
+        }
+    }
+
     public function test_livewire_bound_picker_initialization_does_not_change_with_its_value(): void
     {
         foreach (['date', 'datetime'] as $type) {
