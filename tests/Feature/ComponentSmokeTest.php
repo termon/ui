@@ -178,6 +178,16 @@ class ComponentSmokeTest extends TestCase
         $this->assertStringContainsString('flex-col gap-1', $stacked);
     }
 
+    public function test_display_keeps_bottom_borders_for_every_row_entry(): void
+    {
+        foreach (['default', 'compact'] as $variant) {
+            $html = $this->renderBlade('<div class="grid grid-cols-2"><x-ui::display :variant="$variant" label="Coordinator" value="Alice" /><x-ui::display :variant="$variant" label="Modified By" value="Bob" /></div>', ['variant' => $variant]);
+
+            $this->assertStringNotContainsString('last:border-b-0', $html);
+            $this->assertSame(2, substr_count($html, 'border-b border-slate-100'));
+        }
+    }
+
     public function test_chip_supports_links_icons_sizes_and_aliases(): void
     {
         $link = $this->renderBlade('<x-ui::chip href="/skills" variant="emerald" size="sm" icon="check-circle">Ready</x-ui::chip>');

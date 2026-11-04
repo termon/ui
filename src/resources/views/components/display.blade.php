@@ -16,8 +16,8 @@
     };
 
     $wrapperClasses = match ($variant) {
-        'default' => 'flex flex-col border-b border-slate-100 py-2.5 last:border-b-0 dark:border-slate-700 md:flex-row md:items-start',
-        'compact' => 'flex flex-col border-b border-slate-100 py-1.5 last:border-b-0 dark:border-slate-700 sm:flex-row sm:items-start',
+        'default' => 'flex flex-col border-b border-slate-100 py-2.5 dark:border-slate-700 md:flex-row md:items-start',
+        'compact' => 'flex flex-col border-b border-slate-100 py-1.5 dark:border-slate-700 sm:flex-row sm:items-start',
         'tile' => 'flex min-w-0 flex-col rounded-lg border border-slate-200/80 bg-slate-50/70 px-3 py-2.5 dark:border-slate-700 dark:bg-slate-900/50',
         'stacked' => 'flex min-w-0 flex-col gap-1',
         default => throw new \Exception("No such display variant: {$variant}"),
