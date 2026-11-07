@@ -3,11 +3,12 @@ import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
 const source = readFileSync(new URL('../../src/resources/views/components/tabs/index.blade.php', import.meta.url), 'utf8');
-function fixture({ prefix = 'first-tabs', active = 'One', saved = null, query = '', customPanelId = '' } = {}) {
-    const expression = source.match(/x-data="([\s\S]*?)"/)[1].replace(/@js\(\$(\w+)\)/g, (_, prop) => JSON.stringify({ active, tabsId: prefix }[prop]));
+function fixture({ prefix = 'first-tabs', active = 'One', saved = null, query = '', customPanelId = '', values = {} } = {}) {
+    const expression = source.match(/x-data="([\s\S]*?)"/)[1].replace(/@js\(\$(\w+)\)/g, (_, prop) => JSON.stringify({ active, tabsId: prefix, values }[prop]));
     const storage = new Map(saved ? [['activeTab', saved]] : []);
     const history = [];
-    const window = { location: { search: query, href: `https://example.test/items${query}` }, history: { replaceState: (...args) => history.push(args[2]) } };
+    const navigations = [];
+    const window = { location: { assign: url => navigations.push(url), search: query, href: `https://example.test/items${query}` }, history: { replaceState: (...args) => history.push(args[2]) } };
     const state = Function('localStorage', 'window', `return (${expression})`)(
         { getItem: key => storage.get(key) ?? null, setItem: (key, value) => storage.set(key, value) }, window,
     );
@@ -21,7 +22,7 @@ function fixture({ prefix = 'first-tabs', active = 'One', saved = null, query = 
     state.$refs = { tabs: { children: [...panels, { getAttribute: () => null }] }, tabList: { querySelectorAll: () => buttons } };
     state.$nextTick = callback => callback();
     state.init();
-    return { state, panels, focused, storage, history };
+    return { state, panels, focused, storage, history, navigations };
 }
 
 test('tab keyboard controls wrap and activate the newly focused tab', () => {
@@ -72,4 +73,32 @@ test('tab panels use their parent active value without evaluating their names', 
     assert.equal(panel.show, true);
     panel.showIfActive('One');
     assert.equal(panel.show, false);
+});
+
+
+test('mapped tab values use server navigation and preserve independent query state', () => {
+    const values = { One: 'first', Three: 'third' };
+    const f = fixture({ values, saved: 'One', query: '?tab=third&sort=title&size=5&page=2#results' });
+    assert.equal(f.state.activeTab, 'Three');
+    f.state.switchTab('One');
+    const url = new URL(f.navigations[0]);
+    assert.equal(url.searchParams.get('tab'), 'first');
+    assert.equal(url.searchParams.get('sort'), 'title');
+    assert.equal(url.searchParams.get('size'), '5');
+    assert.equal(url.searchParams.get('page'), '2');
+    assert.equal(url.hash, '#results');
+    assert.equal(f.storage.get('activeTab'), 'One');
+    assert.equal(f.history.length, 0);
+    f.state.switchTab('One');
+    assert.equal(f.navigations.length, 1);
+});
+
+test('unmapped tabs preserve query parameters without navigating', () => {
+    const f = fixture({ query: '?sort=title&size=5' });
+    f.state.switchTab('Three');
+    const url = new URL(f.history[0]);
+    assert.equal(url.searchParams.get('tab'), 'Three');
+    assert.equal(url.searchParams.get('sort'), 'title');
+    assert.equal(url.searchParams.get('size'), '5');
+    assert.equal(f.navigations.length, 0);
 });

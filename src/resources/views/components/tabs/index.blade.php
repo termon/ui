@@ -1,4 +1,4 @@
-@props(['active'])
+@props(['active', 'values' => []])
 
 @php
     $tabsId = 'tabs-'.\Illuminate\Support\Str::uuid();
@@ -6,6 +6,7 @@
 
 <div x-data="{
     activeTab: @js($active),
+    values: @js($values),
     tabsId: @js($tabsId),
     tabs: [],
     tabHeadings: [],
@@ -21,8 +22,9 @@
             panel.setAttribute('aria-labelledby', this.buttonId(index));
             return panel.id;
         });
-        const savedTab = localStorage.getItem('activeTab');
-        const tabParam = new URLSearchParams(window.location.search).get('tab');
+        const savedTab = Object.keys(this.values).length ? null : localStorage.getItem('activeTab');
+        const tabValue = new URLSearchParams(window.location.search).get('tab');
+        const tabParam = Object.keys(this.values).find(label => this.values[label] === tabValue) ?? tabValue;
         if (savedTab && this.tabHeadings.includes(savedTab)) {
             this.activeTab = savedTab;
         } else if (tabParam && this.tabHeadings.includes(tabParam)) {
@@ -35,12 +37,16 @@
         return `${this.tabsId}-button-${index + 1}`;
     },
     switchTab(tab) {
+        if (this.activeTab === tab) return;
         this.activeTab = tab;
-        localStorage.setItem('activeTab', tab);
+        if (!Object.keys(this.values).length) localStorage.setItem('activeTab', tab);
         const url = new URL(window.location.href);
-        url.search = '';
-        url.searchParams.set('tab', tab);
-        window.history.replaceState({}, '', url);
+        url.searchParams.set('tab', this.values[tab] ?? tab);
+        if (Object.keys(this.values).length) {
+            window.location.assign(url.toString());
+        } else {
+            window.history.replaceState({}, '', url);
+        }
     },
     focusTab(index) {
         this.$refs.tabList.querySelectorAll('[role=tab]')[index]?.focus();

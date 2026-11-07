@@ -1,6 +1,6 @@
 # Laravel View Components
 
-> **Version 1.8.54**
+> **Version 1.8.55**
 
 A simple set of anonymous Laravel Blade View Components using TailwindCSS 4 for styling, to help construct basic user interfaces. 
 
@@ -1159,6 +1159,12 @@ A breadcrumb can be used to aid navigation. To configure a breadcrumb component 
 
 ### Badge
 
+For a lighter appearance, use `blue-subtle`, `pink-subtle`, `amber-subtle`, `emerald-subtle`, or `purple-subtle`. These variants use smaller text, a faint background and border, and include dark mode colours.
+
+```blade
+<x-ui::badge variant="emerald-subtle">Approved</x-ui::badge>
+```
+
 Badges provide additional contextual information for other user interface (UI) elements on the page. They enable you to easily show statuses, notifications, and short messages in your app. The badge component has a set of variants `'blue'`, `'gray'`, `'light'`, `'red'`, `'green'`, `'yellow'`, `'indigo'`, `'purple'`, `'pink'`.
 
 ```
@@ -1308,6 +1314,17 @@ Available statistic variants:
 - `dark` / `neutral`
 
 ### Tabs
+
+Pass an optional `values` map to use stable URL values independently of the displayed tab labels. With this map, selecting a tab navigates to the current URL with the mapped `tab` value so the server can load the selected content. Existing query parameters and the URL fragment are preserved; local storage is ignored. Pass `active` as the displayed label.
+
+```blade
+<x-ui::tabs active="Applications" :values="['Applications' => 'applications', 'External' => 'external']">
+    <x-ui::tabs.tab name="Applications">Applications content</x-ui::tabs.tab>
+    <x-ui::tabs.tab name="External">External content</x-ui::tabs.tab>
+</x-ui::tabs>
+```
+
+Without `values`, switching panels updates browser history without navigation and retains the existing local storage selection behaviour. Query parameters are preserved in both modes. Clicking the active tab does nothing.
 
 The `tabs` and `tab` components work together to provide tabbed panels and work together as follows
 
@@ -1659,7 +1676,7 @@ This section lists the public props currently declared by the Blade components. 
 - `size` default `xs`; accepted values are `xs`, `sm`, `md`, `lg`
 
 `badge`
-- `variant` default `blue`; accepted values are `blue`, `gray`, `light`, `red`, `green`, `yellow`, `indigo`, `purple`, `pink`
+- `variant` default `blue`; accepted values are `blue`, `gray`, `slate`, `light`, `red`, `green`, `yellow`, `indigo`, `purple`, `pink`, `blue-subtle`, `pink-subtle`, `amber-subtle`, `emerald-subtle`, `purple-subtle`
 
 `breadcrumb`
 - `crumbs` default `[]`; pass an associative array of label => URL
@@ -1876,7 +1893,8 @@ This section lists the public props currently declared by the Blade components. 
 
 `tabs`
 - `active` required
-- Stores the active tab in `localStorage` and synchronizes the `tab` query parameter
+- `values` default `[]`; optional label => URL value map. A non-empty map enables server navigation and disables local storage.
+- Without `values`, stores the active tab in `localStorage` and synchronizes the `tab` query parameter without navigation. Existing query parameters are preserved in either mode.
 - Arrow keys, Home, and End move between tabs; tab buttons reference their corresponding panels through accessible IDs.
 
 `tabs.tab`

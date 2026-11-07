@@ -35,6 +35,31 @@ class ComponentSmokeTest extends TestCase
         );
     }
 
+    public function test_badges_support_all_subtle_variants(): void
+    {
+        foreach (['blue', 'pink', 'amber', 'emerald', 'purple'] as $colour) {
+            $html = $this->renderBlade('<x-ui::badge :variant="$variant" aria-label="Category">Category</x-ui::badge>', ['variant' => $colour.'-subtle']);
+
+            $this->assertStringContainsString('bg-'.$colour.'-50/60', $html);
+            $this->assertStringContainsString('border-'.$colour.'-200/60', $html);
+            $this->assertStringContainsString('text-'.$colour.'-700', $html);
+            $this->assertStringContainsString('dark:text-'.$colour.'-300', $html);
+            $this->assertStringContainsString('aria-label="Category"', $html);
+        }
+    }
+
+    public function test_tabs_accept_url_values_without_rendering_them_as_html_attributes(): void
+    {
+        $html = $this->renderBlade('<x-ui::tabs active="Applications" :values="$values"><x-ui::tabs.tab name="Applications">Content</x-ui::tabs.tab></x-ui::tabs>', [
+            'values' => ['Applications' => 'applications', 'External' => 'external'],
+        ]);
+
+        $this->assertStringContainsString('values:', $html);
+        $this->assertStringContainsString('applications', $html);
+        $this->assertStringContainsString('window.location.assign(url.toString())', $html);
+        $this->assertStringNotContainsString(' values="', $html);
+    }
+
     public function test_card_supports_surface_variants(): void
     {
         $soft = $this->renderBlade('<x-ui::card variant="soft">Soft card</x-ui::card>');
